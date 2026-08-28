@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Spatial Wall ユーザーマニュアル / User manual
-    url: https://8796n.github.io/nyan-real-spatial-wall/manual/ja/
+    url: https://support.nyanreal.jp/spatial-wall/manual/ja/
     about: まず「困ったとき」を確認してください / Check troubleshooting first
+  - name: Virtual Display Driver サポート / Support
+    url: https://github.com/8796n/nyan-real-vdd/issues
+    about: VDDの不具合・質問はこちら / Report VDD issues here

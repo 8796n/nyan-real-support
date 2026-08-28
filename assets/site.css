@@ -72,6 +72,13 @@ a { color: inherit; }
   padding-block: 88px 72px;
 }
 
+.hero.hub {
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 440px;
+}
+
+.hero.hub h1 { max-width: 900px; }
+
 .eyebrow {
   margin: 0 0 16px;
   color: var(--accent-2);
