@@ -1,5 +1,6 @@
-THIRD-PARTY NOTICES - nyan Real / Spatial Wall (standalone)
-============================================================
+THIRD-PARTY AND SEPARATELY LICENSED COMPONENT NOTICES
+nyan Real / Spatial Wall (standalone)
+======================================================
 
 This notice covers only the standalone application (spatial-wall.exe). It is
 built from a separate CMake target than the obs-nyan-real-3dof OBS plugin in
@@ -7,9 +8,16 @@ this repository, does not link libobs, and is not released under the OBS
 plugin's GPL-2.0-or-later license (see THIRD_PARTY_LICENSES / LICENSE, which
 describe the OBS plugin build only).
 
-The application itself is proprietary and is licensed under the End User
-License Agreement in EULA.ja.txt / EULA.en.txt. The terms below apply to the
-third-party components instead of, and in priority over, that agreement.
+The application as a whole is proprietary and is licensed under the End User
+License Agreement in EULA.ja.txt / EULA.en.txt. Individual components that
+carry separate license notices remain under those terms, which apply to those
+components instead of, and in priority over, that agreement.
+
+First-party component under separate terms:
+- Phone remote UI (data/remote.html), 8796n
+  License: MIT. The full copyright and permission notice is reproduced in the
+  HTML file header so it remains present in the OBS, standalone and Android
+  distributions.
 
 Bundled with this application:
 - Qt 6 (Core / Gui / Widgets / Network / Qml / Quick / QuickWidgets / OpenGL)
