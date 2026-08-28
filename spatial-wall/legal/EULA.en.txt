@@ -188,4 +188,4 @@ interpretation, the Japanese text prevails.
 Contact
 
 8796n <info@8796.jp>
-https://github.com/8796n/nyan-real-spatial-wall/issues
+https://github.com/8796n/nyan-real-support/issues

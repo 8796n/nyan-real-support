@@ -95,7 +95,7 @@ If this notice is updated, the "Last updated" date above will be revised.
 ### Contact
 
 8796n <info@8796.jp> —
-https://github.com/8796n/nyan-real-spatial-wall/issues
+https://github.com/8796n/nyan-real-support/issues
 
 ---
 
@@ -183,4 +183,4 @@ USB 経由で、メガネが報告する情報（機種、ファームウェア�
 ### お問い合わせ
 
 8796n <info@8796.jp> —
-https://github.com/8796n/nyan-real-spatial-wall/issues
+https://github.com/8796n/nyan-real-support/issues
