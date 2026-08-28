@@ -25,7 +25,7 @@ body:
   - type: input
     id: glasses
     attributes:
-      label: ARグラス / AR glasses
+      label: 対応メガネ / Supported glasses
       placeholder: "例 / Example: XREAL Air 2 Pro"
     validations:
       required: true
