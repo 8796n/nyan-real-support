@@ -1,7 +1,7 @@
 ﻿nyan Real / Spatial Wall
 END USER LICENSE AGREEMENT
 
-Last updated: 2026-08-15
+Last updated: 2026-08-27
 Copyright holder: 8796n <info@8796.jp>
 
 This Agreement sets out the terms on which 8796n ("the Licensor") licenses the
@@ -59,7 +59,7 @@ The Customer shall not:
    This restriction does not apply where it cannot lawfully be imposed
    (including under the mandatory provisions of the Japanese Copyright Act and
    under Article 6 of the EU Software Directive for interoperability purposes),
-   nor to the third-party software described in Article 5;
+   nor to components described in Article 5;
 
 3. remove or alter any copyright or other proprietary notice;
 
@@ -81,18 +81,23 @@ Article 4 (Fees, support and updates)
    that update as well.
 
 
-Article 5 (Third-party software)
+Article 5 (Third-party software and separately licensed components)
 
-1. The Software includes third-party software. It is listed, with its licence
-   terms, in the accompanying THIRD_PARTY_LICENSES.txt and the licenses/
-   directory.
+1. The Software includes third-party software and components that the Licensor
+   licenses under separate terms. They are listed, with their licence terms,
+   in the accompanying THIRD_PARTY_LICENSES.txt, the licenses/ directory or the
+   relevant files.
 
-2. For third-party software, the licence terms of that third party prevail over
-   this Agreement. Nothing in this Agreement restricts any right that such a
-   licence grants the Customer, including rights to copy, modify, decompile or
-   redistribute.
+2. For the components described in the preceding paragraph, their respective
+   licence terms prevail over this Agreement. Nothing in this Agreement
+   restricts any right that such a licence grants the Customer, including
+   rights to copy, modify, decompile or redistribute.
 
-3. The Software uses Qt under the GNU Lesser General Public License version 3
+3. The Licensor-owned file data/remote.html is provided under the MIT License
+   stated in that file. For that file, the MIT License prevails over this
+   Agreement.
+
+4. The Software uses Qt under the GNU Lesser General Public License version 3
    by dynamic linking. The Qt library files are placed alongside the executable
    and may be replaced with a compatible build. The full texts of LGPL version
    3 and of the GNU General Public License version 3 are included in the

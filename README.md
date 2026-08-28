@@ -7,7 +7,7 @@ Windows 版、macOS 版、Linux（GNOME / Raspberry Pi labwc）版の公式サ�
 - [English manual](https://8796n.github.io/nyan-real-spatial-wall/manual/en/)
 - [不具合・問い合わせ](https://github.com/8796n/nyan-real-spatial-wall/issues/new?template=bug-report.yml)
 
-問い合わせの前に、アプリの「バージョン情報」→「問い合わせ用情報をコピー」を実行し、結果をフォームの「問い合わせ用情報」欄へ編集せず貼り付けてください。OS を選択し、「ARグラス / AR glasses」欄に機種名を入力して、症状と再現手順をそれぞれの欄へ記入します。
+問い合わせの前に、アプリの「バージョン情報」→「問い合わせ用情報をコピー」を実行し、結果をフォームの「問い合わせ用情報」欄へ編集せず貼り付けてください。OS を選択し、対応メガネの機種名を入力して、症状と再現手順をそれぞれの欄へ記入します。
 
 ## このリポジトリについて
 
@@ -17,4 +17,4 @@ Windows 版、macOS 版、Linux（GNOME / Raspberry Pi labwc）版の公式サ�
 
 This is the official support repository for the Windows, macOS, GNOME and Raspberry Pi/labwc editions of nyan Real / Spatial Wall. It contains support material, not the application's source code. Spatial Wall is paid, closed-source software; see the [English EULA](legal/EULA.en.txt) and the authoritative [Japanese EULA](legal/EULA.ja.txt).
 
-Before opening an issue, choose About → Copy support information and paste the unchanged block into "Copied support information." Select the OS, enter the model in the "ARグラス / AR glasses" field, then fill in "What happened" and "Steps to reproduce" separately.
+Before opening an issue, choose About → Copy support information and paste the unchanged block into "Copied support information." Select the OS, enter the supported glasses model, then fill in "What happened" and "Steps to reproduce" separately.

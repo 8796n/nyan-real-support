@@ -1,11 +1,12 @@
-# Privacy Notice — nyan Real / Spatial Wall
+# Privacy Notice — nyan Real / Spatial Wall (standalone app)
 
 **Last updated: 2026-08-19**
 
-This is the privacy notice for the **nyan Real / Spatial Wall application**
-(`spatial-wall.exe` on Windows, `spatial-wall` on Linux and macOS). It does not
-cover the browser extension, which has its own policy in the
-[browser extension privacy notice](https://github.com/8796n/obs-nyan-real-3dof/blob/main/PRIVACY.md).
+This is the privacy notice for the **standalone nyan Real / Spatial Wall
+application** (`spatial-wall.exe` on Windows, `spatial-wall` on Linux and
+macOS). It does not cover the OBS Studio plugin, nor the browser extension —
+the extension has its own
+[privacy notice](https://github.com/8796n/obs-nyan-real-3dof/blob/main/PRIVACY.md).
 
 ---
 
