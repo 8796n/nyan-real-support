@@ -10,18 +10,19 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://support.nyanreal.jp/">
   <link rel="icon" href="assets/app-icon.png">
-  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/site.css?v=site-shell-1">
 </head>
 <body>
   <header class="site-header">
     <nav class="shell nav" aria-label="メインナビゲーション">
-      <a class="brand" href="./"><img src="assets/app-icon.png" alt=""><span>nyan Real Support</span></a>
+      <a class="brand" href="./" aria-label="nyan Real サポートトップ"><img src="assets/app-icon.png" alt=""><span>nyan Real Support</span></a>
       <div class="nav-links">
+        <a href="./" aria-current="page">トップ</a>
         <a href="spatial-wall/">Spatial Wall</a>
         <a href="media-player/">Media Player</a>
         <a href="vdd/">VDD</a>
-        <a class="language" href="en/" lang="en">English</a>
       </div>
+      <a class="language" href="en/" lang="en">English</a>
     </nav>
   </header>
 
@@ -49,9 +50,13 @@
 
   <footer class="site-footer">
     <div class="shell footer-row">
-      <p>© 2026 8796n · nyan Real</p>
-      <p><a href="https://github.com/8796n/nyan-real-support">GitHub</a></p>
+      <a class="footer-brand" href="./">nyan Real Support</a>
+      <nav class="footer-links" aria-label="フッターナビゲーション">
+        <a href="./">サポートトップ</a>
+        <a href="https://github.com/8796n/nyan-real-support">GitHub</a>
+      </nav>
     </div>
+    <div class="shell footer-meta"><p>© 2026 8796n · nyan Real</p></div>
   </footer>
 </body>
 </html>

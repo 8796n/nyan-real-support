@@ -12,26 +12,23 @@
   <meta property="og:image" content="https://support.nyanreal.jp/assets/og.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="../assets/app-icon.png">
-  <link rel="stylesheet" href="../assets/site.css?v=spatial-home-3">
+  <link rel="stylesheet" href="../assets/site.css?v=site-shell-1">
 </head>
 <body class="support-home">
   <header class="site-header">
     <nav class="shell nav" aria-label="メインナビゲーション">
-      <a class="brand" href="./"><img src="../assets/app-icon.png" alt=""><span>Spatial Wall Support</span></a>
+      <a class="brand" href="../" aria-label="nyan Real サポートトップ"><img src="../assets/app-icon.png" alt=""><span>nyan Real Support</span></a>
       <div class="nav-links">
-        <a href="manual/ja/">マニュアル</a>
-        <a href="guide/">OS別ガイド</a>
-        <a href="devices/">対応メガネ</a>
-        <a href="../">製品一覧</a>
-        <a class="language" href="en/" lang="en">English</a>
+        <a href="../">トップ</a>
+        <a href="./" aria-current="page">Spatial Wall</a>
+        <a href="../media-player/">Media Player</a>
+        <a href="../vdd/">VDD</a>
       </div>
+      <a class="language" href="en/" lang="en">English</a>
     </nav>
   </header>
 
   <main>
-    <nav class="shell support-back" aria-label="親サイトへ">
-      <a href="../">← nyan Real サポートトップ</a>
-    </nav>
     <section class="shell support-hero" aria-labelledby="support-title">
       <img class="wall-visual" src="../assets/spatial-wall-support-hero.png" width="1672" height="941" alt="メガネをかけた猫が、目の前に広がる6枚のディスプレイに驚いているイラスト" fetchpriority="high" decoding="async">
       <div class="support-intro">
@@ -74,9 +71,19 @@
 
   <footer class="site-footer">
     <div class="shell footer-row">
-      <p>© 2026 8796n · nyan Real / Spatial Wall</p>
-      <p><a href="legal/PRIVACY.md">プライバシー</a><a href="legal/EULA.ja.txt">使用許諾契約</a><a href="https://github.com/8796n/nyan-real-support">GitHub</a></p>
+      <a class="footer-brand" href="../">nyan Real Support</a>
+      <nav class="footer-links" aria-label="フッターナビゲーション">
+        <a href="../">サポートトップ</a>
+        <a href="manual/ja/">マニュアル</a>
+        <a href="guide/">OS別ガイド</a>
+        <a href="devices/">対応メガネ</a>
+        <a href="https://github.com/8796n/nyan-real-support/issues/new?template=spatial-wall.yml">問い合わせ</a>
+        <a href="legal/PRIVACY.md">プライバシー</a>
+        <a href="legal/EULA.ja.txt">使用許諾契約</a>
+        <a href="https://github.com/8796n/nyan-real-support">GitHub</a>
+      </nav>
     </div>
+    <div class="shell footer-meta"><p>© 2026 8796n · nyan Real</p></div>
   </footer>
 </body>
 </html>
