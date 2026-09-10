@@ -95,6 +95,7 @@ footer { color: var(--muted); font-size: 0.85rem; margin-top: 3rem; }
 </ul>
 </li>
 <li><a href="#virtual-displays">Virtual displays</a><ul>
+<li><a href="#what-each-display-combination-does">What each display combination does</a></li>
 <li><a href="#going-idle-and-resuming">Going idle and resuming</a></li>
 <li><a href="#the-wall-map">The wall map</a></li>
 <li><a href="#keeping-the-cursor-out-of-trouble">Keeping the cursor out of trouble</a></li>
@@ -110,7 +111,7 @@ footer { color: var(--muted); font-size: 0.85rem; margin-top: 3rem; }
 <li><a href="#shortcut-keys-remote-shortcut-keys">Shortcut keys ("Remote" &gt; "Shortcut keys")</a></li>
 <li><a href="#phone-remote-remote">Phone remote ("Remote")</a></li>
 <li><a href="#android-glasses-bridge-remote">Android glasses bridge ("Remote")</a></li>
-<li><a href="#stream-deck-advanced-stream-deck">Stream Deck ("Advanced" &gt; "Stream Deck")</a></li>
+<li><a href="#stream-deck-remote-stream-deck">Stream Deck ("Remote" &gt; "Stream Deck")</a></li>
 <li><a href="#start-at-login-advanced">Start at login ("Advanced")</a></li>
 </ul>
 </li>
@@ -149,6 +150,9 @@ This manual covers connection, basic setup, everyday use, and troubleshooting.</
 <p>Individual settings explain themselves — hover any control in the app for its
 tooltip. This manual covers what comes before that: what each part is for, and
 in what order to use it.</p>
+<p>The text and screenshots reflect the 0.9.0 development build as of September 10,
+2026. Screenshots show the Windows build with XREAL 1S connected and the master
+switch on. Available settings and controls vary by OS and glasses model.</p>
 <h2 id="about-this-app">About this app</h2>
 <p>Connect a supported pair of glasses over USB and your PC's displays are arranged
 in space as a <strong>wall</strong>, redrawn as you move your head. Physical and virtual displays
@@ -222,7 +226,11 @@ may warn on first run. Choose "More info" then "Run anyway".</p>
 </blockquote>
 <h3 id="linux-gnome">Linux (GNOME)</h3>
 <p>Install the <code>.deb</code> with <code>apt install</code>. Virtual displays go through GNOME's own
-screen-sharing support (Mutter ScreenCast), so there is no driver to add.</p>
+screen-sharing support (Mutter ScreenCast), so there is no driver to add.
+After installing or updating, log out and back in to activate the bundled GNOME
+Shell integration. While the app warns that this integration is unavailable,
+some features are restricted, including focus and using only glasses plus
+virtual displays without a normal monitor.</p>
 <h3 id="linux-raspberry-pi-labwc">Linux (Raspberry Pi / labwc)</h3>
 <p>Install the Pi-specific <code>.deb</code>. Virtual displays use labwc's own support, and the
 package adds the udev rules that let the app reach the glasses over USB.</p>
@@ -237,9 +245,11 @@ to reopen the window or choose "Quit" from its menu.</p>
 <p>What you see first is the operation panel across the top and the category list
 down the left.</p>
 <ul>
-<li><strong>Enabled</strong> — the master switch. Turning it off stops all rendering and display
-  management.</li>
-<li><strong>3DoF (head tracking)</strong> — with it off, the wall stays locked to your view.</li>
+<li><strong>Enabled</strong> — the master switch. Turning it off stops glasses output, the sensor
+  connection, and Audio Wall. Virtual displays behave as described under display
+  combinations below.</li>
+<li><strong>3DoF (head tracking)</strong> — with it off, the wall normally stays locked to your view.
+  Enable "Gimbal when 3DoF is off" in "Glasses" to follow larger head movements smoothly.</li>
 <li><strong>Center</strong> — re-places the wall so the direction you are facing becomes forward.</li>
 <li><strong>Wall map</strong> — shows the wall as a small flat map (see below).</li>
 </ul>
@@ -248,8 +258,10 @@ down the left.</p>
 glasses are detected and head tracking starts, the status changes to "3DoF
 running".</p>
 <h2 id="connecting-the-glasses">Connecting the glasses</h2>
-<p>Plug in over USB and detection is automatic. The <strong>Glasses</strong> category shows the
-detected model, the IMU path, and the glasses display.</p>
+<p>Turn the master switch on and plug in over USB for automatic detection. Click
+the <strong>status indicator</strong> at the top (such as "3DoF running") to check the detected
+model, IMU transport, and glasses display. The <strong>Glasses</strong> category contains
+display mode, SBS output, FoV, and related settings.</p>
 <p>In the normal display path, the glasses need to be a <strong>separate extended
 display</strong>. A clone, or "second screen only", would hide the very monitors the
 wall is supposed to capture. By default the app makes them an extended display
@@ -269,16 +281,17 @@ path is active. See "Tested configurations and known limitations" in the
 appendix for eligibility and tested hardware.</p>
 <p>Once connected, check these three.</p>
 <ol>
-<li><strong>Display mode</strong> — 2D or 3D SBS, and the refresh rate. The 72 Hz and 90 Hz modes
-   also lower the OLED duty cycle, which cuts motion blur when you look around.
+<li><strong>Display mode</strong> — 2D or 3D SBS, and the refresh rate. On supported models,
+   72 Hz and 90 Hz modes also lower the OLED duty cycle, reducing motion blur.
    "Restore saved display mode on connection" is off by default. Manual choices
    are remembered even while it is off, and the setting also restores normal
    modes. If the last remembered mode is HMD-capable, enable it only on a PC that
    enters that mode reliably.</li>
 <li><strong>SBS output</strong> — "Auto" gets most modes right. Only half-SBS modes cannot be
    told apart by resolution, so switch those on by hand.</li>
-<li><strong>Brightness and volume</strong> — available on models that expose the controls. The
-   amplifier inside the glasses and the PC's volume multiply, so if the PC is
+<li><strong>Brightness and volume</strong> — use the operation panel at the top. Controls such as
+   brightness and the glasses' amplifier volume appear when the model supports them.
+   The amplifier inside the glasses and the PC's volume multiply, so if the PC is
    already at 100% and it is still quiet, raise the glasses' own volume.</li>
 </ol>
 <h3 id="tap-controls-supported-models">Tap controls (supported models)</h3>
@@ -291,11 +304,13 @@ screen; move to wake it. The timeout and sensitivity live under "Power saving".<
 <h2 id="building-the-wall">Building the wall</h2>
 <p>The <strong>Display Wall</strong> category decides which displays join the wall and how they
 are arranged.</p>
+<p><img alt="The Display Wall diagram and virtual-display settings" src="manual-images/display-wall-en.png" /></p>
 <h3 id="choosing-displays">Choosing displays</h3>
 <p>The diagram shows the OS's current display arrangement. Click a tile to toggle
 whether that display belongs to the wall. Excluded tiles are dimmed, and the last
-remaining display cannot be removed. The main display works like any other tile.
-The glasses' own display never joins the wall.</p>
+remaining display cannot be removed. A virtual display created by Spatial Wall
+also cannot be removed from the wall while it is the main display; make another
+display main first. The glasses' own display never joins the wall.</p>
 <h3 id="arranging-them">Arranging them</h3>
 <p>Spatial Wall has no layout-mode selector: <strong>the OS display arrangement is the
 wall</strong>. Drag a tile in the diagram to edit that arrangement. <strong>Apply</strong> writes the
@@ -308,7 +323,8 @@ There are no numeric controls for display gaps or outer padding.</p>
 <li><strong>Center</strong> — makes the direction you are facing forward. Nominate a display and
   that display is what ends up in front of you.</li>
 <li><strong>Focus</strong> — shows a single display from the wall, for when you want to sink
-  into one task. "None" returns to the whole wall.</li>
+  into one task. Pick a display number at the top; "All" returns to the whole
+  wall. This panel is hidden when fewer than two focus targets are available.</li>
 <li><strong>Screen distance</strong> — how far the wall sits. Physical size is preserved, so
   closer looks bigger. Below 0.5 m tires the eyes, so treat that as a brief
   effect rather than a working distance.</li>
@@ -324,35 +340,107 @@ the wall. Click its tile to show or hide it, drag to move it, drag its lower-rig
 corner to resize it, and right-click to open its settings.</p>
 <h2 id="virtual-displays">Virtual displays</h2>
 <p>Short on physical monitors? Add <strong>virtual displays</strong> and the wall grows.
-"Advanced" &gt; "Virtual displays".</p>
+Choose a resolution under "Virtual displays" at the bottom of "Display Wall",
+then click "Add". You can also right-click empty space in the diagram to add one.
+Right-click a virtual-display tile to change its resolution or remove it.</p>
 <p>On Windows this needs a driver — <strong>nyan Real / Virtual Display Driver</strong>
 (recommended) or <strong>ParsecVDisplay</strong>. <strong>Drivers are not bundled</strong>, so install one
 separately. Linux and macOS use the OS's own support and need nothing installed.</p>
 <p>Virtual displays you add exist only while this app runs. Their previous
 configuration is restored the next time you start it.</p>
+<p>Adding or removing a virtual display changes only that one display. Removing
+one of several leaves the others running, and adding one after removing all of
+them resumes operation automatically. These changes do not put the whole set
+into idle mode.</p>
+<h3 id="what-each-display-combination-does">What each display combination does</h3>
+<p>In the table below, <code>G</code> is a recognised glasses display, <code>V</code> is a virtual
+display created by Spatial Wall, and <code>N</code> is any other normal display. Multiple
+N or V displays follow the same rules.</p>
+<table>
+<thead>
+<tr>
+<th>Connected displays</th>
+<th>While the master is on</th>
+<th>Main display</th>
+<th>When the master is off or G disconnects</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>G only</td>
+<td>There is no N or V to put on the wall, so wall output stays idle</td>
+<td>G (not applicable on Pi)</td>
+<td>No change</td>
+</tr>
+<tr>
+<td>G + N</td>
+<td>N is shown on the wall through G</td>
+<td>N</td>
+<td>Only the wall on G stops; N remains usable</td>
+</tr>
+<tr>
+<td>G + V</td>
+<td>Spatial Wall first proves that V is really visible through G</td>
+<td>V becomes main automatically on Windows, GNOME, and macOS. Pi has no global main-display concept</td>
+<td>With no N to escape to, V automatically goes idle for safety. Turning the master on restores it</td>
+</tr>
+<tr>
+<td>G + N + V</td>
+<td>N and V are shown on the same wall</td>
+<td>Normally N. On Windows, GNOME, and macOS, right-click N or V in the Display Wall diagram to choose it</td>
+<td>Windows, GNOME, and macOS return to N and keep V connected. Windows and macOS restore an explicit choice after the master is turned on again; on GNOME, choose it again. Pi makes V idle</td>
+</tr>
+</tbody>
+</table>
+<p>V is made main automatically only when there is <strong>exactly one G, at least one
+V, and no N</strong>, and a current V frame has actually been shown through G. It is
+not automatic when an N is present or multiple glasses displays are detected.
+Windows Direct HMD output puts G outside the desktop and therefore follows the
+HMD-output path instead of this table.</p>
+<p>To choose V with "Make main display", the display must belong to the wall and
+be viewable through the glasses. It cannot be selected while the glasses are
+asleep or a single target is focused. On GNOME, the V choice lasts for the
+current app session; choose it again after master-off, glasses disconnection,
+or restarting the app. Idle sleep preserves the choice across wake. The Pi
+build has no OS-level main-display concept.</p>
 <h3 id="going-idle-and-resuming">Going idle and resuming</h3>
 <p>Virtual displays are only visible through the glasses, so any window left on one
-goes missing when you take the glasses off. <strong>Go idle</strong> disconnects the virtual
+goes missing when you take the glasses off. <strong>Go idle &amp; recall windows</strong> disconnects the virtual
 displays temporarily, and the OS moves their visible windows to the remaining
-displays. <strong>Resume</strong> restores the previous virtual-display configuration.
-Turning the master on with the glasses present resumes automatically.</p>
-<p>On macOS, managed virtual displays also go idle when the Mac sleeps and resume
-shortly after wake, once the physical display layout has settled.</p>
-<p>Nothing goes idle <strong>automatically</strong> when you turn the master switch off or
-disconnect the glasses. On every OS the invisible screens remain reachable
-through the wall map.</p>
+displays. <strong>Resume &amp; restore windows</strong> restores the previous virtual-display
+configuration and the recalled windows. Going idle is unavailable while the
+wall is being shown, so turn the master off first. Resume also works without
+the glasses. Turning the master on with the glasses present resumes automatically.</p>
+<p>Normally, if an N remains available, merely turning the master off or
+disconnecting the glasses does not make V idle. The invisible displays remain
+reachable through the wall map. The exceptions are topologies with no safe
+escape, such as G + V, and the Pi build. The app may also make V idle while the
+computer sleeps to protect the display layout, then resume it after the
+physical displays have settled following wake.</p>
 <h3 id="the-wall-map">The wall map</h3>
 <p>A small window showing the whole wall as a flat map. The virtual displays remain
 mouse-operable there, so you can keep working with the glasses off. Wheel to
 zoom, drag to pan, double-click to fit.</p>
+<p>On Windows, Raspberry Pi, and macOS, the wall map needs a normal display to
+host its window. G cannot host it while showing the wall, so the switch is
+disabled without an N, for example in G + V or G + V + V. With the master off,
+G may be available again as a desktop display. On GNOME, active Shell
+integration allows the map to be hosted on a virtual display, so it can also
+be used without N.</p>
 <blockquote>
 <p>Closing the wall map closes only that window; it does not disconnect any
-virtual display. Use <strong>Go idle</strong> / <strong>Resume</strong> to disconnect and restore them.</p>
+virtual display. Use <strong>Go idle &amp; recall windows</strong> / <strong>Resume &amp; restore windows</strong>
+to disconnect and restore them.</p>
 </blockquote>
 <h3 id="keeping-the-cursor-out-of-trouble">Keeping the cursor out of trouble</h3>
 <p>On Windows and macOS, the glasses display and the virtual displays each have a
 "keep the cursor off" option. With it on, the cursor tunnels through to the
-display on the far side instead of getting stranded. The glasses option is
+display on the far side instead of getting stranded. The virtual-display option,
+"Keep the cursor out while not visible in the glasses", applies while a display
+is invisible, such as during sleep or with the glasses disconnected. When
+focusing one display, that visible virtual display remains mouse-operable;
+the other invisible virtual displays stay fenced. This also applies over the
+Android bridge. The glasses option is
 hidden while the glasses are an HMD outside the desktop, where no cursor can
 enter them. macOS asks for Input Monitoring permission the first time. GNOME and
 Raspberry Pi use different input controls, so this option is not shown there.</p>
@@ -364,10 +452,12 @@ fence.</p>
 </blockquote>
 <h2 id="sound">Sound</h2>
 <h3 id="output">Output</h3>
-<p>The "Audio output" selector at the top decides where the audio you
-hear comes out. "Auto: glasses" switches to the glasses' USB audio once per
+<p>The "Audio output" selector in "Audio Wall" chooses the device that plays
+Spatial Wall's audio. "Auto: glasses" switches to the glasses' USB audio once per
 connection. Pick a specific device and the choice is remembered while that device
 is away, then re-applied when it returns.</p>
+<p>Volume and mute are in the operation panel at the top. While the Android bridge
+is the active output, these controls adjust the phone's media volume instead.</p>
 <h3 id="audio-wall">Audio Wall</h3>
 <p>Turn on spatial audio in the "Audio Wall" category and the app
 finds whatever is playing, then mixes each app so it is heard from the direction
@@ -380,10 +470,9 @@ single direction.</p>
 <h3 id="browser-tabs">Browser tabs</h3>
 <p>On Chrome or Edge 116 or later, install the "nyan Real Audio
 Wall connector" extension to place each tab's audio individually. It works on
-Windows and Linux. Chrome tab capture is not yet supported on macOS. DRM media
-and cross-origin
-media without CORS permission keep playing normally in the browser and are not
-spatialized. Audio generated directly with Web Audio may not be captured either.</p>
+Windows, Linux and macOS. DRM media and cross-origin media without CORS
+permission keep playing normally in the browser and are not spatialized. Audio
+generated directly with Web Audio may not be captured either.</p>
 <h2 id="controlling-it">Controlling it</h2>
 <h3 id="shortcut-keys-remote-shortcut-keys">Shortcut keys ("Remote" &gt; "Shortcut keys")</h3>
 <p>Centering, focus (next / previous / off), toggling 3DoF and the master switch can
@@ -394,8 +483,11 @@ global shortcuts, so these rows are not shown there.</p>
 <h3 id="phone-remote-remote">Phone remote ("Remote")</h3>
 <p>Turns a phone on the same network into a touchpad remote — a PC on wired Ethernet
 and a phone on Wi-Fi still reach each other, as long as it is the same network.
-Scan the QR code with the phone's camera — no app to install. From the page you get mouse control,
-centering, gyro bias recalibration and the screen distance.</p>
+Scan the QR code with the phone's camera — no app to install. The page offers
+mouse control, text input, centering, gyro bias recalibration, focus, and volume.
+Use the keyboard button to compose text on the phone and send it to the PC's
+input field. In the remote's settings, "Display Wall" groups the layout diagram,
+center display, screen distance, size factor, and curve.</p>
 <p>When the QR cannot be scanned (say the glasses are your only display), use
 <strong>Pair with code</strong>: open the URL in the phone's browser and type the 6-digit code
 shown in the app.</p>
@@ -415,20 +507,24 @@ port or want to sit away from the machine. Windows and macOS can send video and
 audio by treating the glasses as an Android external display (Presentation).
 On macOS this uses Screen Recording and Audio Recording permission. The appendix
 lists the tested configuration and known limitations. High quality mode and the
-external Video Input widget remain Windows-only.</p>
+external Video Input widget remain Windows-only.
+On Windows, "High quality mode" is under "Remote" &gt; "Android glasses bridge".
+It sharpens text and fine details, at the cost of more network
+traffic when large parts of the screen change.</p>
 <p>Once the phone app connects, "Remote" shows its state: the glasses' brightness,
 display mode and external display, plus whether the IMU and video channels are
 up. Model-specific settings behave the same over the bridge as they do when the
 glasses are plugged straight into the PC.</p>
-<h3 id="stream-deck-advanced-stream-deck">Stream Deck ("Advanced" &gt; "Stream Deck")</h3>
+<h3 id="stream-deck-remote-stream-deck">Stream Deck ("Remote" &gt; "Stream Deck")</h3>
 <p>Turning on "Accept control from this PC" opens a loopback-only (127.0.0.1)
 control port, so the Stream Deck plugin can trigger the same actions as the
 global hotkeys. It is unreachable from other machines, so there is no token.</p>
 <h3 id="start-at-login-advanced">Start at login ("Advanced")</h3>
 <p>Windows, packaged Linux builds and the macOS app bundle can start with the
 desktop session. macOS may open System Settings &gt; General &gt; Login Items for
-approval. At login, only the resident icon appears; the control window stays
-closed.</p>
+approval. The control window's previous visible or hidden state is remembered.
+Close the window beforehand if you want only the resident icon at login;
+the icon can reopen it at any time.</p>
 <h2 id="tuning-the-picture-and-the-load">Tuning the picture and the load</h2>
 <h3 id="smoothness-power-saving">Smoothness ("Power saving")</h3>
 <ul>
@@ -447,7 +543,7 @@ closed.</p>
 <li><strong>Low-persistence duty</strong> — lowers the OLED duty cycle while your head is
   moving, cutting motion blur at the cost of brightness. XREAL Air and Nreal
   Light only.</li>
-<li><strong>Fullscreen Exclusive</strong> — normally unnecessary. Try it only where scanout
+<li><strong>Glasses Fullscreen Exclusive (Windows, "Advanced")</strong> — normally unnecessary. Try it only where scanout
   falls below the panel's nominal Hz (some NVIDIA hybrid setups). It belongs to
   the desktop path and is disabled while DisplayCore drives an HMD.</li>
 </ul>
@@ -455,7 +551,9 @@ closed.</p>
 <p>Display language defaults to "Auto (follow OS)". You can explicitly choose
 English or Japanese. After changing it, restart Spatial Wall when prompted to
 apply the new language.</p>
-<p>The theme defaults to "Auto (follow OS)"; Light and Dark can be forced.</p>
+<p>The theme defaults to "Auto (follow OS)"; Light and Dark can be forced. With
+Ubuntu 24.04's stock Qt 6.4, Auto uses the light theme and does not follow live
+OS theme changes, while Light and Dark remain available manually.</p>
 <p><img alt="Display language and theme in Appearance settings" src="manual-images/appearance-language-en.png" /></p>
 <h2 id="when-something-is-wrong">When something is wrong</h2>
 <h3 id="the-glasses-are-not-detected">The glasses are not detected</h3>
@@ -504,9 +602,13 @@ Spatial Wall from the glasses. If a virtual display managed by Spatial Wall is
 the main display, the app first moves the main-display role to a visible physical
 display.</p>
 <h3 id="still-stuck">Still stuck</h3>
-<p>"About" &gt; "Copy support information" puts the product, version, build time,
-the OS name and version, and connected glasses on the clipboard. Paste it into "Copied support
-information" in the
+<p>"About" &gt; "Copy support information" puts the product, version, OS, the GPU
+actually used and its driver version when available, connected glasses and
+runtime state, display layout, virtual-display backend and status,
+and support-approved effective settings on the clipboard. With nyan Real /
+Virtual Display Driver, it also includes the driver and app protocol versions.
+Connection tokens, output paths, display and audio-device identifiers, and other
+potentially private or secret settings are excluded. Paste it into "Copied support information" in the
 <a href="https://github.com/8796n/nyan-real-support/issues/new?template=spatial-wall.yml">support form</a>
 without editing it. Select the OS, enter the supported glasses model,
 then fill in "What happened" and "Steps to reproduce" separately. Before
@@ -542,10 +644,10 @@ contain no private or secret information.</p>
 </tr>
 <tr>
 <td>Wall map</td>
-<td>✅</td>
-<td>✅</td>
-<td>✅</td>
-<td>✅ available with the master switch off or the glasses disconnected</td>
+<td>✅ requires N while warping</td>
+<td>✅ can also use V with active Shell integration</td>
+<td>✅ requires N while warping</td>
+<td>✅ requires N while warping; also available with the master off or glasses disconnected</td>
 </tr>
 <tr>
 <td>Cursor fence</td>
@@ -582,12 +684,22 @@ contain no private or secret information.</p>
 <td>—</td>
 <td>🟡 video, 3DoF, and audio verified on Intel Mac; Apple Silicon unverified</td>
 </tr>
+<tr>
+<td>Flat-wall screenshot</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>— the Capture button is visible but does not save a file yet</td>
+</tr>
 </tbody>
 </table>
-<p>macOS as a whole is experimental. Anything unavailable simply does not appear in
-the UI.</p>
+<p>macOS as a whole is experimental. Most host-specific unavailable features are
+hidden from the UI; the flat-wall Capture button is the current exception.</p>
+<p>GNOME Android glasses output is not yet available in standard distributed builds.
+A development build has verified single-desktop video and audio, but does not
+yet support multi-display walls or widget video.</p>
 <h3 id="tested-configurations-and-known-limitations">Tested configurations and known limitations</h3>
-<p>The following results apply to the Spatial Wall 0.9.0 series as of August 2026.</p>
+<p>The following results cover the Spatial Wall 0.9.0 series through September 10, 2026.</p>
 <table>
 <thead>
 <tr>
@@ -606,6 +718,11 @@ the UI.</p>
 <td>macOS Android glasses bridge</td>
 <td>Intel Mac / macOS 15.7 / SC-52D / XREAL Air. Video from one physical and two virtual displays, 3DoF, audio, and automatic reconnection after restarting Spatial Wall were verified.</td>
 <td>Apple Silicon is unverified. High quality mode and external Video Input are Windows-only.</td>
+</tr>
+<tr>
+<td>Windows Android glasses bridge</td>
+<td>Surface Duo / Android 12 / xbx a01+. Remote control, 1080p video, and reconnection verified.</td>
+<td>A 4K display can remain black. Use focus on a 1080p display with this configuration. Head-tracking feel while wearing the glasses, audible playback, and long sessions remain unverified.</td>
 </tr>
 </tbody>
 </table>
