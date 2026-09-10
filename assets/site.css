@@ -126,35 +126,12 @@ h3 { margin: 0 0 8px; font-size: 1.2rem; }
 .button:focus-visible { outline: 3px solid rgba(117, 217, 255, 0.5); outline-offset: 2px; }
 
 .wall-visual {
-  position: relative;
-  min-height: 340px;
-  perspective: 900px;
-}
-
-.screen {
-  position: absolute;
-  width: 68%;
-  aspect-ratio: 16 / 10;
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
   border-radius: 18px;
-  background:
-    linear-gradient(140deg, rgba(117, 217, 255, 0.12), rgba(255, 111, 145, 0.18)),
-    #12172a;
-  box-shadow: inset 0 0 35px rgba(255, 255, 255, 0.04), 0 28px 70px rgba(0, 0, 0, 0.42);
 }
-
-.screen::after {
-  content: "";
-  position: absolute;
-  inset: 17px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 11px;
-  background: linear-gradient(135deg, rgba(255,255,255,.03), transparent 55%);
-}
-
-.screen.one { left: 0; top: 76px; transform: rotateY(27deg) rotateZ(-2deg); }
-.screen.two { right: 0; top: 22px; transform: rotateY(-23deg) rotateZ(2deg); }
-.screen.three { left: 19%; bottom: 0; transform: translateZ(80px); }
 
 .section { padding-block: 72px; }
 .section + .section { border-top: 1px solid var(--line); }
@@ -206,14 +183,13 @@ a.card:hover, a.card:focus-visible { border-color: rgba(117, 217, 255, 0.5); tra
 
 @media (max-width: 860px) {
   .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 64px; }
-  .wall-visual { min-height: 300px; order: -1; }
+  .wall-visual { order: -1; }
   .grid.three, .grid.four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 600px) {
   .nav-links a:not(.language) { display: none; }
   .hero { gap: 28px; padding-block: 44px 56px; }
-  .wall-visual { min-height: 225px; }
   .grid.three, .grid.four { grid-template-columns: 1fr; }
   .section { padding-block: 52px; }
   .button { width: 100%; }
