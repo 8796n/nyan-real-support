@@ -12,9 +12,9 @@
   <meta property="og:image" content="https://support.nyanreal.jp/assets/og.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="../../assets/app-icon.png">
-  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../../assets/site.css?v=spatial-home-2">
 </head>
-<body>
+<body class="support-home">
   <header class="site-header">
     <nav class="shell nav" aria-label="Main navigation">
       <a class="brand" href="./"><img src="../../assets/app-icon.png" alt=""><span>Spatial Wall Support</span></a>
@@ -29,41 +29,32 @@
   </header>
 
   <main>
-    <section class="shell hero">
-      <div>
-        <p class="eyebrow">nyan Real / Spatial Wall</p>
-        <h1>Keep your spatial wall working beautifully.</h1>
-        <p class="lead">Official support for the Windows, macOS, GNOME and Raspberry Pi editions. Find setup guidance, supported glasses and practical troubleshooting in one place.</p>
-        <div class="actions">
-          <a class="button primary" href="../manual/en/">User manual</a>
-          <a class="button" href="https://github.com/8796n/nyan-real-support/issues/new?template=spatial-wall.yml">Get support</a>
-        </div>
-      </div>
+    <section class="shell support-hero" aria-labelledby="support-title">
       <img class="wall-visual" src="../../assets/spatial-wall-support-hero.png" width="1672" height="941" alt="A cat wearing display glasses looks amazed at six virtual screens spread out in front of it" fetchpriority="high" decoding="async">
+      <div class="support-intro">
+        <p class="eyebrow">nyan Real</p>
+        <h1 id="support-title">Spatial Wall<br> <span>Support</span></h1>
+        <p>Setup, supported glasses and help with everyday use, all in one place.</p>
+        <p class="support-platforms">Windows · macOS · GNOME · Raspberry Pi</p>
+      </div>
     </section>
 
-    <section class="section">
-      <div class="shell">
-        <p class="eyebrow">Start here</p>
-        <h2>Go straight to what you need</h2>
-        <p class="section-intro">Use the manual for everyday operation, the platform guide for installation and OS-specific notes, and the compatibility page for glasses support.</p>
-        <div class="grid three">
-          <a class="card" href="../manual/en/"><span class="tag">Manual</span><h3>User manual</h3><p>Connection, wall layout, sound, controls, performance tuning and troubleshooting.</p></a>
-          <a class="card" href="../devices/"><span class="tag">Compatibility</span><h3>Supported glasses</h3><p>Support status for XREAL, RayNeo, Rokid, VITURE, MOVERIO and more.</p></a>
-          <a class="card" href="https://github.com/8796n/nyan-real-support/issues/new?template=spatial-wall.yml"><span class="tag">Support</span><h3>Still stuck?</h3><p>Copy the app's support information and send it through the dedicated form.</p></a>
-        </div>
-      </div>
-    </section>
+    <nav class="shell support-links" aria-label="Support resources">
+      <a class="card" href="../manual/en/"><span class="tag">Manual</span><h2>User manual</h2><p>Connection, wall layout and controls.</p></a>
+      <a class="card" href="guide/"><span class="tag">Setup</span><h2>Platform guide</h2><p>Installation and OS-specific notes.</p></a>
+      <a class="card" href="../devices/"><span class="tag">Glasses</span><h2>Supported glasses</h2><p>Check models and available features.</p></a>
+      <a class="card" href="https://github.com/8796n/nyan-real-support/issues/new?template=spatial-wall.yml"><span class="tag">Support</span><h2>Get support</h2><p>Ask for help with an unresolved issue.</p></a>
+    </nav>
 
     <section class="section" id="platforms">
       <div class="shell">
-        <p class="eyebrow">Platforms</p>
-        <h2>Four supported environments</h2>
+        <h2>Find your platform</h2>
+        <p class="section-intro">Installation steps and system requirements.</p>
         <div class="grid four">
-          <a class="card" href="guide/#windows"><span class="tag">Windows</span><h3>Windows edition</h3><p>64-bit Windows 10 build 19041 or later.</p></a>
-          <a class="card" href="guide/#macos"><span class="tag">macOS</span><h3>macOS</h3><p>macOS 14.4 or later. Currently experimental.</p></a>
-          <a class="card" href="guide/#gnome"><span class="tag">Linux</span><h3>GNOME</h3><p>GNOME 46 or later in a Wayland session.</p></a>
-          <a class="card" href="guide/#pi"><span class="tag">Raspberry Pi</span><h3>Pi / labwc</h3><p>Raspberry Pi OS trixie or later.</p></a>
+          <a class="card" href="guide/#windows"><h3>Windows</h3><p>64-bit Windows 10 build 19041 or later.</p></a>
+          <a class="card" href="guide/#macos"><h3>macOS</h3><p>macOS 14.4 or later. Currently experimental.</p></a>
+          <a class="card" href="guide/#gnome"><h3>GNOME</h3><p>GNOME 46 or later in a Wayland session.</p></a>
+          <a class="card" href="guide/#pi"><h3>Raspberry Pi / labwc</h3><p>Raspberry Pi OS trixie or later.</p></a>
         </div>
       </div>
     </section>
@@ -71,7 +62,7 @@
     <section class="section">
       <div class="shell">
         <div class="callout">
-          <h3>Before contacting support</h3>
+          <h2>Before contacting support</h2>
           <p>Open Spatial Wall's About page and choose “Copy info for a bug report.” Paste the resulting version, build time and connected-glasses information into the support form.</p>
         </div>
       </div>

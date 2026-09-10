@@ -12,9 +12,9 @@
   <meta property="og:image" content="https://support.nyanreal.jp/assets/og.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="../assets/app-icon.png">
-  <link rel="stylesheet" href="../assets/site.css">
+  <link rel="stylesheet" href="../assets/site.css?v=spatial-home-2">
 </head>
-<body>
+<body class="support-home">
   <header class="site-header">
     <nav class="shell nav" aria-label="メインナビゲーション">
       <a class="brand" href="./"><img src="../assets/app-icon.png" alt=""><span>Spatial Wall Support</span></a>
@@ -29,42 +29,32 @@
   </header>
 
   <main>
-    <section class="shell hero">
-      <div>
-        <p class="eyebrow">nyan Real / Spatial Wall</p>
-        <h1>空間ウォールを、<br>気持ちよく使い続ける。</h1>
-        <p class="lead">Windows版、macOS版、GNOME版、Raspberry Pi版の公式サポートサイトです。使い方、対応メガネの情報、困ったときの確認手順をまとめています。</p>
-        <div class="actions">
-          <a class="button primary" href="manual/ja/">ユーザーマニュアル</a>
-          <a class="button" href="https://github.com/8796n/nyan-real-support/issues/new?template=spatial-wall.yml">問い合わせる</a>
-        </div>
-      </div>
+    <section class="shell support-hero" aria-labelledby="support-title">
       <img class="wall-visual" src="../assets/spatial-wall-support-hero.png" width="1672" height="941" alt="メガネをかけた猫が、目の前に広がる6枚のディスプレイに驚いているイラスト" fetchpriority="high" decoding="async">
+      <div class="support-intro">
+        <p class="eyebrow">nyan Real</p>
+        <h1 id="support-title">Spatial Wall<br> <span>サポート</span></h1>
+        <p>使い方、対応メガネ、困ったときの確認手順をまとめています。</p>
+        <p class="support-platforms">Windows · macOS · GNOME · Raspberry Pi</p>
+      </div>
     </section>
 
-    <section class="section">
-      <div class="shell">
-        <p class="eyebrow">Start here</p>
-        <h2>必要な情報へすぐに</h2>
-        <p class="section-intro">アプリの操作はマニュアル、導入やOS固有の注意点はOS別ガイド、メガネの対応状況は対応メガネページから確認できます。</p>
-        <div class="grid three">
-          <a class="card" href="manual/ja/"><span class="tag">Manual</span><h3>ユーザーマニュアル</h3><p>接続、ウォール構成、音、操作、負荷調整、トラブル対処まで。</p></a>
-          <a class="card" href="devices/"><span class="tag">Compatibility</span><h3>対応メガネ</h3><p>XREAL、RayNeo、Rokid、VITURE、MOVERIOなどの対応状況。</p></a>
-          <a class="card" href="https://github.com/8796n/nyan-real-support/issues/new?template=spatial-wall.yml"><span class="tag">Support</span><h3>解決しないとき</h3><p>バージョン情報をコピーして、専用フォームからお問い合わせください。</p></a>
-        </div>
-      </div>
-    </section>
+    <nav class="shell support-links" aria-label="サポートメニュー">
+      <a class="card" href="manual/ja/"><span class="tag">Manual</span><h2>マニュアル</h2><p>接続・ウォール構成・操作方法。</p></a>
+      <a class="card" href="guide/"><span class="tag">Setup</span><h2>OS別ガイド</h2><p>インストールと環境ごとの注意点。</p></a>
+      <a class="card" href="devices/"><span class="tag">Glasses</span><h2>対応メガネ</h2><p>使える機種と機能を確認。</p></a>
+      <a class="card" href="https://github.com/8796n/nyan-real-support/issues/new?template=spatial-wall.yml"><span class="tag">Support</span><h2>問い合わせ</h2><p>解決しない問題を相談。</p></a>
+    </nav>
 
     <section class="section" id="platforms">
       <div class="shell">
-        <p class="eyebrow">Platforms</p>
-        <h2>4つの環境をサポート</h2>
-        <p class="section-intro">共通のSpatial Wallアプリを、各OSの画面・音声・入力の仕組みに合わせて提供します。</p>
+        <h2>お使いのOSから探す</h2>
+        <p class="section-intro">導入手順と動作要件はこちら。</p>
         <div class="grid four">
-          <a class="card" href="guide/#windows"><span class="tag">Windows</span><h3>Windows版</h3><p>Windows 10 build 19041以降、64bit。</p></a>
-          <a class="card" href="guide/#macos"><span class="tag">macOS</span><h3>macOS版</h3><p>macOS 14.4以降。現在は実験的対応です。</p></a>
-          <a class="card" href="guide/#gnome"><span class="tag">Linux</span><h3>GNOME版</h3><p>GNOME 46以降のWaylandセッション。</p></a>
-          <a class="card" href="guide/#pi"><span class="tag">Raspberry Pi</span><h3>Pi / labwc版</h3><p>Raspberry Pi OS trixie以降。</p></a>
+          <a class="card" href="guide/#windows"><h3>Windows</h3><p>Windows 10 build 19041以降、64bit。</p></a>
+          <a class="card" href="guide/#macos"><h3>macOS</h3><p>macOS 14.4以降。現在は実験的対応です。</p></a>
+          <a class="card" href="guide/#gnome"><h3>GNOME</h3><p>GNOME 46以降のWaylandセッション。</p></a>
+          <a class="card" href="guide/#pi"><h3>Raspberry Pi / labwc</h3><p>Raspberry Pi OS trixie以降。</p></a>
         </div>
       </div>
     </section>
@@ -72,7 +62,7 @@
     <section class="section">
       <div class="shell">
         <div class="callout">
-          <h3>問い合わせ前に「問い合わせ用情報をコピー」</h3>
+          <h2>問い合わせる前に</h2>
           <p>Spatial Wallの「バージョン情報」を開き、「問い合わせ用情報をコピー」を押してください。バージョン、ビルド時刻、接続中のメガネがまとまり、問い合わせフォームへそのまま貼り付けられます。</p>
         </div>
       </div>
