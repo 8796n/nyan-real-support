@@ -133,12 +133,15 @@ h3 { margin: 0 0 8px; font-size: 1.2rem; }
   border-radius: 18px;
 }
 
+.support-back { padding-top: 12px; font-size: 0.875rem; }
+.support-back a { display: inline-flex; align-items: center; min-height: 36px; color: var(--accent-2); text-underline-offset: 0.2em; }
+
 .support-hero {
   display: grid;
   grid-template-columns: minmax(0, 2.4fr) minmax(0, 1fr);
   align-items: center;
   gap: 36px;
-  padding-block: 40px 32px;
+  padding-block: 20px 32px;
 }
 
 .support-intro h1 { font-size: clamp(1.75rem, 2.6vw, 2.25rem); line-height: 1.35; }
