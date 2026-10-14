@@ -108,6 +108,7 @@ footer { color: var(--muted); font-size: 0.85rem; margin-top: 3rem; }
 </ul>
 </li>
 <li><a href="#controlling-it">Controlling it</a><ul>
+<li><a href="#view-pointer">View pointer</a></li>
 <li><a href="#shortcut-keys-remote-shortcut-keys">Shortcut keys ("Remote" &gt; "Shortcut keys")</a></li>
 <li><a href="#phone-remote-remote">Phone remote ("Remote")</a></li>
 <li><a href="#android-glasses-bridge-remote">Android glasses bridge ("Remote")</a></li>
@@ -254,12 +255,18 @@ down the left.</p>
 <li><strong>Wall map</strong> — shows the wall as a small flat map (see below).</li>
 </ul>
 <p><img alt="The Spatial Wall operation panel and Glasses settings" src="manual-images/control-window-en.png" /></p>
-<p>You can go through the settings before connecting anything. Once the connected
-glasses are detected and head tracking starts, the status changes to "3DoF
-running".</p>
+<p>You can go through the settings before connecting anything. Once the glasses are
+connected and ready for display, the status changes to "Running". The "3DoF"
+switch at the top shows whether head tracking is enabled.</p>
+<p>Click a <strong>heading with a ▶ arrow</strong> to expand or collapse the advanced adjustments
+in Display Wall or Audio Wall, or the Glasses settings.
+These groups start collapsed and keep their open or closed state when you switch
+categories until you quit the app. Collapsing a group does not change its settings.
+Basic controls such as layout, screen curve, and audio enable and output remain
+visible, as do all Tap controls, Remote control, Power saving, and Video effects settings.</p>
 <h2 id="connecting-the-glasses">Connecting the glasses</h2>
 <p>Turn the master switch on and plug in over USB for automatic detection. Click
-the <strong>status indicator</strong> at the top (such as "3DoF running") to check the detected
+the <strong>status indicator</strong> at the top (such as "Running") to check the detected
 model, IMU transport, and glasses display. The <strong>Glasses</strong> category contains
 display mode, SBS output, FoV, and related settings.</p>
 <p>In the normal display path, the glasses need to be a <strong>separate extended
@@ -281,12 +288,15 @@ path is active. See "Tested configurations and known limitations" in the
 appendix for eligibility and tested hardware.</p>
 <p>Once connected, check these three.</p>
 <ol>
-<li><strong>Display mode</strong> — 2D or 3D SBS, and the refresh rate. On supported models,
-   72 Hz and 90 Hz modes also lower the OLED duty cycle, reducing motion blur.
+<li><strong>Display mode</strong> — 2D or 3D SBS, and the refresh rate.
    "Restore saved display mode on connection" is off by default. Manual choices
    are remembered even while it is off, and the setting also restores normal
    modes. If the last remembered mode is HMD-capable, enable it only on a PC that
-   enters that mode reliably.</li>
+   enters that mode reliably.
+   When XREAL One / One Pro / 1S is connected directly to the PC, both 2D and
+   3D SBS use 60 Hz modes while the master switch is on. Other refresh rates
+   are unavailable during this time, and this startup mode selection takes
+   priority over restoring a saved display mode.</li>
 <li><strong>SBS output</strong> — "Auto" gets most modes right. Only half-SBS modes cannot be
    told apart by resolution, so switch those on by hand.</li>
 <li><strong>Brightness and volume</strong> — use the operation panel at the top. Controls such as
@@ -300,7 +310,9 @@ play/pause, volume, centering and so on. If the response is unreliable, calibrat
 from the "Tap controls" category — the prompts appear inside the glasses.</p>
 <h3 id="idle-sleep">Idle sleep</h3>
 <p>After a period without motion the app sleeps and blanks the
-screen; move to wake it. The timeout and sensitivity live under "Power saving".</p>
+screen; move to wake it. The timeout and sensitivity live under "Power saving".
+The idle-sleep switch, timeout, and sensitivity share one card. Frame skip and
+wall capture rate appear in a separate card and work independently of idle sleep.</p>
 <h2 id="building-the-wall">Building the wall</h2>
 <p>The <strong>Display Wall</strong> category decides which displays join the wall and how they
 are arranged.</p>
@@ -319,6 +331,9 @@ display settings are reflected in the wall as well.</p>
 <p>Turn on "Show display borders" to add a thin black separator between adjacent displays.
 There are no numeric controls for display gaps or outer padding.</p>
 <h3 id="setting-your-viewpoint">Setting your viewpoint</h3>
+<p>"Center on display" appears directly below the diagram in "Display Wall", followed
+by screen curve and folding-screen mode. Open <strong>Advanced adjustments</strong> to change
+display borders, screen distance, or size factor.</p>
 <ul>
 <li><strong>Center</strong> — makes the direction you are facing forward. Nominate a display and
   that display is what ends up in front of you.</li>
@@ -340,9 +355,15 @@ the wall. Click its tile to show or hide it, drag to move it, drag its lower-rig
 corner to resize it, and right-click to open its settings.</p>
 <h2 id="virtual-displays">Virtual displays</h2>
 <p>Short on physical monitors? Add <strong>virtual displays</strong> and the wall grows.
-Choose a resolution under "Virtual displays" at the bottom of "Display Wall",
+Choose a resolution under "Virtual displays" in "Display Wall",
 then click "Add". You can also right-click empty space in the diagram to add one.
 Right-click a virtual-display tile to change its resolution or remove it.</p>
+<p>Right-click either a physical (N) or virtual (V) display to choose an OS-supported
+resolution or display scale. Resolutions are sorted by width and height, largest
+first; scales are sorted smallest first. Choices depend on the display and OS.
+On macOS, scale selects the available standard/HiDPI modes for the pixel resolution.
+On labwc, enter a percentage because the compositor does not provide a scale list.
+Unavailable settings remain disabled with an explanation in the tooltip.</p>
 <p>On Windows this needs a driver — <strong>nyan Real / Virtual Display Driver</strong>
 (recommended) or <strong>ParsecVDisplay</strong>. <strong>Drivers are not bundled</strong>, so install one
 separately. Linux and macOS use the OS's own support and need nothing installed.</p>
@@ -474,12 +495,38 @@ Windows, Linux and macOS. DRM media and cross-origin media without CORS
 permission keep playing normally in the browser and are not spatialized. Audio
 generated directly with Web Audio may not be captured either.</p>
 <h2 id="controlling-it">Controlling it</h2>
+<h3 id="view-pointer">View pointer</h3>
+<p>On Windows, GNOME Wayland, Raspberry Pi (labwc) and macOS, directly connected glasses can move the OS cursor
+with your head direction. Enable "View pointer" in the top operation panel;
+it is off by default. The glasses must be connected and calibrated,
+with head tracking enabled. Gaze control starts after the mouse is idle and yields
+when mouse movement exceeds the tolerance. Adjust both values under "Glasses" &gt;
+"Glasses display &amp; output".</p>
+<p>GNOME requires the bundled Shell extension. Log out and back in after installing
+or updating the package. On macOS, allow Spatial Wall in System Settings &gt; Privacy
+&amp; Security &gt; Accessibility and Input Monitoring. Restart the app if macOS requests it.
+Without these permissions, gaze movement remains stopped.
+On Pi, the logged-in user needs read access to pointing devices such as the mouse.
+Small physical mouse movements still reach the OS and may briefly move the cursor during gaze control.</p>
+<p>GNOME, Pi and macOS support cursor movement and left-button dragging inside wall desktops;
+widget clicks, menus and moving widgets are unsupported. When looking at a widget
+or empty space, the cursor stays at its last desktop position, and <strong>clicks still
+go to that position</strong>. Detecting mouse movement and held buttons may be delayed;
+the OS handles left, right and middle clicks normally. Holding the right or middle
+button freezes gaze movement. Android glasses bridge is not yet supported.</p>
 <h3 id="shortcut-keys-remote-shortcut-keys">Shortcut keys ("Remote" &gt; "Shortcut keys")</h3>
 <p>Centering, focus (next / previous / off), toggling 3DoF and the master switch can
-be bound to global hotkeys on Windows, Raspberry Pi (labwc) and macOS. They keep
-working while another app has the foreground. On macOS, the default master
-shortcut is Control+Shift+Esc. The GNOME build does not yet register
-global shortcuts, so these rows are not shown there.</p>
+be bound to global hotkeys on Windows, GNOME, Raspberry Pi (labwc) and macOS.
+They keep working while another app has the foreground. On GNOME and macOS,
+the default master shortcut is Control+Shift+Esc.</p>
+<p>Select a field and press the new combination, then click outside the field to
+apply it. Use the field’s clear button to disable a shortcut, or <strong>Reset to
+defaults</strong> to restore all shortcuts. Combinations reserved by the desktop or
+another app may not work. GNOME manages these as standard custom shortcuts
+while Spatial Wall is running; edit them in Spatial Wall. No logout is needed.</p>
+<p>"Toggle view pointer" defaults to Ctrl+Alt+P on Windows, GNOME and Pi, and
+Control+Shift+P on macOS. This experimental
+feature supports glasses connected to the PC and shows an in-glasses on/off confirmation.</p>
 <h3 id="phone-remote-remote">Phone remote ("Remote")</h3>
 <p>Turns a phone on the same network into a touchpad remote — a PC on wired Ethernet
 and a phone on Wi-Fi still reach each other, as long as it is the same network.
@@ -506,11 +553,8 @@ to the wall on your PC. This is useful when you would rather not tie up a PC
 port or want to sit away from the machine. Windows and macOS can send video and
 audio by treating the glasses as an Android external display (Presentation).
 On macOS this uses Screen Recording and Audio Recording permission. The appendix
-lists the tested configuration and known limitations. High quality mode and the
-external Video Input widget remain Windows-only.
-On Windows, "High quality mode" is under "Remote" &gt; "Android glasses bridge".
-It sharpens text and fine details, at the cost of more network
-traffic when large parts of the screen change.</p>
+lists the tested configuration and known limitations. The external Video Input
+widget remains Windows-only.</p>
 <p>Once the phone app connects, "Remote" shows its state: the glasses' brightness,
 display mode and external display, plus whether the IMU and video channels are
 up. Model-specific settings behave the same over the bridge as they do when the
@@ -519,6 +563,9 @@ glasses are plugged straight into the PC.</p>
 <p>Turning on "Accept control from this PC" opens a loopback-only (127.0.0.1)
 control port, so the Stream Deck plugin can trigger the same actions as the
 global hotkeys. It is unreachable from other machines, so there is no token.</p>
+<p>Plugin 0.1.36 and later includes "Toggle view pointer" for supported configurations
+with glasses connected to the PC. Add it to a key to toggle the mode and see its current setting,
+including changes made through settings or hotkeys.</p>
 <h3 id="start-at-login-advanced">Start at login ("Advanced")</h3>
 <p>Windows, packaged Linux builds and the macOS app bundle can start with the
 desktop session. macOS may open System Settings &gt; General &gt; Login Items for
@@ -540,9 +587,12 @@ the icon can reopen it at any time.</p>
 </ul>
 <h3 id="blur-and-flicker-glasses">Blur and flicker (Glasses)</h3>
 <ul>
-<li><strong>Low-persistence duty</strong> — lowers the OLED duty cycle while your head is
-  moving, cutting motion blur at the cost of brightness. XREAL Air and Nreal
-  Light only.</li>
+<li><strong>Automatic low persistence</strong> — XREAL Air and a01 families use the glasses'
+  low-persistence brightness curve while 3DoF is enabled and return to the
+  factory curve when it is disabled. No Duty adjustment is needed.</li>
+<li><strong>Nreal Light</strong> — uses the glasses' normal drive in 2D and low-persistence drive
+  in 3D. Adjust brightness with the glasses' buttons or the app; there is no manual
+  Duty setting. The Android glasses bridge currently supports 2D only.</li>
 <li><strong>Glasses Fullscreen Exclusive (Windows, "Advanced")</strong> — normally unnecessary. Try it only where scanout
   falls below the panel's nominal Hz (some NVIDIA hybrid setups). It belongs to
   the desktop path and is disabled while DisplayCore drives an HMD.</li>
@@ -562,7 +612,8 @@ OS theme changes, while Light and Dark remain available manually.</p>
   work.</li>
 <li>On XREAL One-family models, USB Ethernet / TCP/IP must be enabled on the glasses.
   3DoF will not work without it (the app says so inside the glasses).</li>
-<li>In DP audio mode the app cannot acquire sensor data. Switch the glasses to USB audio.</li>
+<li>On XREAL Air-family / xbx a01-family models, DP audio mode disconnects the USB
+  sensor connection, so the app cannot acquire sensor data. Switch the glasses to USB audio.</li>
 </ul>
 <h3 id="nothing-shows-in-the-glasses-or-the-desktop-vanished">Nothing shows in the glasses, or the desktop vanished</h3>
 <ul>
@@ -657,6 +708,13 @@ contain no private or secret information.</p>
 <td>✅ requires Input Monitoring permission</td>
 </tr>
 <tr>
+<td>View pointer</td>
+<td>🟡 PC connection</td>
+<td>🟡 PC connection and Shell integration required; desktops only</td>
+<td>🟡 Direct connection; input-device read access required; desktops only</td>
+<td>🟡 PC connection; Accessibility and Input Monitoring required; desktops only</td>
+</tr>
+<tr>
 <td>Tap controls</td>
 <td>✅</td>
 <td>✅</td>
@@ -673,14 +731,14 @@ contain no private or secret information.</p>
 <tr>
 <td>Global hotkeys</td>
 <td>✅</td>
-<td>—</td>
+<td>✅</td>
 <td>✅</td>
 <td>✅</td>
 </tr>
 <tr>
 <td>Android glasses bridge output</td>
 <td>✅</td>
-<td>—</td>
+<td>✅ video, widgets, 3DoF, and audio</td>
 <td>—</td>
 <td>🟡 video, 3DoF, and audio verified on Intel Mac; Apple Silicon unverified</td>
 </tr>
@@ -695,9 +753,11 @@ contain no private or secret information.</p>
 </table>
 <p>macOS as a whole is experimental. Most host-specific unavailable features are
 hidden from the UI; the flat-wall Capture button is the current exception.</p>
-<p>GNOME Android glasses output is not yet available in standard distributed builds.
-A development build has verified single-desktop video and audio, but does not
-yet support multi-display walls or widget video.</p>
+<p>GNOME Android glasses output is included in standard builds from October 4, 2026.
+It supports physical and virtual displays, widget video, 3DoF, and Audio Wall.
+Keep a physical PC screen available for login and unlocking: the GNOME lock screen
+cannot be streamed to Android. Cursor movement shares the video frame rate. Multiple displays can increase CPU load and latency.
+Hardware verification so far used GNOME 50.1 and SC-52D; other combinations remain unverified.</p>
 <h3 id="tested-configurations-and-known-limitations">Tested configurations and known limitations</h3>
 <p>The following results cover the Spatial Wall 0.9.0 series through September 10, 2026.</p>
 <table>
@@ -717,7 +777,7 @@ yet support multi-display walls or widget video.</p>
 <tr>
 <td>macOS Android glasses bridge</td>
 <td>Intel Mac / macOS 15.7 / SC-52D / XREAL Air. Video from one physical and two virtual displays, 3DoF, audio, and automatic reconnection after restarting Spatial Wall were verified.</td>
-<td>Apple Silicon is unverified. High quality mode and external Video Input are Windows-only.</td>
+<td>Apple Silicon is unverified. External Video Input is Windows-only.</td>
 </tr>
 <tr>
 <td>Windows Android glasses bridge</td>
@@ -729,6 +789,17 @@ yet support multi-display walls or widget video.</p>
 <h3 id="where-settings-live">Where settings live</h3>
 <p>Settings and logs are under <code>%APPDATA%\nyan-real\</code> (the platform's user config
 directory on Linux and macOS). You can open the log-storage folder from the app.</p>
+<p>A failed save leaves the saved file intact. When settings change, the previous valid
+settings are kept in <code>settings.json.bak</code>; saving identical contents does not rotate
+the backup. If <code>settings.json</code> is missing or damaged at startup, the app recovers a
+readable backup and shows a notice in the window and through the tray icon.
+Recent changes may be missing.</p>
+<p>If neither file can be read, the app starts with defaults and pauses saving to
+preserve the original files. Restore the files and restart, or use "Advanced" &gt;
+"Reset settings to defaults" to resume saving. For a save failure, check disk space,
+folder permissions, and the log. Change a setting after fixing the cause to retry.
+Backups also contain connection tokens and other private settings; do not attach
+them directly to a support request.</p>
 <h3 id="resetting">Resetting</h3>
 <p>"Advanced" &gt; "Reset settings to defaults" returns everything to its initial
 state. This cannot be undone.</p>
