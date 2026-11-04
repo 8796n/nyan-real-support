@@ -16,6 +16,12 @@ First-party component under separate terms:
   distributions.
 
 Bundled with this application:
+- BoringSSL and Fiat Cryptography (LAN pairing)
+  https://boringssl.googlesource.com/boringssl
+  Revision: fd0ed4d0a1273570612a08a31bace08e4dd73c81
+  License: Apache-2.0. The unmodified library is statically linked with private,
+  prefixed symbols. Full upstream license and author notices, including Fiat
+  and the additional upstream Go test terms, are in licenses/boringssl.txt.
 - Qt 6 (Core / Gui / Widgets / Network / Qml / Quick / QuickWidgets / OpenGL)
   https://www.qt.io/
   License: LGPL-3.0 (open-source edition)
