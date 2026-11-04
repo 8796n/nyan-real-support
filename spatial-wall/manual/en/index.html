@@ -112,6 +112,7 @@ footer { color: var(--muted); font-size: 0.85rem; margin-top: 3rem; }
 <li><a href="#shortcut-keys-remote-shortcut-keys">Shortcut keys ("Remote" &gt; "Shortcut keys")</a></li>
 <li><a href="#phone-remote-remote">Phone remote ("Remote")</a></li>
 <li><a href="#android-glasses-bridge-remote">Android glasses bridge ("Remote")</a></li>
+<li><a href="#connecting-to-rdp-from-android">Connecting to RDP from Android</a></li>
 <li><a href="#stream-deck-remote-stream-deck">Stream Deck ("Remote" &gt; "Stream Deck")</a></li>
 <li><a href="#start-at-login-advanced">Start at login ("Advanced")</a></li>
 </ul>
@@ -151,8 +152,8 @@ This manual covers connection, basic setup, everyday use, and troubleshooting.</
 <p>Individual settings explain themselves — hover any control in the app for its
 tooltip. This manual covers what comes before that: what each part is for, and
 in what order to use it.</p>
-<p>The text and screenshots reflect the 0.9.0 development build as of September 10,
-2026. Screenshots show the Windows build with XREAL 1S connected and the master
+<p>Support information reflects implementation and test records through October 26,
+2026. Screenshots show the September 10 development build on Windows with XREAL 1S connected and the master
 switch on. Available settings and controls vary by OS and glasses model.</p>
 <h2 id="about-this-app">About this app</h2>
 <p>Connect a supported pair of glasses over USB and your PC's displays are arranged
@@ -168,7 +169,7 @@ can both join, and sound can come from where each window sits.</p>
 <li><strong>Audio Wall</strong> — finds the apps that are playing audio and mixes them so each
   one is heard from the direction of its window. No per-app setup.</li>
 </ul>
-<p><strong>It contacts no server on the internet.</strong> It makes no automatic update check
+<p><strong>The Spatial Wall desktop app contacts no server on the internet.</strong> It makes no automatic update check
 and sends no usage or crash data. Network communication is limited to these
 local paths:</p>
 <ul>
@@ -177,9 +178,11 @@ local paths:</p>
 <li><strong>Tab audio from the Chrome extension</strong> — loopback on the same PC (<code>127.0.0.1</code>)</li>
 <li><strong>Local control from Stream Deck and similar tools</strong> — loopback on the same PC (<code>127.0.0.1</code>)</li>
 </ul>
+<p>The Android app's RDP client contacts an internet server only when you connect
+through an RD Gateway you specify. Direct RDP connections are limited to the LAN.</p>
 <p>Support is not automated either. To report a problem you copy the details from
 "About" and paste them into a GitHub Issue by hand.</p>
-<p><strong>Supported glasses</strong>: XREAL (One Pro / One / 1S / Air 2 Pro / Air 2 / Air),
+<p><strong>Supported glasses</strong>: XREAL (One Pro / 1 Pro+ / One / 1S / Air 2 Pro / Air 2 / Air),
 ROG XREAL R1, xbx a01 / a01+, RayNeo Air, Rokid (Max / Air),
 VITURE (Pro / One / One Lite), EPSON MOVERIO (BT-40 / BT-30C), Nreal Light and
 MAD Gaze Glow. What each model can do differs — see
@@ -196,7 +199,7 @@ for the details.</p>
 <tbody>
 <tr>
 <td>Windows</td>
-<td>64-bit Windows 10 version 2004 (build 19041) or later</td>
+<td>64-bit Windows 10 version 2004 (build 19041) or later. Audio Wall capture of individual apps requires Windows 11 or later</td>
 </tr>
 <tr>
 <td>Linux (GNOME)</td>
@@ -513,7 +516,11 @@ widget clicks, menus and moving widgets are unsupported. When looking at a widge
 or empty space, the cursor stays at its last desktop position, and <strong>clicks still
 go to that position</strong>. Detecting mouse movement and held buttons may be delayed;
 the OS handles left, right and middle clicks normally. Holding the right or middle
-button freezes gaze movement. Android glasses bridge is not yet supported.</p>
+button freezes gaze movement. The Android glasses bridge also supports view
+pointer; cursor tracking, clicks and dragging were checked on Windows with SC-52D.
+Equivalent worn-glasses checks with GNOME/macOS hosts remain pending.
+Standalone Android RDP also provides the view-pointer button and sends pointer
+input to the PC whose screen you are looking at.</p>
 <h3 id="shortcut-keys-remote-shortcut-keys">Shortcut keys ("Remote" &gt; "Shortcut keys")</h3>
 <p>Centering, focus (next / previous / off), toggling 3DoF and the master switch can
 be bound to global hotkeys on Windows, GNOME, Raspberry Pi (labwc) and macOS.
@@ -538,6 +545,10 @@ center display, screen distance, size factor, and curve.</p>
 <p>When the QR cannot be scanned (say the glasses are your only display), use
 <strong>Pair with code</strong>: open the URL in the phone's browser and type the 6-digit code
 shown in the app.</p>
+<p>To remove all registered devices, select <strong>Forget all devices</strong> under <strong>Remote</strong>
+on the PC. This also removes registrations for devices that are currently offline.
+Each device must pair again, for example by scanning the QR code, before reconnecting.
+The QR code is for scanning; clicking it on the PC does not remove registrations.</p>
 <blockquote>
 <p>If Windows Firewall asks on first enable, choose "Allow access". Only devices
 on your own network can reach it, and any device that does not know the token
@@ -550,7 +561,7 @@ shared or public Wi-Fi.</p>
 <p>A way to connect the glasses to an <strong>Android phone</strong> instead of the PC. The app
 on the phone handles the USB connection and relays video and head orientation
 to the wall on your PC. This is useful when you would rather not tie up a PC
-port or want to sit away from the machine. Windows and macOS can send video and
+port or want to sit away from the machine. Windows, GNOME and macOS can send video and
 audio by treating the glasses as an Android external display (Presentation).
 On macOS this uses Screen Recording and Audio Recording permission. The appendix
 lists the tested configuration and known limitations. The external Video Input
@@ -559,6 +570,33 @@ widget remains Windows-only.</p>
 display mode and external display, plus whether the IMU and video channels are
 up. Model-specific settings behave the same over the bridge as they do when the
 glasses are plugged straight into the PC.</p>
+<h3 id="connecting-to-rdp-from-android">Connecting to RDP from Android</h3>
+<p>Choose "RDP" on the Android home screen, or open "RDP destinations" from "…".
+Register the PC's hostname, username and optional domain. For access outside the
+LAN, register an RD Gateway in the destination screen's settings and select it
+for the PC. Gateway credentials can be shared, match the PC's credentials, or be
+specific to that PC. The PC must accept RDP connections; the Spatial Wall desktop
+app is not required.</p>
+<p>Destinations are encrypted on the phone. Unlocking and saving require biometrics
+or the device's screen-lock authentication. Saving passwords is optional.
+Closing the destination screen locks the saved data and keeps active sessions
+running. Use "Disconnect RDP" in "…" to disconnect. Saved data is excluded from
+backups and device migration; reinstalling or losing the encryption key requires
+registering it again. Resetting saved destinations deletes all entries and keys.</p>
+<p>An untrusted certificate or a hostname mismatch stops the connection for review.
+Compare the SHA-256 fingerprint with the PC or Gateway through a trusted channel,
+then use "Trust and save" with device authentication to trust it for that
+destination. Certificate changes require another review; expired or malformed
+certificates are rejected. Direct connections are LAN-only. Browser sign-in and
+interactive MFA are unsupported.</p>
+<p>Arrange multiple PCs and multiple monitors per connection in a wall of up to
+15 screens. Per-screen resolution, focus, touchpad and keyboard input, view
+pointer, 3DoF, supported glasses' 6DoF, and audio playback are available.
+Clipboard, file and microphone forwarding are unsupported. On SC-52D, device
+authentication, encrypted storage, Gateway video/input/glasses audio, multiple
+PCs, and arranging three 4K screens have been checked. Long sessions and other
+phones and Gateway configurations remain under validation. Third-party licenses
+are available from the destination screen's settings.</p>
 <h3 id="stream-deck-remote-stream-deck">Stream Deck ("Remote" &gt; "Stream Deck")</h3>
 <p>Turning on "Accept control from this PC" opens a loopback-only (127.0.0.1)
 control port, so the Stream Deck plugin can trigger the same actions as the
@@ -592,7 +630,9 @@ the icon can reopen it at any time.</p>
   factory curve when it is disabled. No Duty adjustment is needed.</li>
 <li><strong>Nreal Light</strong> — uses the glasses' normal drive in 2D and low-persistence drive
   in 3D. Adjust brightness with the glasses' buttons or the app; there is no manual
-  Duty setting. The Android glasses bridge currently supports 2D only.</li>
+  Duty setting. The Android glasses bridge also supports Full-SBS at 60 Hz,
+  including IPD parallax with 6DoF tracking. If switching back to SBS fails,
+  wait briefly, then turn the master off and on again.</li>
 <li><strong>Glasses Fullscreen Exclusive (Windows, "Advanced")</strong> — normally unnecessary. Try it only where scanout
   falls below the panel's nominal Hz (some NVIDIA hybrid setups). It belongs to
   the desktop path and is disabled while DisplayCore drives an HMD.</li>
@@ -604,6 +644,9 @@ apply the new language.</p>
 <p>The theme defaults to "Auto (follow OS)"; Light and Dark can be forced. With
 Ubuntu 24.04's stock Qt 6.4, Auto uses the light theme and does not follow live
 OS theme changes, while Light and Dark remain available manually.</p>
+<p>"Show cursor direction compass" shows or hides the system tray compass that points
+toward the mouse cursor. It is on by default. Changes apply immediately and are
+remembered the next time Spatial Wall starts.</p>
 <p><img alt="Display language and theme in Appearance settings" src="manual-images/appearance-language-en.png" /></p>
 <h2 id="when-something-is-wrong">When something is wrong</h2>
 <h3 id="the-glasses-are-not-detected">The glasses are not detected</h3>
@@ -709,10 +752,10 @@ contain no private or secret information.</p>
 </tr>
 <tr>
 <td>View pointer</td>
-<td>🟡 PC connection</td>
-<td>🟡 PC connection and Shell integration required; desktops only</td>
-<td>🟡 Direct connection; input-device read access required; desktops only</td>
-<td>🟡 PC connection; Accessibility and Input Monitoring required; desktops only</td>
+<td>🟡 PC direct and Android bridge checked</td>
+<td>🟡 Shell integration required; direct tracking and left click checked; desktops only</td>
+<td>🟡 input-device read access required; basic direct tracking checked; desktops only</td>
+<td>🟡 Accessibility and Input Monitoring required; basic direct tracking checked; desktops only</td>
 </tr>
 <tr>
 <td>Tap controls</td>
@@ -751,15 +794,24 @@ contain no private or secret information.</p>
 </tr>
 </tbody>
 </table>
+<p>The GNOME and macOS view pointer paths through Android are implemented; worn checks remain pending.</p>
 <p>macOS as a whole is experimental. Most host-specific unavailable features are
-hidden from the UI; the flat-wall Capture button is the current exception.</p>
+hidden from the UI; the flat-wall Capture button is the current exception.
+Direct connections to MOVERIO BT-40 on macOS support head tracking, magnetic correction, brightness adjustment, automatic brightness, 2D/Half-SBS switching, and convergence linking.
+BT-30C hardware operation on macOS remains unverified. Direct connections to MAD Gaze Glow are also supported: natural head tracking, brightness changes, 2D/Full-SBS switching, panel sleep/wake, and reconnecting from the app have been verified with GLOW Plus.
+Worn 3D viewing, physical unplug/replug, system sleep/wake, long sessions, and other Glow models remain unverified on macOS.
+Android supports head tracking, brightness adjustment and 3D display; BT-40 also supports automatic brightness and convergence linking.
+See the <a href="https://support.nyanreal.jp/spatial-wall/devices/">supported-glasses page</a> for hardware verification by model.</p>
 <p>GNOME Android glasses output is included in standard builds from October 4, 2026.
 It supports physical and virtual displays, widget video, 3DoF, and Audio Wall.
 Keep a physical PC screen available for login and unlocking: the GNOME lock screen
-cannot be streamed to Android. Cursor movement shares the video frame rate. Multiple displays can increase CPU load and latency.
+cannot be streamed to Android. Independent cursors are drawn separately from
+video updates; physical-display and portal SHM captures still embed the cursor.
+HEVC/HW and AVC/HW are preferred, with AVC/SW as fallback. Multiple displays can
+increase GPU/CPU load and latency.
 Hardware verification so far used GNOME 50.1 and SC-52D; other combinations remain unverified.</p>
 <h3 id="tested-configurations-and-known-limitations">Tested configurations and known limitations</h3>
-<p>The following results cover the Spatial Wall 0.9.0 series through September 10, 2026.</p>
+<p>The following configuration-specific results cover records through October 29, 2026.</p>
 <table>
 <thead>
 <tr>
@@ -769,6 +821,11 @@ Hardware verification so far used GNOME 50.1 and SC-52D; other combinations rema
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>macOS direct MOVERIO BT-40 connection</td>
+<td>Apple A18 Pro / macOS 27.2 / BT-40. Natural head tracking with magnetic correction, dedicated HMD output at 1920×1080 and 60 Hz, automatic recovery after unplugging and reconnecting, and working settings and menus verified. Restoring magnetic calibration and resuming correction also verified.</td>
+<td>When prompted, place the glasses on a desk and manually recalibrate the gyroscope (about 20–50 seconds). Worn 3D viewing, long sessions, repeated reconnections, and BT-30C remain unverified.</td>
+</tr>
 <tr>
 <td>Windows direct HMD output</td>
 <td>Windows 11 Pro (build 26200) / RTX 3060 / xbx a01+ with an HMD VSDB. Acquisition and scanout verified at 2D 90 Hz and 3D SBS 72 Hz.</td>
@@ -783,6 +840,16 @@ Hardware verification so far used GNOME 50.1 and SC-52D; other combinations rema
 <td>Windows Android glasses bridge</td>
 <td>Surface Duo / Android 12 / xbx a01+. Remote control, 1080p video, and reconnection verified.</td>
 <td>A 4K display can remain black. Use focus on a 1080p display with this configuration. Head-tracking feel while wearing the glasses, audible playback, and long sessions remain unverified.</td>
+</tr>
+<tr>
+<td>GNOME Android glasses bridge</td>
+<td>GNOME 50.1 / Intel N100 / SC-52D / XREAL Air 2. HEVC video and head tracking for physical/virtual displays and widgets, AVC/HW fallback, native-resolution streaming, and sharper static text verified.</td>
+<td>The GNOME lock screen cannot be streamed. Other GPUs/phones and long sessions remain unverified.</td>
+</tr>
+<tr>
+<td>Windows Android glasses bridge</td>
+<td>SC-52D / XREAL 1 Pro+. Worn checks covered 2D/SBS video and tracking, return to 2D, and Eye position tracking in 2D.</td>
+<td>SBS combined with Eye and long-term stability remain unverified.</td>
 </tr>
 </tbody>
 </table>
