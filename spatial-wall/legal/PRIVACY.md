@@ -1,12 +1,13 @@
 # Privacy Notice — nyan Real / Spatial Wall (standalone app)
 
-**Last updated: 2026-08-19**
+**Last updated: 2026-10-26**
 
 This is the privacy notice for the **standalone nyan Real / Spatial Wall
 application** (`spatial-wall.exe` on Windows, `spatial-wall` on Linux and
-macOS). It does not cover the OBS Studio plugin, nor the browser extension —
-the extension has its own
-[privacy notice](https://github.com/8796n/obs-nyan-real-3dof/blob/main/PRIVACY.md).
+macOS), with an additional section for the Android glasses bridge RDP client.
+Unless stated otherwise, "the app" below means the desktop application. The
+browser extension has its own
+[privacy notice](https://support.nyanreal.jp/spatial-wall/legal/PRIVACY-chrome-extension.md).
 
 ---
 
@@ -14,7 +15,7 @@ the extension has its own
 
 ### Summary
 
-**The app contacts no server on the internet.** It makes no update check and
+**The Spatial Wall desktop app contacts no server on the internet.** It makes no update check and
 reports no usage or crash data. Everything it
 processes — screen images, audio, head tracking — stays on your own computer or
 inside your own network.
@@ -88,6 +89,35 @@ temperature, sensor data, and the factory calibration stored in the device. This
 is used to render correctly and is shown in the app. It is not transmitted
 anywhere.
 
+### Android glasses bridge: RDP connections
+
+The Android companion can connect directly to a remote PC on your local network.
+**Only a connection to an RD Gateway that you specify and choose to connect to
+may contact a server on the internet.** The desktop application's no-external-server
+policy remains unchanged. RDP uses TLS and validates both the remote PC's and the
+Gateway's certificates against system CAs and CAs installed on your Android device.
+
+The selected PC and, when configured, Gateway receive the authentication data
+needed for their respective logins. Keyboard and pointer input goes to the remote
+PC, and its desktop images are received by the companion. Head tracking is
+processed locally to display that desktop. This RDP client does not redirect the
+clipboard, files, drives, audio, microphone or camera. There is no vendor relay,
+telemetry or automatic connection to an internet service.
+
+Multiple connection profiles, including account names and any passwords you elect
+to save, are encrypted with AES-256-GCM in app-private, non-backup storage. The key
+is held by Android Keystore; each unlock and save requires strong biometrics or
+the device's screen-lock credential. The app does not receive biometric data.
+Closing or leaving the connection manager locks its saved information. An active
+RDP session continues until disconnected and temporarily uses credentials in memory;
+locking the connection manager does not log out the remote session.
+
+Saved profiles are not backed up or transferred to another device. Removing the
+app, resetting saved connections, or losing the Keystore key requires registering
+the profiles again. Connection credentials are not put into diagnostic logs or
+the remote-control WebView. Delete individual profiles from RDP connections, or
+use Reset saved connections to erase all profiles and their key.
+
 ### Changes to this notice
 
 If this notice is updated, the "Last updated" date above will be revised.
@@ -103,7 +133,7 @@ https://github.com/8796n/nyan-real-support/issues
 
 ### 要約
 
-**インターネット上の外部サーバーとは通信しません。** 更新の自動確認も、
+**Spatial Wall 本体はインターネット上の外部サーバーとは通信しません。** 更新の自動確認も、
 利用状況やクラッシュ情報の送信も行いません。処理する
 情報（画面の映像、音声、頭の動き）は、お使いのコンピューターの中か、
 ご自身のネットワークの中で完結します。
@@ -175,6 +205,32 @@ USB 経由で、メガネが報告する情報（機種、ファームウェア�
 センサー値、デバイスに保存された工場校正値）を読み取ります。これらは
 正しく描画するために使用し、アプリ内に表示します。外部へ送信することは
 ありません。
+
+### Android メガネブリッジの RDP 接続
+
+本通知の他の記述における「本アプリ」は Spatial Wall 本体を指します。
+Android メガネブリッジでは、ローカルネットワーク内の PC への直接 RDP 接続が可能です。
+**インターネット上の外部サーバーと通信するのは、お客様が指定し、接続操作を行った
+RD Gateway に接続する場合のみです。** Spatial Wall 本体の外部通信を行わない方針は
+変わりません。RDP は TLS を使用し、接続先 PC と Gateway の証明書を、Android の
+システム CA およびお客様が端末に登録した CA に照らして検証します。
+
+指定した PC と、設定した場合は Gateway に、それぞれのログインに必要な認証情報を
+送ります。キーボード・ポインター入力を接続先 PC へ送り、その画面を受信します。
+頭の動きは受信画面の表示のため端末内で処理します。この RDP クライアントでは、
+クリップボード・ファイル・ドライブ・音声・マイク・カメラを転送しません。
+配布元の中継サーバー、テレメトリ、インターネットサービスへの自動接続はありません。
+
+複数の接続先、アカウント名、保存を選んだパスワードは、アプリ専用のバックアップ対象外
+領域に AES-256-GCM で暗号化保存します。暗号鍵は Android Keystore が管理し、
+解除と保存のたびに強い生体認証または端末の画面ロック認証を求めます。
+アプリが生体情報を受け取ることはありません。接続先管理画面を閉じる、または離れると
+登録情報を再びロックします。接続中は資格情報を一時的にメモリで使用し、RDP セッションは
+切断するまで継続します。接続先管理画面のロックはリモートセッションのログアウトではありません。
+
+登録情報はバックアップ・端末移行されません。アプリの削除、登録情報の初期化、暗号鍵の
+喪失後は再登録が必要です。資格情報は診断ログやリモコンの WebView へ渡しません。
+接続先ごとの削除、または「保存済み接続先を初期化」で全登録情報と暗号鍵を削除できます。
 
 ### 本通知の変更
 

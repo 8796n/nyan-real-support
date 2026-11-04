@@ -2,11 +2,7 @@ THIRD-PARTY AND SEPARATELY LICENSED COMPONENT NOTICES
 nyan Real / Spatial Wall (standalone)
 ======================================================
 
-This notice covers only the standalone application (spatial-wall.exe). It is
-built from a separate CMake target than the obs-nyan-real-3dof OBS plugin in
-this repository, does not link libobs, and is not released under the OBS
-plugin's GPL-2.0-or-later license (see THIRD_PARTY_LICENSES / LICENSE, which
-describe the OBS plugin build only).
+This notice covers the Spatial Wall application.
 
 The application as a whole is proprietary and is licensed under the End User
 License Agreement in EULA.ja.txt / EULA.en.txt. Individual components that
@@ -16,7 +12,7 @@ components instead of, and in priority over, that agreement.
 First-party component under separate terms:
 - Phone remote UI (data/remote.html), 8796n
   License: MIT. The full copyright and permission notice is reproduced in the
-  HTML file header so it remains present in the OBS, standalone and Android
+  HTML file header so it remains present in the desktop and Android
   distributions.
 
 Bundled with this application:
@@ -27,6 +23,12 @@ Bundled with this application:
   can be replaced with a compatible build of your own. The full license text
   is bundled as required by LGPL-3.0 section 4(b): licenses/lgpl-3.0.txt, plus
   licenses/gpl-3.0.txt, which LGPL-3.0 is written as a supplement to.
+- OpenVR SDK, Valve Corporation (Windows)
+  https://github.com/ValveSoftware/openvr
+  License: BSD-3-Clause. The SteamVR driver (driver/nyan_real/) and the
+  SteamVR dashboard panel (nyan-vr-settings.exe) are built with its headers,
+  and its openvr_api.dll ships next to the panel. The full license text is in
+  licenses/openvr.txt and driver/nyan_real/licenses/openvr.txt.
 
 Vendored in this repository (compiled into this application):
 - ParsecVDisplay virtual-display driver API, Nguyen Duy (src/vendor/parsec-vdd/)

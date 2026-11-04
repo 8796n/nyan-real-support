@@ -1,7 +1,7 @@
 ﻿nyan Real / Spatial Wall
 END USER LICENSE AGREEMENT
 
-Last updated: 2026-08-27
+Last updated: 2026-10-26
 Copyright holder: 8796n <info@8796.jp>
 
 This Agreement sets out the terms on which 8796n ("the Licensor") licenses the
@@ -10,10 +10,7 @@ software "nyan Real / Spatial Wall" ("the Software") to you ("the Customer").
 By installing, copying or using the Software you are deemed to have accepted
 this Agreement. If you do not accept it, do not install or use the Software.
 
-This Agreement applies to the standalone application (Spatial Wall) only. The
-separately distributed OBS Studio plugin (obs-nyan-real-3dof) is open source
-software under the GNU General Public License v2 or later and is not covered by
-this Agreement.
+This Agreement applies to the Spatial Wall application.
 
 This English text is a reference translation. The Japanese text
 (EULA.ja.txt) is the authoritative version; see Article 13.
@@ -106,12 +103,21 @@ Article 5 (Third-party software and separately licensed components)
 
 Article 6 (Privacy)
 
-The Software does not communicate with any external server on the internet. It
-performs no automatic update checks and sends no usage statistics, crash
-reports, advertising traffic or analytics. Networking is used only for features
-that stay inside the Customer's own network: the phone remote, the Android
-glasses bridge, and receiving tab audio from the browser extension. See the
-accompanying manual and the published privacy notice for details.
+The Spatial Wall desktop application does not communicate with any external
+server on the internet. It performs no automatic update checks and sends no
+usage statistics, crash reports, advertising traffic or analytics. Desktop
+networking is limited to features inside the Customer's own network: the phone
+remote, integration with the Android glasses bridge, and receiving tab audio
+from the browser extension.
+
+The Android glasses bridge's RDP client communicates with an external server on
+the internet only when the Customer explicitly connects to a specified RD
+Gateway. Direct RDP connections without a Gateway are limited to the local
+network. Connections exchange authentication data, remote desktop images and
+input with the selected destination; this data is not sent to the Licensor's
+servers. Saved connection details are encrypted locally on the Android device
+and protected by biometric or device screen-lock authentication. See the
+accompanying manual and published privacy notice for details.
 
 
 Article 7 (Disclaimer of warranty)
