@@ -152,7 +152,7 @@ This manual covers connection, basic setup, everyday use, and troubleshooting.</
 <p>Individual settings explain themselves — hover any control in the app for its
 tooltip. This manual covers what comes before that: what each part is for, and
 in what order to use it.</p>
-<p>Support information reflects implementation and test records through October 26,
+<p>Support information reflects implementation and test records through November 5,
 2026. Screenshots show the September 10 development build on Windows with XREAL 1S connected and the master
 switch on. Available settings and controls vary by OS and glasses model.</p>
 <h2 id="about-this-app">About this app</h2>
@@ -180,6 +180,10 @@ local paths:</p>
 </ul>
 <p>The Android app's RDP client contacts an internet server only when you connect
 through an RD Gateway you specify. Direct RDP connections are limited to the LAN.</p>
+<p>The phone's browser separately loads the official remote entry and checks its
+updates from the support website. After offline preparation, the remote can run
+without internet access. Downloading the Android starter in a browser is also a
+separate action you choose; the starter obtains the full app from your LAN PC.</p>
 <p>Support is not automated either. To report a problem you copy the details from
 "About" and paste them into a GitHub Issue by hand.</p>
 <p><strong>Supported glasses</strong>: XREAL (One Pro / 1 Pro+ / One / 1S / Air 2 Pro / Air 2 / Air),
@@ -216,7 +220,7 @@ for the details.</p>
 </tbody>
 </table>
 <p>On any of them you also need a USB-C port that carries video (or an HDMI
-adapter) and the glasses themselves. No internet connection is required. The
+adapter) and the glasses themselves. The desktop app needs no internet connection. The
 phone remote and Android glasses bridge require the phone and PC to be on the
 same LAN. The appendix has a table of what differs per OS.</p>
 <h2 id="installing-and-first-run">Installing and first run</h2>
@@ -537,25 +541,47 @@ feature supports glasses connected to the PC and shows an in-glasses on/off conf
 <h3 id="phone-remote-remote">Phone remote ("Remote")</h3>
 <p>Turns a phone on the same network into a touchpad remote — a PC on wired Ethernet
 and a phone on Wi-Fi still reach each other, as long as it is the same network.
-Scan the QR code with the phone's camera — no app to install. The page offers
+Use Chrome / Chromium 156 or later on Android or desktop. iPhone and iPad browsers
+are not supported. Scan the PC's QR code to open the
+<a href="https://support.nyanreal.jp/spatial-wall/remote/">official remote entry</a>, then select
+<strong>Register and connect</strong>. No app installation or certificate-fingerprint comparison
+is needed. Allow the browser's local-network access request when it appears.
+The page offers
 mouse control, text input, centering, gyro bias recalibration, focus, and volume.
 Use the keyboard button to compose text on the phone and send it to the PC's
 input field. In the remote's settings, "Display Wall" groups the layout diagram,
 center display, screen distance, size factor, and curve.</p>
+<p>The browser needs internet access to load the official entry for the first time
+and to check for its updates. After the entry reports that offline preparation
+is complete, it can open from its saved copy on subsequent visits without internet
+access. Clearing or losing browser data requires another online visit. Close all
+remote tabs to apply a pending entry update. The controls themselves are loaded
+from your PC, so they match that PC's Spatial Wall version. Screen images, inputs
+and control state travel directly between the phone and PC on your LAN.</p>
 <p>When the QR cannot be scanned (say the glasses are your only display), use
-<strong>Pair with code</strong>: open the URL in the phone's browser and type the 6-digit code
-shown in the app.</p>
-<p>To remove all registered devices, select <strong>Forget all devices</strong> under <strong>Remote</strong>
-on the PC. This also removes registrations for devices that are currently offline.
+<strong>Pair with code</strong> on the PC. Open the official entry, enter the PC address and port
+shown in Spatial Wall, and enter its six-digit code. QR invitations and codes expire
+after 60 seconds and are single-use after successful registration.</p>
+<p>Before registering, choose whether the new device may also use the Android glasses
+bridge or phone controller. Remote control is included. These choices apply to the
+next registration; changing them does not change an already registered device.
+After registration, choose the saved PC in the browser. Automatic reconnection does
+not require another code while the registration and browser permission remain valid.</p>
+<p>To revoke one device, use its <strong>Forget</strong> button in the PC's registered-device list.
+To remove all registered devices, select <strong>Forget all devices</strong> under <strong>Remote</strong>
+on the PC. Revocation disconnects affected control, video and audio sessions and also removes access for devices that are currently offline.
 Each device must pair again, for example by scanning the QR code, before reconnecting.
-The QR code is for scanning; clicking it on the PC does not remove registrations.</p>
+The QR code is for scanning; clicking it on the PC does not remove registrations.
+Removing a saved PC in the browser only clears that browser's copy; use the PC's
+device list to revoke access. Use a private browser profile on a device you control.</p>
 <blockquote>
-<p>If Windows Firewall asks on first enable, choose "Allow access". Only devices
-on your own network can reach it, and any device that does not know the token
-in the URL is rejected.</p>
-<p>The phone remote, Android app download, and glasses bridge use unencrypted
-HTTP/WebSocket on the LAN. Use them only on a trusted private network, not
-shared or public Wi-Fi.</p>
+<p>If Windows Firewall asks on first enable, allow Spatial Wall on your private
+network. The browser needs both TCP and UDP on the displayed port; the Android
+app uses TCP. Guest Wi-Fi or client isolation may prevent devices from connecting.
+Control, video, audio and app downloads use authenticated encryption. Keep QR
+invitations and codes private, and turn the remote off when it is not needed.
+Older Android companions and old pairing links cannot connect; install the
+current app and register again.</p>
 </blockquote>
 <h3 id="android-glasses-bridge-remote">Android glasses bridge ("Remote")</h3>
 <p>A way to connect the glasses to an <strong>Android phone</strong> instead of the PC. The app
@@ -566,6 +592,21 @@ audio by treating the glasses as an Android external display (Presentation).
 On macOS this uses Screen Recording and Audio Recording permission. The appendix
 lists the tested configuration and known limitations. The external Video Input
 widget remains Windows-only.</p>
+<p>For the first installation, download the
+<a href="https://support.nyanreal.jp/spatial-wall/android-installer/spatialwall-installer.apk">official Android starter</a>
+in your phone's browser and install it yourself. Android 11 or later on a 64-bit ARM
+device is required. The starter is open source and only obtains the full app from
+your PC on the LAN. Register with the PC and follow Android's installation confirmation.
+The starter and full app use the same product signing certificate, and registration
+carries over. The Android app does not contact the support website to download updates.
+For glasses use, enable <strong>Android glasses bridge</strong> before registering the device.</p>
+<p>With a compatible app already installed, scan the PC's QR and select <strong>Open installed
+Android app</strong> in the official entry, then confirm the PC in Android. Alternatively,
+register from the app using the PC address and six-digit code. Saved PC credentials
+are protected by Android Keystore and excluded from backups; normal reconnection
+does not ask for biometric authentication. Losing or erasing saved registrations
+requires registration again. RDP credentials have their separate authentication
+rules described below.</p>
 <p>Once the phone app connects, "Remote" shows its state: the glasses' brightness,
 display mode and external display, plus whether the IMU and video channels are
 up. Model-specific settings behave the same over the bridge as they do when the
@@ -865,11 +906,13 @@ Recent changes may be missing.</p>
 preserve the original files. Restore the files and restart, or use "Advanced" &gt;
 "Reset settings to defaults" to resume saving. For a save failure, check disk space,
 folder permissions, and the log. Change a setting after fixing the cause to retry.
-Backups also contain connection tokens and other private settings; do not attach
-them directly to a support request.</p>
+Backups contain private settings; do not attach them directly to a support request.
+Phone registrations are kept separately in protected storage and are not restored
+from this backup. If registration storage fails, remote connections stop.</p>
 <h3 id="resetting">Resetting</h3>
-<p>"Advanced" &gt; "Reset settings to defaults" returns everything to its initial
-state. This cannot be undone.</p>
+<p>"Advanced" &gt; "Reset settings to defaults" returns app settings to their initial
+state. This cannot be undone. Registered phones remain registered; remove them
+from the phone remote's device list or use <strong>Forget all devices</strong>.</p>
 <h3 id="checking-the-version">Checking the version</h3>
 <p>"About" shows the version and build time. Right-clicking <code>spatial-wall.exe</code> and
 opening <strong>Properties</strong> &gt; <strong>Details</strong> shows it too.</p>

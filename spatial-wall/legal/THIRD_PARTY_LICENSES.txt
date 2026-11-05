@@ -16,6 +16,14 @@ First-party component under separate terms:
   distributions.
 
 Bundled with this application:
+- LAN TLS/WebTransport transport (Rust, rustls, ring, Quinn, wtransport and dependencies)
+  https://github.com/rust-lang/rust
+  https://github.com/rustls/rustls
+  https://github.com/BiagioFesta/wtransport
+  Full copyright, license and disclaimer texts for the locked dependencies and
+  Rust runtime are in licenses/remote-transport.txt. Exact versions, source
+  hashes and selected license alternatives are in licenses/remote-transport.json.
+  OS system libraries are dynamically linked and are not included in those files.
 - BoringSSL and Fiat Cryptography (LAN pairing)
   https://boringssl.googlesource.com/boringssl
   Revision: fd0ed4d0a1273570612a08a31bace08e4dd73c81

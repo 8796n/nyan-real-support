@@ -1,6 +1,6 @@
 # Privacy Notice — nyan Real / Spatial Wall (standalone app)
 
-**Last updated: 2026-10-26**
+**Last updated: 2026-11-05**
 
 This is the privacy notice for the **standalone nyan Real / Spatial Wall
 application** (`spatial-wall.exe` on Windows, `spatial-wall` on Linux and
@@ -23,7 +23,7 @@ inside your own network.
 ### No external communication
 
 The app contains no analytics, telemetry, crash reporting, advertising or
-third-party SDK of any kind. There is no automatic update check and no account,
+third-party tracking SDK. There is no automatic update check and no account,
 sign-in or activation server.
 
 Support is deliberately manual: "About" > "Copy support info" puts a text block
@@ -51,9 +51,50 @@ The phone remote and the bridge listen on your local network, so anyone already
 on that network can reach them while they are enabled. Use them on a network you
 trust, and turn them off when not in use.
 
-The phone remote, companion APK download, and Android bridge use unencrypted
-HTTP/WebSocket inside that network. Use them only on a trusted private network,
-not shared or public Wi-Fi.
+Phone control, companion APK downloads, and the Android bridge use authenticated
+encryption on the LAN. Registration establishes the PC's identity using its QR
+invitation or six-digit code; reconnecting checks the saved identity. Public
+connection-setup data can be fetched over HTTP, but the code and saved access
+credential are not sent in plaintext. Device access can be revoked individually
+or together on the PC, which also closes the affected control, video and audio connections.
+
+### Official browser entry and Android starter downloads
+
+The phone's browser opens `https://support.nyanreal.jp/spatial-wall/remote/` to
+obtain the open-source entry and its fixed connection tools. The browser contacts
+that website for the first load and service-worker update checks. The hosting
+provider receives ordinary web-request information, including the connecting IP
+address and browser headers. This is separate from the desktop app's LAN traffic.
+No analytics or third-party scripts are included in the entry.
+
+After all entry assets have been saved, the browser can reopen them offline.
+The cache contains only the fixed entry assets, not LAN responses, screen images,
+registration invitations, or access credentials. The actual remote-control UI is
+obtained from the connected PC, verified, and run separately from the entry's
+saved credentials. Controls and screen data are sent directly to that PC, not
+through the support website.
+
+The QR's local PC address and short-lived invitation are in the URL fragment,
+which is not sent in the website request. The entry removes the fragment from the
+address bar before loading its modules. Saved PC addresses, public identities,
+permissions and device access credentials remain in that browser profile's local
+storage. Other code trusted at the same website origin and anyone with access to
+the profile may access that storage. Use your own profile and revoke unwanted
+devices on the PC. Clearing the browser's saved PC list does not revoke the PC-side
+registration.
+
+You may choose to download the open-source Android starter APK from the support
+website using your browser. Installing it is a separate action confirmed by you.
+The starter downloads the full app only from your registered LAN PC, checks its
+hash, package, version and signing certificate, and asks Android to confirm the
+update. The Android app does not contact the support website to fetch app updates.
+
+Spatial Wall's Android PC registrations are encrypted with an app-private Android
+Keystore key and excluded from backups. They include the PC's public identity,
+device access credential and permissions; the display name and PC address are
+saved separately as local settings. Normal reconnection does not require biometric
+authentication. Clearing or losing registrations requires pairing again. These
+registrations are separate from the RDP credential store described below.
 
 ### What is captured, and where it goes
 
@@ -73,6 +114,7 @@ computer.
 |---|---|
 | `%APPDATA%\nyan-real\` (Windows) — the OS user config directory on Linux and macOS | your settings |
 | `%APPDATA%\nyan-real\logs\` | diagnostic logs, one file per launch |
+| the app's protected remote-access store | PC identity key and registered device labels, permissions and credential verifiers |
 
 Logs record what the app and the connected glasses did — device model, firmware
 version, capture and rendering diagnostics — so a problem can be investigated.
@@ -80,7 +122,8 @@ They stay on your computer. They are only shared if you attach one to a support
 request yourself.
 
 "Advanced" > "Reset settings to defaults" returns the settings to their initial
-state.
+state. It retains registered phones. Remove those registrations separately in
+the phone remote settings.
 
 ### Connected glasses
 
@@ -99,9 +142,9 @@ Gateway's certificates against system CAs and CAs installed on your Android devi
 
 The selected PC and, when configured, Gateway receive the authentication data
 needed for their respective logins. Keyboard and pointer input goes to the remote
-PC, and its desktop images are received by the companion. Head tracking is
+PC, and its desktop images and playback audio are received by the companion. Head tracking is
 processed locally to display that desktop. This RDP client does not redirect the
-clipboard, files, drives, audio, microphone or camera. There is no vendor relay,
+clipboard, files, drives, microphone or camera. There is no vendor relay,
 telemetry or automatic connection to an internet service.
 
 Multiple connection profiles, including account names and any passwords you elect
@@ -141,7 +184,7 @@ https://github.com/8796n/nyan-real-support/issues
 ### 外部通信を行わないこと
 
 本アプリには、アナリティクス、テレメトリ、クラッシュレポート、広告、
-サードパーティ SDK は一切含まれません。更新の自動確認もなく、アカウント、
+第三者の追跡用SDKは含まれません。更新の自動確認もなく、アカウント、
 サインイン、ライセンス認証サーバーもありません。
 
 サポートも意図的に手動です。「バージョン情報」の「問い合わせ用情報をコピー」は
@@ -169,9 +212,41 @@ PC のホスト名とポート番号で、ネットワークの外には出ま�
 到達できます。信頼できるネットワークでお使いいただき、使わないときは
 オフにしてください。
 
-スマホリモコン、連携用 APK のダウンロード、Android ブリッジは、その
-ネットワーク内で暗号化されていない HTTP / WebSocket を使用します。共有・公衆 Wi-Fi
-ではなく、信頼できる私設ネットワークでのみお使いください。
+スマホの操作、連携APKの取得、Androidブリッジには、LAN内で認証付きの暗号化を使用します。
+QRの招待または6桁コードによる登録でPCを確認し、再接続では保存済みのPCの識別情報を検証します。
+公開の接続準備情報はHTTPで取得することがありますが、コードや保存済みのアクセス資格を
+平文では送信しません。PCで端末ごと、またはまとめて登録を解除でき、対象の操作・映像・音声接続も停止します。
+
+### 公式ブラウザ入口とAndroid導入アプリの取得
+
+スマホのブラウザは `https://support.nyanreal.jp/spatial-wall/remote/` から、
+オープンソースの入口と固定の接続用プログラムを取得します。初回の読込とservice workerの
+更新確認では、このサイトへ通信します。サイトのホスティング事業者には、接続元IPアドレスや
+ブラウザのHTTPヘッダーなど通常のWebリクエスト情報が届きます。本体PCのLAN通信とは別の経路です。
+入口に解析サービスや第三者のスクリプトは含めていません。
+
+入口に必要なファイルをすべて保存すると、次回からオフラインでも開けます。
+キャッシュに含めるのは固定の入口ファイルだけで、LANの応答、画面、登録用の招待、
+アクセス資格は含めません。実際のリモコン操作画面は接続先PCから取得して検証し、
+入口の保存資格から分離して実行します。操作や画面データはそのPCへ直接送られ、
+サポートサイトを中継しません。
+
+QRのPCアドレスと短時間有効な招待はURLのフラグメント部分にあり、サイトへのリクエストには
+送信されません。入口はモジュールを読み込む前にアドレスバーからフラグメントを取り除きます。
+保存したPCアドレス・公開の識別情報・権限・端末のアクセス資格は、そのブラウザプロファイルの
+ローカル保存領域に残ります。同じサイトの信頼されたコードや、プロファイルへアクセスできる人は
+この保存領域にアクセスできます。個人用プロファイルを使い、不要な端末はPCで登録を解除してください。
+ブラウザの保存済みPCの削除だけでは、PC側の登録は解除されません。
+
+オープンソースのAndroid導入APKは、お客様がブラウザでサポートサイトからダウンロードし、
+自分でインストールを確認できます。導入アプリが本体を取得する先は、登録したLAN内のPCだけです。
+ハッシュ・パッケージ名・版番号・署名証明書を検証してから、Androidの更新確認を開きます。
+Androidアプリがサポートサイトへアプリの更新を取得しに行くことはありません。
+
+AndroidのSpatial Wall用PC登録は、アプリ専用のAndroid Keystore鍵で暗号化し、バックアップから
+除外します。PCの公開の識別情報・端末のアクセス資格・権限を含み、表示名とPCアドレスは別の
+ローカル設定に保存します。通常の再接続で生体認証は求めません。保存の消去・喪失後は再登録が
+必要です。これらは後述のRDP資格ストアとは別に管理します。
 
 ### 取り込む情報と、その行き先
 
@@ -191,6 +266,7 @@ USB / DisplayPort でメガネへ、またはブリッジ使用時はご自身�
 |---|---|
 | `%APPDATA%\nyan-real\`（Windows。Linux / macOS では各 OS のユーザー設定ディレクトリ） | 設定 |
 | `%APPDATA%\nyan-real\logs\` | 診断ログ（起動ごとに 1 ファイル） |
+| アプリの保護されたリモコン登録領域 | PCの秘密鍵、登録端末の名前・権限・資格の検証用ハッシュ |
 
 ログには、問題を調べられるように、アプリと接続中のメガネの動作（機種、
 ファームウェア版数、取り込みと描画の診断情報）が記録されます。ログは
@@ -198,6 +274,7 @@ USB / DisplayPort でメガネへ、またはブリッジ使用時はご自身�
 限り、外部へ渡ります。
 
 「詳細」の「設定を既定値に戻す」で、設定は初期状態に戻ります。
+スマホの端末登録は残るため、解除する場合はスマホリモコンの設定で別途操作します。
 
 ### 接続したメガネ
 
@@ -216,9 +293,9 @@ RD Gateway に接続する場合のみです。** Spatial Wall 本体の外部�
 システム CA およびお客様が端末に登録した CA に照らして検証します。
 
 指定した PC と、設定した場合は Gateway に、それぞれのログインに必要な認証情報を
-送ります。キーボード・ポインター入力を接続先 PC へ送り、その画面を受信します。
+送ります。キーボード・ポインター入力を接続先 PC へ送り、その画面と再生音声を受信します。
 頭の動きは受信画面の表示のため端末内で処理します。この RDP クライアントでは、
-クリップボード・ファイル・ドライブ・音声・マイク・カメラを転送しません。
+クリップボード・ファイル・ドライブ・マイク・カメラを転送しません。
 配布元の中継サーバー、テレメトリ、インターネットサービスへの自動接続はありません。
 
 複数の接続先、アカウント名、保存を選んだパスワードは、アプリ専用のバックアップ対象外
