@@ -126,7 +126,7 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
     $('host').readOnly = $('port').readOnly = !!constrained;
     $('change-pc').hidden = !constrained; $('change-pc').disabled = !!active;
     $('cancel').hidden = !active; $('panel').hidden = !!active?.ready; $('remote').hidden = !active?.ready;
-    $('download-app').disabled = !frame || !active?.ready || active.apkStatus === 'apkLoading';
+    $('download-app').disabled = !frame || !active?.controlOpen || active.apkStatus === 'apkLoading';
     $('download-app').hidden = !!active?.apkUrl;
     $('save-apk').hidden = !active?.apkUrl;
     if (active?.apkUrl) {
@@ -183,6 +183,7 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
     status('connecting');
     const mounted = await api.mountDeviceFrame({ device, container:$('viewport'), storage:win.localStorage, productKey, signal:op.abort.signal,
       onReady() { if (current(op)) { op.ready = true; status('connected'); render(); } },
+      onControlChange(open) { if (current(op)) { op.controlOpen = open; render(); } },
       onClose() { if (current(op)) cancel(op.ready ? 'disconnected' : 'failed'); },
     });
     if (!current(op)) { mounted.close(); return; }
@@ -190,7 +191,7 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
   }
   async function prepareApk() {
     const op = active;
-    if (!frame || !op?.ready || op.apkUrl || op.apkStatus === 'apkLoading') return;
+    if (!frame || !op?.controlOpen || op.apkUrl || op.apkStatus === 'apkLoading') return;
     op.apkStatus = 'apkLoading'; render();
     try {
       const { blob, version } = await frame.downloadApk();

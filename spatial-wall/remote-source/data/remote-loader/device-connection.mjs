@@ -89,29 +89,29 @@ export function createDeviceConnection({ device, events }) {
     }
   }
   async function downloadApk(productKey) {
-    if (closed || apkPending) throw Error('Android app download unavailable');
+    const active = owners.control?.active;
+    if (closed || apkPending || !active?.authenticated || !active.channel?.isOpen)
+      throw Error('Android app download requires a connected PC');
     apkPending = true;
-    const cancel = new AbortController();
-    operations.add(cancel);
-    let wt;
+    // The server closes sessions with no remaining streams. The control stream
+    // keeps this session open between pulls and owns its cancellation.
+    const { signal } = active.abort, wt = active.wt;
     try {
-      const init = deadline(cancel.signal);
-      try { wt = await transport(init); } finally { init.dispose(); }
-      const envelope = await oneReply('/app.apk/manifest', 8192, cancel.signal, wt);
+      const envelope = await oneReply('/app.apk/manifest', 8192, signal, wt);
       const manifest = await verifyApkManifest(decoder.decode(envelope), productKey);
-      cancel.signal.throwIfAborted();
+      signal.throwIfAborted();
       const bytes = new Uint8Array(manifest.size);
       for (let offset = 0; offset < bytes.length; offset += APK_CHUNK) {
         const size = Math.min(APK_CHUNK, bytes.length - offset);
-        const chunk = await oneReply(`/app.apk/${offset / APK_CHUNK}`, size, cancel.signal, wt, 30000);
+        const chunk = await oneReply(`/app.apk/${offset / APK_CHUNK}`, size, signal, wt, 30000);
         if (chunk.length !== size) throw Error('Incomplete Android app download');
         bytes.set(chunk, offset);
       }
       await verifyPayloadHash(bytes, manifest.sha256);
-      cancel.signal.throwIfAborted();
+      signal.throwIfAborted();
       return { blob: new Blob([bytes], { type: 'application/vnd.android.package-archive' }), version: manifest.version_name };
     } finally {
-      wt?.close(); operations.delete(cancel); apkPending = false;
+      apkPending = false;
     }
   }
   function stop(name) {
@@ -125,7 +125,8 @@ export function createDeviceConnection({ device, events }) {
   }
   function current(name, owner, active) { return !closed && owners[name] === owner && owner.active === active; }
   async function launch(name, owner) {
-    const active = { abort: new AbortController(), channel: null, wt: null, finished: false, busy: false, notified: false };
+    const active = { abort: new AbortController(), channel: null, wt: null, finished: false,
+      authenticated: false, busy: false, notified: false };
     owner.active = active;
     const run = deadline(active.abort.signal), first = deferred();
     function finish() {
@@ -146,13 +147,13 @@ export function createDeviceConnection({ device, events }) {
     try {
       active.wt = await transport(run);
       if (!current(name, owner, active)) { active.wt.close(); return; }
-      let sent = false, opened = false;
+      let sent = false;
       active.channel = openOrderedChannel(active.wt, {
         maxTextBytes: 256 * 1024, maxBinaryBytes: name === 'control' ? 4 * 1024 * 1024 + 40 : 0,
         maxPendingBytes: 4 * 1024 * 1024, maxPendingMessages: 64, onPong() {}, onClose: finish,
         onText(text) {
           if (!sent || !current(name, owner, active)) throw Error('Unexpected channel response');
-          if (!opened) { run.check(); opened = true; first.resolve(); if (name === 'control') events.open(); }
+          if (!active.authenticated) { run.check(); active.authenticated = true; first.resolve(); if (name === 'control') events.open(); }
           if (!current(name, owner, active)) return;
           try {
             const type = JSON.parse(text)?.t;
@@ -161,7 +162,7 @@ export function createDeviceConnection({ device, events }) {
           name === 'control' ? events.text(text) : events.controllerText(text);
         },
         onBinary(bytes) {
-          if (!opened || !current(name, owner, active)) throw Error('Unexpected cursor response');
+          if (!active.authenticated || !current(name, owner, active)) throw Error('Unexpected cursor response');
           events.cursor(bytes);
         },
       });
