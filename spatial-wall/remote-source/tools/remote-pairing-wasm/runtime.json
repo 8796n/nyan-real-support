@@ -1,0 +1,166 @@
+{
+  "version": "6.0.13",
+  "revision": "e13ee988ce3d87a738dd8f3661d02223308c412a",
+  "emsdk_revision": "d7b4130688bfa348392b921ab04015aa15c4f154",
+  "sdk_archive_sha256": "937b834b397e33645923794c1a20566a86c63ebc02b213e537c0a86dd380ab6c",
+  "boringssl_notice_sha256": "3e1afdec027297c5cfb9486e21da57e828a76414f0c18ce53ec237188845dee6",
+  "files": [
+    {
+      "path": "LICENSE",
+      "sha256": "620a78084fc7ca97c0b5dea9abf891f3ffcadfdbf305276f099c9c4e12fc1d86"
+    },
+    {
+      "path": "AUTHORS",
+      "sha256": "b865d6074c7f13366cad82990ba58bbe0a3f3eccf5fa47e50aa02693de4e895e"
+    },
+    {
+      "path": "system/lib/libc/musl/COPYRIGHT",
+      "sha256": "b870108ec5e7790e9f9919064f1b9421d62d5f9b0e6c230c6adf7ea2da62e97b"
+    },
+    {
+      "path": "system/lib/libcxx/LICENSE.TXT",
+      "sha256": "539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b"
+    },
+    {
+      "path": "system/lib/libcxx/CREDITS.TXT",
+      "sha256": "054e099bf5954c8821b880f5751d2fbf221bf43cf7c57ac1c2c5ff6263d6d9c3"
+    },
+    {
+      "path": "system/lib/libcxxabi/LICENSE.TXT",
+      "sha256": "e2b35be49f7284a45b7baca8fc7b3ab7440e7902392b2528a457816b5bb2a15c"
+    },
+    {
+      "path": "system/lib/libcxxabi/CREDITS.TXT",
+      "sha256": "a259fff28a51623f14917dd68f97f3af7804984087ddc1bfd8196d08ebb75b83"
+    },
+    {
+      "path": "system/lib/compiler-rt/LICENSE.TXT",
+      "sha256": "1a8f1058753f1ba890de984e48f0242a3a5c29a6a8f2ed9fd813f36985387e8d"
+    },
+    {
+      "path": "system/lib/compiler-rt/CREDITS.TXT",
+      "sha256": "a9901f47a089da41e4690682d00ce4cedaa2baf41fedbe79beee366d43ac2461"
+    },
+    {
+      "path": "system/lib/llvm-libc/LICENSE.TXT",
+      "sha256": "ebcd9bbf783a73d05c53ba4d586b8d5813dcdf3bbec50265860ccc885e606f47"
+    },
+    {
+      "path": "system/lib/emmalloc.c",
+      "sha256": "00eb577cbef51a3359c309f45a7c99a814b8c6151ab75c9a3c78a56f0169146b",
+      "notice_lines": 6
+    },
+    {
+      "path": "system/lib/compiler-rt/emscripten_exception_builtins.c",
+      "sha256": "48e70458a6cc487f78b2406931cc6da9f12b81f72b2cd5098ff9216c6cd65f16",
+      "notice_lines": 6
+    },
+    {
+      "path": "system/lib/libc/emscripten_get_heap_size.c",
+      "sha256": "f642e9c8e89121b3c379535996cb78d8a7fa0626ef8351d7b00c1824dcdb1dbe",
+      "notice_lines": 6
+    },
+    {
+      "path": "system/lib/libc/emscripten_memset.c",
+      "sha256": "0f4aa67095fe7a65f13e93bf68d21318a0f1d845fbf5baedcd8d6fa17c33ba71",
+      "notice_lines": 6
+    },
+    {
+      "path": "system/lib/libc/emscripten_syscall_stubs.c",
+      "sha256": "569e0a3b94cb7632b9a9c2359f6c5dd5962b7193855e19b00007c0ae268fb77b",
+      "notice_lines": 6
+    },
+    {
+      "path": "system/lib/libc/sbrk.c",
+      "sha256": "c5240534df9773b524c3385452e9ec7d45eb1d6c7c37c441cfbea156f0f7fa0e",
+      "notice_lines": 6
+    },
+    {
+      "path": "system/lib/libc/wasi-helpers.c",
+      "sha256": "6173efcc48a1daacd3c1f7817b18173a6de48a1bb87b1ba49598fa70d22b1731",
+      "notice_lines": 6
+    },
+    {
+      "path": "system/lib/pthread/library_pthread_stub.c",
+      "sha256": "1c00d6be4d4780405ac4cfbd0523dbeca911d9e33b16c2515b8a6c5109799e98",
+      "notice_lines": 6
+    },
+    {
+      "path": "system/lib/pthread/pthread_self_stub.c",
+      "sha256": "d1cff7b24162d6c473553447239fa104b4f7faf9453ef14eb41f08c1bdee6ad3",
+      "notice_lines": 6
+    },
+    {
+      "path": "src/lib/libwasi.js",
+      "sha256": "dc9c3f215307b4f928050ba870da31cd3a79bd95d9f70aeb96b55534d6dd0468",
+      "notice_lines": 5
+    },
+    {
+      "path": "src/lib/libcore.js",
+      "sha256": "0dbc7d550c930f6f10f8dc7957b4fdcc0530a5145f2d50ecd88ce85edf4df52c",
+      "notice_lines": 5
+    },
+    {
+      "path": "src/preamble.js",
+      "sha256": "cd14b8bfbb45fcae6134bb459fae269ad9dbc3c2912c1ff6706999aba57d8947",
+      "notice_lines": 5
+    },
+    {
+      "path": "src/postamble.js",
+      "sha256": "ec570b97cd642501bdc568fc1266e0864eb94df2aa0ecca52465d4689dfb73fc",
+      "notice_lines": 5
+    },
+    {
+      "path": "src/shell.js",
+      "sha256": "7ce24b00a82dfd0ce8b57bf237d5d0be2e3f9b706ea16225e6ef216da66680e8",
+      "notice_lines": 5
+    }
+  ],
+  "runtime_archive_members": {
+    "libc++-noexcept.a": [
+      "new.o",
+      "new_helpers.o"
+    ],
+    "libc++abi-noexcept.a": [
+      "cxa_default_handlers.o",
+      "cxa_handlers.o"
+    ],
+    "libc.a": [
+      "__errno_location.o",
+      "__lockfile.o",
+      "__overflow.o",
+      "__stdio_close.o",
+      "__stdio_seek.o",
+      "__stdio_write.o",
+      "__towrite.o",
+      "abort.o",
+      "default_attr.o",
+      "emscripten_get_heap_size.o",
+      "emscripten_memcpy.o",
+      "emscripten_memset.o",
+      "fputc.o",
+      "fwrite.o",
+      "getentropy.o",
+      "getpid.o",
+      "library_pthread_stub.o",
+      "lseek.o",
+      "perror.o",
+      "pthread_self_stub.o",
+      "stderr.o",
+      "strerror.o",
+      "strlen.o",
+      "wasi-helpers.o"
+    ],
+    "libclang_rt.builtins.a": [
+      "emscripten_exception_builtins.o",
+      "stack_ops.o"
+    ],
+    "libemmalloc.a": [
+      "emmalloc.o",
+      "sbrk.o"
+    ],
+    "libstubs.a": [
+      "emscripten_syscall_stubs.o"
+    ]
+  }
+}

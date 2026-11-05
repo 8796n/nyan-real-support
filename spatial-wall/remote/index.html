@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' blob: 'sha256-gqttCE1vvcsUfZmED1TLD3syX8zlVSydVt9aZciQgbc=' 'sha256-RWi8bTOJaHJcwR58TPNVuoVaQqVvTlh3TcmeU8GrJ44=' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' http: https: 'unsafe-webtransport-hashes'; frame-src blob:; worker-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<script src="./assets/0aac5d004e098e7d3b7c256177482f84327a9f0131e3d01c68a782b8d603b3c8/entry-capture.js"></script>
+<title>Spatial Wall Remote</title>
+<link rel="stylesheet" href="./assets/0aac5d004e098e7d3b7c256177482f84327a9f0131e3d01c68a782b8d603b3c8/entry.css">
+<script type="module" src="./assets/0aac5d004e098e7d3b7c256177482f84327a9f0131e3d01c68a782b8d603b3c8/entry.mjs"></script>
+</head><body>
+<main id="panel">
+  <header><h1>Spatial Wall Remote</h1><label><span class="sr-only">Language</span><select id="language"><option value="en">English</option><option value="ja">日本語</option></select></label></header>
+  <p id="intro">Connect to Spatial Wall on the same local network.</p>
+  <p id="status" role="status" aria-live="polite">Loading secure connection tools…</p>
+  <section id="invite" hidden><h2 id="invite-title"></h2><p id="invite-host"></p><p id="invite-grants"></p>
+    <div class="actions"><button id="browser-pair" type="button" disabled>Register and connect</button><button id="open-app" type="button" disabled>Open installed Android app</button></div>
+    <p id="app-note" class="hint"></p>
+  </section>
+  <section><h2 id="saved-title">Saved PCs</h2><div id="saved"></div><p id="empty" class="hint"></p></section>
+  <section><h2 id="pair-title">Register with a code</h2>
+    <label for="label" id="label-title">Name shown on the PC</label><input id="label" maxlength="96" autocomplete="nickname">
+    <form id="pair-form">
+      <div class="endpoint"><label><span id="host-title">PC address</span><input id="host" inputmode="decimal" placeholder="192.168.1.7" required autocomplete="off"></label>
+      <label><span id="port-title">Port</span><input id="port" inputmode="numeric" value="8797" required autocomplete="off"></label></div>
+      <label for="code" id="code-title">Six-digit code</label><input id="code" type="password" inputmode="numeric" pattern="[0-9]{6}" minlength="6" maxlength="6" required autocomplete="one-time-code">
+      <button id="register" type="submit" disabled>Register and connect</button>
+    </form>
+    <button id="change-pc" type="button" hidden></button>
+  </section>
+  <p id="local-note" class="hint"></p>
+  <p id="offline-status" class="hint" role="status" aria-live="polite"></p>
+  <section><h2 id="android-title">Android app</h2>
+    <p id="download-note" class="hint">The optional starter downloads the full app from your PC. Android 11 or later and a 64-bit ARM device are required. After installing, scan a fresh PC QR and choose Open installed Android app.</p>
+    <p><a id="download-app" href="../android-installer/spatialwall-installer.apk" download>Download Android starter APK</a> · <a id="installer-source" href="https://github.com/8796n/nyan-real-support/tree/main/spatial-wall/android-installer/source" target="_blank" rel="noopener noreferrer">Starter source</a></p>
+  </section>
+  <p class="hint"><a id="entry-source" href="https://github.com/8796n/nyan-real-support/tree/main/spatial-wall/remote-source" target="_blank" rel="noopener noreferrer">Entry source</a> · <a id="entry-license" href="./assets/0aac5d004e098e7d3b7c256177482f84327a9f0131e3d01c68a782b8d603b3c8/LICENSE" target="_blank" rel="noopener noreferrer">MIT license</a> · <a id="runtime-notice" href="./assets/0aac5d004e098e7d3b7c256177482f84327a9f0131e3d01c68a782b8d603b3c8/remote-pairing-wasm.txt" target="_blank" rel="noopener noreferrer">Wasm runtime licenses</a> · <a id="boring-notice" href="./assets/0aac5d004e098e7d3b7c256177482f84327a9f0131e3d01c68a782b8d603b3c8/boringssl.txt" target="_blank" rel="noopener noreferrer">BoringSSL licenses</a></p>
+  <div class="actions"><button id="remove-all" type="button" disabled>Clear saved PCs in this browser</button><button id="cancel" type="button" hidden>Cancel</button></div>
+  <noscript>JavaScript is required to connect securely. / 安全に接続するには JavaScript が必要です。</noscript>
+</main>
+<div id="remote" hidden><button id="disconnect" type="button"></button><div id="viewport"></div></div>
+</body></html>

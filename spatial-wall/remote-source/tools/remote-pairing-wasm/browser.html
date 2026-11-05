@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>Pairing Wasm local checks</title>
+<h1>Pairing Wasm local checks</h1>
+<p>Development fixtures only. This does not register a device or contact a PC service.</p>
+<button id="run">Run checks</button><pre id="result"></pre>
+<script type="module">
+import createModule from './pairing-core.mjs';
+import { runBrowserChecks } from './browser-checks.mjs';
+const button = document.querySelector('#run'), output = document.querySelector('#result');
+button.onclick = async () => {
+  button.disabled = true;
+  try {
+    const start = performance.now();
+    const result = runBrowserChecks(await createModule());
+    output.textContent = JSON.stringify({ ...result, elapsedMs: performance.now() - start,
+      secureContext: isSecureContext, userAgent: navigator.userAgent }, null, 2);
+  } catch { output.textContent = 'Checks failed. No credentials were used.'; }
+  finally { button.disabled = false; }
+};
+</script></html>

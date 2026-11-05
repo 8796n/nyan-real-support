@@ -1,0 +1,82 @@
+// SPDX-License-Identifier: MIT
+// Copyright (C) 2026 8796n <info@8796.jp>
+// Generated with the complete, fixed release inventory. Never cache LAN traffic.
+const RELEASE = /*__RELEASE__*/;
+const ASSETS = /*__ASSETS__*/;
+const SCOPE = new URL(self.registration.scope);
+const PREFIX = 'spatial-wall.remote.v2:' + SCOPE.pathname + ':';
+const CACHE = PREFIX + RELEASE;
+const INVENTORY = new Map(ASSETS.map(item => [new URL(item.path, SCOPE).href, item]));
+
+async function verifiedFetch(url, item) {
+  const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 15000);
+  let response, reader;
+  try {
+    response = await fetch(url, { credentials:'omit', redirect:'error', cache:'no-store', signal:controller.signal });
+    if (response.status !== 200 || response.redirected || !response.body) throw Error('Offline asset unavailable');
+    reader = response.body.getReader();
+    const bytes = new Uint8Array(item.size);
+    let offset = 0;
+    while (true) {
+      const part = await reader.read();
+      if (part.done) break;
+      if (!(part.value instanceof Uint8Array) || part.value.length > bytes.length - offset) throw Error('Offline asset size differs');
+      bytes.set(part.value, offset); offset += part.value.length;
+    }
+    if (offset !== bytes.length) throw Error('Offline asset is truncated');
+    const hash = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), b => b.toString(16).padStart(2,'0')).join('');
+    if (hash !== item.sha256) throw Error('Offline asset hash differs');
+    return new Response(bytes, { headers:{'Content-Type':item.type,'X-Content-Type-Options':'nosniff'} });
+  } finally {
+    clearTimeout(timer); controller.abort();
+    if (reader) { reader.cancel().catch(() => {}); reader.releaseLock(); }
+    else response?.body?.cancel().catch(() => {});
+  }
+}
+self.addEventListener('install', event => {
+  event.waitUntil((async () => {
+    try {
+      const cache = await caches.open(CACHE);
+      // Bound installation concurrency and do not expose partial releases.
+      for (const [url, item] of INVENTORY) await cache.put(url, await verifiedFetch(url, item));
+    } catch (error) { await caches.delete(CACHE); throw error; }
+  })());
+});
+self.addEventListener('activate', event => {
+  event.waitUntil((async () => {
+    for (const name of await caches.keys()) if (name.startsWith(PREFIX) && name !== CACHE) await caches.delete(name);
+  })());
+});
+// No skipWaiting or clients.claim: an update never replaces a running UI owner.
+self.addEventListener('message', event => {
+  if (event.data !== 'spatial-offline-check-v2' || event.ports.length !== 1) return;
+  const port = event.ports[0];
+  event.waitUntil((async () => {
+    let complete = false;
+    try {
+      const cache = await caches.open(CACHE);
+      complete = true;
+      for (const url of INVENTORY.keys()) if (!await cache.match(url)) { complete = false; break; }
+    } catch {}
+    try { port.postMessage(complete); } finally { port.close(); }
+  })());
+});
+self.addEventListener('fetch', event => {
+  const request = event.request, url = new URL(request.url);
+  if (request.method !== 'GET' || url.origin !== SCOPE.origin || url.search) return;
+  // A frame's one-use bootstrap nonce is a fragment, never a cache key.
+  url.hash = '';
+  if (url.pathname === SCOPE.pathname) url.pathname += 'index.html';
+  const item = INVENTORY.get(url.href);
+  if (!item) return;
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE), saved = await cache.match(url.href);
+    if (saved) return saved;
+    try {
+      const response = await verifiedFetch(url.href, item); await cache.put(url.href, response.clone()); return response;
+    } catch {
+      return new Response('Offline files are unavailable. Connect to the internet, close all remote tabs, and reopen. / オフライン用ファイルがありません。ネット接続後、リモコンの全タブを閉じて開き直してください。',
+        {status:503,headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'}});
+    }
+  })());
+});

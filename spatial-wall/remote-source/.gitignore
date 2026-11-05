@@ -1,0 +1,7 @@
+build/
+deps/
+__pycache__/
+local.properties
+*.keystore
+*.jks
+*.p12
