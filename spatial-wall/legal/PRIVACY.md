@@ -58,7 +58,7 @@ connection-setup data can be fetched over HTTP, but the code and saved access
 credential are not sent in plaintext. Device access can be revoked individually
 or together on the PC, which also closes the affected control, video and audio connections.
 
-### Official browser entry and Android starter downloads
+### Official browser entry and Android app downloads
 
 The phone's browser opens `https://support.nyanreal.jp/spatial-wall/remote/` to
 obtain the open-source entry and its fixed connection tools. The browser contacts
@@ -88,11 +88,13 @@ the profile may access that storage. Use your own profile and revoke unwanted
 devices on the PC. Clearing the browser's saved PC list does not revoke the PC-side
 registration.
 
-You may choose to download the open-source Android starter APK from the support
-website using your browser. Installing it is a separate action confirmed by you.
-The starter downloads the full app only from your registered LAN PC, checks its
-hash, package, version and signing certificate, and asks Android to confirm the
-update. The Android app does not contact the support website to fetch app updates.
+When you choose to install or update the Android app, the browser downloads the
+APK from your registered Spatial Wall PC over the authenticated, encrypted LAN
+connection. It verifies the product-signed release information and the APK's size
+and hash before offering to save the file. You open the downloaded file and confirm
+installation in Android. The support website serves the browser entry. The APK
+transfer and the browser's device credential stay between your browser and your PC.
+The Android app registers separately with the PC on first use.
 
 Spatial Wall's Android PC registrations are encrypted with an app-private Android
 Keystore key and excluded from backups. They include the PC's public identity,
@@ -222,7 +224,7 @@ QRの招待または6桁コードによる登録でPCを確認し、再接続で
 公開の接続準備情報はHTTPで取得することがありますが、コードや保存済みのアクセス資格を
 平文では送信しません。PCで端末ごと、またはまとめて登録を解除でき、対象の操作・映像・音声接続も停止します。
 
-### 公式ブラウザ入口とAndroid導入アプリの取得
+### 公式ブラウザ入口とAndroidアプリの取得
 
 スマホのブラウザは `https://support.nyanreal.jp/spatial-wall/remote/` から、
 オープンソースの入口と固定の接続用プログラムを取得します。初回の読込とservice workerの
@@ -247,10 +249,12 @@ QRのPCアドレスと短時間有効な招待はURLのフラグメント部分�
 この保存領域にアクセスできます。個人用プロファイルを使い、不要な端末はPCで登録を解除してください。
 ブラウザの保存済みPCの削除だけでは、PC側の登録は解除されません。
 
-オープンソースのAndroid導入APKは、お客様がブラウザでサポートサイトからダウンロードし、
-自分でインストールを確認できます。導入アプリが本体を取得する先は、登録したLAN内のPCだけです。
-ハッシュ・パッケージ名・版番号・署名証明書を検証してから、Androidの更新確認を開きます。
-Androidアプリがサポートサイトへアプリの更新を取得しに行くことはありません。
+Androidアプリをインストールまたは更新するときは、お客様の操作で、ブラウザが登録済みの
+Spatial WallのPCからLAN内の認証・暗号化された接続でAPKを取得します。ブラウザは製品署名付きの
+配布情報とAPKのサイズ・ハッシュを検証してから保存を案内します。お客様が保存したファイルを
+開き、Androidの画面でインストールを確認します。サポートサイトが配信するのはブラウザの入口で、
+APKとブラウザの端末資格はブラウザとPCの間で直接やり取りします。
+Androidアプリは初回利用時にブラウザとは別にPCに登録します。
 
 AndroidのSpatial Wall用PC登録は、アプリ専用のAndroid Keystore鍵で暗号化し、バックアップから
 除外します。PCの公開の識別情報・端末のアクセス資格・権限を含み、表示名とPCアドレスは別の

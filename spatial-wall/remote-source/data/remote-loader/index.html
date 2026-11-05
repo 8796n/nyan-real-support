@@ -33,12 +33,15 @@
   <p id="local-note" class="hint"></p>
   <p id="offline-status" class="hint" role="status" aria-live="polite"></p>
   <section><h2 id="android-title">Android app</h2>
-    <p id="download-note" class="hint">The optional starter downloads the full app from your PC. Android 11 or later and a 64-bit ARM device are required. After installing, scan a fresh PC QR and choose Open installed Android app.</p>
-    <p><a id="download-app" href="../android-installer/spatialwall-installer.apk" download>Download Android starter APK</a> · <a id="installer-source" href="https://github.com/8796n/nyan-real-support/tree/main/spatial-wall/android-installer/source" target="_blank" rel="noopener noreferrer">Starter source</a></p>
+    <p id="download-note" class="hint">To install or update the Android app, connect to your PC and choose Get Android app from PC. Requires Android 11 or later on a 64-bit ARM device.</p>
   </section>
   <p class="hint"><a id="entry-source" href="https://github.com/8796n/nyan-real-support/tree/main/spatial-wall/remote-source" target="_blank" rel="noopener noreferrer">Entry source</a> · <a id="entry-license" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT license</a> · <a id="runtime-notice" href="./remote-pairing-wasm.txt" target="_blank" rel="noopener noreferrer">Wasm runtime licenses</a> · <a id="boring-notice" href="./boringssl.txt" target="_blank" rel="noopener noreferrer">BoringSSL licenses</a></p>
   <div class="actions"><button id="remove-all" type="button" disabled>Clear saved PCs in this browser</button><button id="cancel" type="button" hidden>Cancel</button></div>
   <noscript>JavaScript is required to connect securely. / 安全に接続するには JavaScript が必要です。</noscript>
 </main>
-<div id="remote" hidden><button id="disconnect" type="button"></button><div id="viewport"></div></div>
+<div id="remote" hidden>
+  <div class="remote-tools"><button id="download-app" type="button" disabled>Get Android app from PC</button>
+    <a id="save-apk" download="SpatialWall.apk" hidden>Save APK</a><button id="disconnect" type="button"></button></div>
+  <p id="apk-status" role="status" hidden></p><div id="viewport"></div>
+</div>
 </body></html>

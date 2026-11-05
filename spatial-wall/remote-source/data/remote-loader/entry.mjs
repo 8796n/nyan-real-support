@@ -14,9 +14,12 @@ const WORDS = {
     'invite-title':'Register this browser', 'saved-title':'Saved PCs', empty:'No PCs saved in this browser.',
     'pair-title':'Register with a code', 'label-title':'Name shown on the PC', 'host-title':'PC address', 'port-title':'Port', 'code-title':'Six-digit code',
     register:'Register and connect', 'browser-pair':'Register and connect', 'open-app':'Open installed Android app',
-    'app-note':'Opens an already installed compatible Android app. If it is not installed, download the starter below first.',
-    'android-title':'Android app', 'download-app':'Download Android starter APK', 'installer-source':'Starter source',
-    'download-note':'The optional starter downloads the full app from your PC. Android 11 or later and a 64-bit ARM device are required. After installing, scan a fresh PC QR and choose Open installed Android app.',
+    'app-note':'If the Android app is already installed, open it to register it with this PC.',
+    'android-title':'Android app', 'download-app':'Get Android app from PC', 'save-apk':'Save APK',
+    'download-note':'To install or update the Android app, connect to your PC and choose Get Android app from PC. Requires Android 11 or later on a 64-bit ARM device.',
+    apkLoading:'Getting the Android app from your PC and verifying its signature…',
+    apkReady:'Open the saved APK on Android to install it. On first use, scan a fresh QR from your PC to register the app.',
+    apkFailed:'Could not verify or download the Android app. Check the PC has an up-to-date Spatial Wall installation and try again.',
     'entry-source':'Entry source', 'entry-license':'MIT license',
     'local-note':'Saved access belongs to this browser. Removing it here does not revoke the device on your PC. Clearing browser data requires registration again.',
     'remove-all':'Clear saved PCs in this browser', cancel:'Cancel', disconnect:'Disconnect', 'change-pc':'Choose another PC',
@@ -46,9 +49,12 @@ const WORDS = {
     'invite-title':'このブラウザを登録', 'saved-title':'保存済みPC', empty:'このブラウザに保存済みのPCはありません。',
     'pair-title':'コードで登録', 'label-title':'PCに表示する端末名', 'host-title':'PCのアドレス', 'port-title':'ポート', 'code-title':'6桁コード',
     register:'登録して接続', 'browser-pair':'登録して接続', 'open-app':'インストール済みAndroidアプリを開く',
-    'app-note':'インストール済みの対応Androidアプリを開きます。未導入の場合は、下の導入用APKを先にダウンロードしてください。',
-    'android-title':'Androidアプリ', 'download-app':'Android導入用APKをダウンロード', 'installer-source':'導入アプリのソース',
-    'download-note':'導入アプリはLAN内のPCから本体アプリを取得します。Android 11以降・64-bit ARM端末が必要です。インストール後はPCの新しいQRを読み取り、「インストール済みAndroidアプリを開く」を選んでください。ブラウザだけで使う場合は不要です。',
+    'app-note':'Androidアプリをすでにインストールしている場合は、アプリを開いてこのPCに登録できます。',
+    'android-title':'Androidアプリ', 'download-app':'PCからAndroidアプリを取得', 'save-apk':'APKを保存',
+    'download-note':'Androidアプリをインストール・更新するには、PCに接続して「PCからAndroidアプリを取得」を選びます。Android 11以降の64ビットARM端末で利用できます。',
+    apkLoading:'PCからAndroidアプリを取得し、製品署名を確認しています…',
+    apkReady:'保存したAPKをAndroidで開いてインストールしてください。初回はPCの新しいQRを読み取り、アプリを登録します。',
+    apkFailed:'Androidアプリを取得・検証できませんでした。PCのSpatial Wallが最新版か確認して、もう一度お試しください。',
     'entry-source':'入口のソース', 'entry-license':'MITライセンス',
     'local-note':'保存したアクセスはこのブラウザ専用です。ここで削除してもPC上の端末登録は解除されません。ブラウザのデータを消した場合は再登録が必要です。',
     'remove-all':'このブラウザの保存済みPCを削除', cancel:'キャンセル', disconnect:'切断', 'change-pc':'別のPCを選ぶ',
@@ -104,7 +110,7 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
     doc.documentElement.lang = language; $('language').value = language;
     for (const key of ['intro','invite-title','saved-title','empty','pair-title','label-title','host-title','port-title','code-title',
       'register','browser-pair','open-app','app-note','local-note','remove-all','cancel','disconnect','change-pc',
-      'android-title','download-app','installer-source','download-note','entry-source','entry-license']) $(key).textContent = text(key);
+      'android-title','download-app','download-note','entry-source','entry-license']) $(key).textContent = text(key);
     $('status').textContent = text(message);
     $('offline-status').textContent = text(offlineStatus);
     $('runtime-notice').textContent = text('runtimeNotice'); $('boring-notice').textContent = text('boringNotice');
@@ -120,6 +126,17 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
     $('host').readOnly = $('port').readOnly = !!constrained;
     $('change-pc').hidden = !constrained; $('change-pc').disabled = !!active;
     $('cancel').hidden = !active; $('panel').hidden = !!active?.ready; $('remote').hidden = !active?.ready;
+    $('download-app').disabled = !frame || !active?.ready || active.apkStatus === 'apkLoading';
+    $('download-app').hidden = !!active?.apkUrl;
+    $('save-apk').hidden = !active?.apkUrl;
+    if (active?.apkUrl) {
+      $('save-apk').href = active.apkUrl;
+      $('save-apk').textContent = text('save-apk') + ' (' + active.apkVersion + ')';
+    } else {
+      $('save-apk').removeAttribute('href');
+    }
+    $('apk-status').hidden = !active?.apkStatus;
+    $('apk-status').textContent = active?.apkStatus ? text(active.apkStatus) : '';
     $('empty').hidden = devices.length !== 0; $('saved').replaceChildren();
     for (const device of devices) {
       const row = doc.createElement('div'), name = doc.createElement('span'), connect = doc.createElement('button'), remove = doc.createElement('button');
@@ -141,6 +158,7 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
   }
   function cancel(key = 'cancelled') {
     const old = active; active = null; old?.abort.abort(); frame?.close(); frame = null;
+    if (old?.apkUrl) win.URL.revokeObjectURL(old.apkUrl);
     $('code').value = ''; status(key); render();
   }
   function reload(selection) {
@@ -165,10 +183,21 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
     status('connecting');
     const mounted = await api.mountDeviceFrame({ device, container:$('viewport'), storage:win.localStorage, productKey, signal:op.abort.signal,
       onReady() { if (current(op)) { op.ready = true; status('connected'); render(); } },
-      onClose() { if (current(op)) { active = null; frame = null; status(op.ready ? 'disconnected' : 'failed'); render(); } },
+      onClose() { if (current(op)) cancel(op.ready ? 'disconnected' : 'failed'); },
     });
     if (!current(op)) { mounted.close(); return; }
-    frame = mounted;
+    frame = mounted; render();
+  }
+  async function prepareApk() {
+    const op = active;
+    if (!frame || !op?.ready || op.apkUrl || op.apkStatus === 'apkLoading') return;
+    op.apkStatus = 'apkLoading'; render();
+    try {
+      const { blob, version } = await frame.downloadApk();
+      if (!current(op)) return;
+      op.apkUrl = win.URL.createObjectURL(blob); op.apkVersion = version; op.apkStatus = 'apkReady';
+    } catch { if (current(op)) op.apkStatus = 'apkFailed'; }
+    render();
   }
   function select(device) {
     if (active) return;
@@ -218,6 +247,7 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
   listen($('pair-form'),'submit',event => { event.preventDefault(); if (!$('register').disabled) void register(false); });
   listen($('browser-pair'),'click',() => { if (!$('browser-pair').disabled) void register(true); });
   listen($('cancel'),'click',() => cancel()); listen($('disconnect'),'click',() => cancel('disconnected'));
+  listen($('download-app'),'click',() => { void prepareApk(); });
   listen($('change-pc'),'click',() => reload('choose'));
   listen($('remove-all'),'click',() => {
     if (active) return;

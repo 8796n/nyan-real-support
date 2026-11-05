@@ -26,6 +26,6 @@ export async function mountDeviceFrame({ device, container, storage, productKey,
       controllerAllowed,
       onReady() { if (!closed) onReady(); }, onClose: close });
     if (closed) { frame.close(); throw new DOMException('Connection cancelled', 'AbortError'); }
-    return Object.freeze({ close, iframe: frame.iframe });
+    return Object.freeze({ close, iframe: frame.iframe, downloadApk: () => connection.downloadApk(productKey) });
   } catch (error) { close(); throw error; }
 }

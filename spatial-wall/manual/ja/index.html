@@ -179,8 +179,8 @@ XREAL 1S を接続し、マスタースイッチをオンにした状態です�
 <strong>RD Gateway に接続する場合のみ、インターネット上の外部サーバーと通信します。</strong>
 Gateway を使わない直接 RDP 接続は LAN 内に限ります。本体の通信方針は変わりません。</p>
 <p>スマホのブラウザは別途、公式リモコン入口の取得と更新確認のためサポートサイトへ通信します。
-オフライン利用の準備後は、インターネットなしでリモコンを利用できます。Android導入アプリの
-ブラウザでのダウンロードも、お客様が選んで行う別の操作です。導入アプリはLAN内のPCから本体を取得します。</p>
+オフライン利用の準備後は、インターネットなしでリモコンを利用できます。
+Androidアプリの取得を選ぶと、ブラウザがLAN内の登録済みPCから署名済みAPKを直接取得します。</p>
 <p>サポートも自動化していません。不具合の報告は、「バージョン情報」から情報をコピーして
 GitHub Issues に貼る、という手動の流れです。</p>
 <p><strong>対応メガネ</strong>：XREAL（One Pro / 1 Pro+ / One / 1S / Air 2 Pro / Air 2 / Air）、
@@ -560,19 +560,22 @@ AndroidアプリはTCPを使います。ゲストWi-Fiや端末間通信を禁�
 対応しています。macOS では画面収録と音声収録の許可が必要です。検証済みの構成と
 既知の制限は付録にまとめています。
 外部 Video Input は Windows 専用です。</p>
-<p>初回はスマホのブラウザで
-<a href="https://support.nyanreal.jp/spatial-wall/android-installer/spatialwall-installer.apk">公式Android導入アプリ</a>
-を自分でダウンロードしてインストールします。Android 11以降・64bit ARM端末が必要です。
-この導入アプリはオープンソースで、LAN内のPCからだけ本体を取得します。
-PCに登録してAndroidのインストール確認に従ってください。導入アプリと本体は同じ製品署名を使い、
-登録が引き継がれます。Androidアプリがサポートサイトへ更新を取りに行くことはありません。
-メガネで使う場合は、端末登録前に<strong>Androidメガネブリッジ</strong>を許可してください。</p>
-<p>導入アプリでGoogle Play プロテクトが<strong>「有害なアプリをブロックしました」</strong>と表示した場合は、
-「OK」で閉じてインストールを中止してください。Play プロテクトは有効のままにしてください。
-スマホリモコンだけなら、<a href="https://support.nyanreal.jp/spatial-wall/remote/">ブラウザ版リモコン</a>をそのまま使えます。</p>
-<p>対応アプリがインストール済みなら、PCのQRを読み取った公式入口で
-<strong>インストール済みAndroidアプリを開く</strong>を押し、Android側でPCへの登録を確認します。
-アプリでPCアドレスと6桁コードを入力して登録することもできます。
+<p>Androidアプリの初回インストール・更新には、Android 11以降の64ビットARM端末を使います。
+Chromeの通常のタブでも、ホーム画面に追加したリモコンでも操作できます。</p>
+<ol>
+<li><a href="https://support.nyanreal.jp/spatial-wall/remote/">ブラウザ版リモコン</a>を開いて、保存済みのPCに接続します。
+   ブラウザを初めて使う場合は、PCのQRを読み取って登録します。</li>
+<li><strong>PCからAndroidアプリを取得</strong>を押します。ブラウザが検証を終えたら<strong>APKを保存</strong>を押します。
+   接続中のPCのSpatial Wallに同梱されたAPKがスマホに保存されます。</li>
+<li>ダウンロード一覧から <code>SpatialWall.apk</code> を開き、Androidの画面でインストールまたは更新を確認します。
+   Google Play プロテクトで<strong>「有害なアプリをブロックしました」</strong>と表示された場合は、
+   「OK」で閉じて中止し、Play プロテクトは有効のままにしてください。</li>
+</ol>
+<p><strong>初回インストール後</strong>は、ブラウザとは別にAndroidアプリをPCに登録します。
+メガネで使う場合は、PCで<strong>Androidメガネブリッジ</strong>を許可してから新しいQRを表示します。
+そのQRを読み取り、公式入口で<strong>インストール済みAndroidアプリを開く</strong>を押して、Android側でPCへの登録を確認します。
+アプリでPCアドレスと新しい6桁コードを入力して登録することもできます。
+同じ製品署名のAPKで上書き更新すると、アプリに登録したPCは引き継がれます。
 保存したPCの資格はAndroid Keystoreで保護され、バックアップには含まれません。
 通常の再接続で生体認証を求めることはありません。保存の消失や消去後は再登録が必要です。
 RDPの資格は、次節の別の認証ルールで扱います。</p>

@@ -13,6 +13,10 @@ the desktop application, product signing keys, and saved device data are not par
 of this source distribution. `data/remote-loader/product-key.pem` is the public
 verification key, not a signing key.
 
+On request the entry also fetches the Android app from that PC. It checks the
+product signature on the APK manifest and the hash of the complete download
+before offering the file to save. The APK is distributed with the PC application.
+
 ## What is included
 
 - `data/remote-loader/`: unbundled JavaScript, HTML, CSS, the service worker template,

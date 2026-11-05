@@ -3,8 +3,9 @@
 import { lanServer } from './connection-data.mjs';
 import { fetchIdentityPin } from './identity.mjs';
 import { openOrderedChannel } from './transport.mjs';
-import { MAX_UI_BYTES } from './verify-ui.mjs';
+import { MAX_UI_BYTES, verifyApkManifest, verifyPayloadHash } from './verify-ui.mjs';
 const UI_LIMIT = 4 + 8192 + MAX_UI_BYTES, PREVIEW_LIMIT = 2 * 1024 * 1024;
+const APK_CHUNK = 1024 * 1024;
 const decoder = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
 const encoder = new TextEncoder();
 const hex = bytes => Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
@@ -14,12 +15,12 @@ function deferred() {
   promise.catch(() => {});
   return { promise, resolve, reject };
 }
-function deadline(signal) {
-  const controller = new AbortController(), stopped = deferred(), until = performance.now() + 5000;
+function deadline(signal, milliseconds = 5000) {
+  const controller = new AbortController(), stopped = deferred(), until = performance.now() + milliseconds;
   function cancel(reason) { if (!controller.signal.aborted) { controller.abort(reason); stopped.reject(reason); } }
   const abort = () => cancel(new DOMException('PC operation cancelled', 'AbortError'));
   const timeout = () => cancel(new DOMException('PC operation timed out', 'TimeoutError'));
-  const timer = setTimeout(timeout, 5000);
+  const timer = setTimeout(timeout, milliseconds);
   signal?.addEventListener('abort', abort, { once: true });
   if (signal?.aborted) abort();
   function check() {
@@ -49,7 +50,7 @@ export function createDeviceConnection({ device, events }) {
   let authorization = 'Device ' + hex(device.id) + '.' + hex(secret), closed = false;
   const owners = { control: null, controller: null };
   const operations = new Set();
-  let previewPending = false;
+  let previewPending = false, apkPending = false;
   async function transport(run) {
     const pin = await run.wait(fetchIdentityPin(server + '/identity-v2', spki, { signal: run.signal }));
     run.check();
@@ -59,8 +60,8 @@ export function createDeviceConnection({ device, events }) {
     try { await run.wait(wt.ready); return wt; }
     catch (error) { wt.close(); throw error; }
   }
-  async function oneReply(route, maximum, signal, shared) {
-    const cancel = new AbortController(), run = deadline(cancel.signal), reply = deferred();
+  async function oneReply(route, maximum, signal, shared, milliseconds) {
+    const cancel = new AbortController(), run = deadline(cancel.signal, milliseconds), reply = deferred();
     let wt = shared, channel, value, sent = false;
     const abort = () => cancel.abort();
     operations.add(cancel);
@@ -85,6 +86,32 @@ export function createDeviceConnection({ device, events }) {
     } finally {
       channel?.stop(); if (!shared) wt?.close();
       run.dispose(); operations.delete(cancel); signal?.removeEventListener('abort', abort);
+    }
+  }
+  async function downloadApk(productKey) {
+    if (closed || apkPending) throw Error('Android app download unavailable');
+    apkPending = true;
+    const cancel = new AbortController();
+    operations.add(cancel);
+    let wt;
+    try {
+      const init = deadline(cancel.signal);
+      try { wt = await transport(init); } finally { init.dispose(); }
+      const envelope = await oneReply('/app.apk/manifest', 8192, cancel.signal, wt);
+      const manifest = await verifyApkManifest(decoder.decode(envelope), productKey);
+      cancel.signal.throwIfAborted();
+      const bytes = new Uint8Array(manifest.size);
+      for (let offset = 0; offset < bytes.length; offset += APK_CHUNK) {
+        const size = Math.min(APK_CHUNK, bytes.length - offset);
+        const chunk = await oneReply(`/app.apk/${offset / APK_CHUNK}`, size, cancel.signal, wt, 30000);
+        if (chunk.length !== size) throw Error('Incomplete Android app download');
+        bytes.set(chunk, offset);
+      }
+      await verifyPayloadHash(bytes, manifest.sha256);
+      cancel.signal.throwIfAborted();
+      return { blob: new Blob([bytes], { type: 'application/vnd.android.package-archive' }), version: manifest.version_name };
+    } finally {
+      wt?.close(); operations.delete(cancel); apkPending = false;
     }
   }
   function stop(name) {
@@ -170,7 +197,7 @@ export function createDeviceConnection({ device, events }) {
     for (const cancel of operations) cancel.abort();
     stop('control'); stop('controller'); secret.fill(0); authorization = '';
   }
-  return Object.freeze({ close, hooks: Object.freeze({ start, stop, send,
+  return Object.freeze({ close, downloadApk, hooks: Object.freeze({ start, stop, send,
     async preview(signal) {
       const active = owners.control?.active;
       if (closed || previewPending || !active?.channel?.isOpen) return '';

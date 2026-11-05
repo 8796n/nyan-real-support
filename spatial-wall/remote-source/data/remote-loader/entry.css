@@ -14,6 +14,8 @@ button:focus-visible,input:focus-visible,select:focus-visible { outline:3px soli
 .saved-pc { margin:10px 0; } .saved-pc span { flex:1; min-width:180px; overflow-wrap:anywhere; }
 .hint { color:#b5c2d9; font-size:.9rem; } #status { min-height:1.6em; color:#bfd0fa; overflow-wrap:anywhere; }
 #code { max-width:180px; letter-spacing:.3em; } #invite-host { font-weight:600; }
-#remote { height:100dvh; display:flex; flex-direction:column; } #disconnect { align-self:flex-end; margin:4px 8px; }
+#remote { height:100dvh; display:flex; flex-direction:column; }
+.remote-tools { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:4px 8px; }
+#save-apk { padding:10px 4px; } #apk-status { margin:2px 8px 6px; font-size:.9rem; }
 #viewport { flex:1; min-height:0; } #viewport iframe { border:0; width:100%; height:100%; display:block; }
 .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
