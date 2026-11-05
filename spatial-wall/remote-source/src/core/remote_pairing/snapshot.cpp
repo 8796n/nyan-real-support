@@ -60,9 +60,9 @@ bool remote_snapshot::restore(const uint8_t *bytes, size_t size, remote_devices:
     }
     if (offset != size) return false;
     remote_devices validator;
-    if (!validator.load(parsed)) return false;
+    if (!validator.load(std::move(parsed), true)) return false;
     if (!set_key(bytes + 11, key_size)) return false;
-    devices.swap(parsed);
+    devices = validator.saved();
     return true;
 }
 

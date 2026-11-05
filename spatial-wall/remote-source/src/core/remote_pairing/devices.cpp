@@ -11,8 +11,7 @@ namespace nyan {
 namespace {
 bool grants_valid(uint8_t grants)
 {
-    return grants && !(grants & ~(NYAN_PAIRING_GRANT_REMOTE | NYAN_PAIRING_GRANT_GLASSES |
-                                NYAN_PAIRING_GRANT_CONTROLLER));
+    return grants && !(grants & ~NYAN_PAIRING_GRANT_MASK);
 }
 template<size_t N> bool nonzero(const std::array<uint8_t, N> &bytes)
 {
@@ -62,18 +61,23 @@ std::string remote_devices::credential::authorization() const
     return value;
 }
 
-bool remote_devices::load(records saved)
+bool remote_devices::load(records saved, bool restore_retired_grant)
 {
     ready_ = false;
     records_.clear();
     if (saved.size() > capacity) return false;
+    // Older protected snapshots used bit 4 for a SteamVR hand controller.
+    const unsigned allowed = NYAN_PAIRING_GRANT_MASK | (restore_retired_grant ? 4 : 0);
     for (size_t i = 0; i < saved.size(); ++i) {
-        const auto &item = saved[i];
+        auto &item = saved[i];
         if (!nonzero(item.device) || !nonzero(item.verifier) ||
-            !grants_valid(item.grants) || !label_valid(item.label)) return false;
+            !item.grants || (item.grants & ~allowed) || !label_valid(item.label)) return false;
         for (size_t j = 0; j < i; ++j)
             if (item.device == saved[j].device || item.verifier == saved[j].verifier) return false;
+        item.grants &= NYAN_PAIRING_GRANT_MASK;
     }
+    saved.erase(std::remove_if(saved.begin(), saved.end(),
+        [](const record &item) { return item.grants == 0; }), saved.end());
     records_ = std::move(saved);
     ready_ = true;
     return true;

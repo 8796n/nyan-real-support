@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (C) 2026 8796n <info@8796.jp>
-import { lanServer } from './connection-data.mjs';
+import { lanServer, validGrants } from './connection-data.mjs';
 import { fetchIdentityPin } from './identity.mjs';
 import { openOrderedChannel } from './transport.mjs';
 import { MAX_UI_BYTES, verifyApkManifest, verifyPayloadHash } from './verify-ui.mjs';
@@ -39,7 +39,7 @@ export function createDeviceConnection({ device, events }) {
   const server = lanServer(device?.host, device?.port);
   if (globalThis.isSecureContext === false || typeof WebTransport !== 'function' || !crypto?.subtle)
     throw Error('Secure WebTransport is unavailable');
-  if (!Number.isInteger(device.grants) || device.grants < 1 || device.grants > 7 || !(device.grants & 1) ||
+  if (!validGrants(device.grants) || !(device.grants & 1) ||
       !(device.id instanceof Uint8Array) || device.id.length !== 16 || !device.id.some(b => b) ||
       !(device.secret instanceof Uint8Array) || device.secret.length !== 32 || !device.secret.some(b => b) ||
       !(device.spki instanceof Uint8Array) || device.spki.length < 1 || device.spki.length > 256)
@@ -176,8 +176,7 @@ export function createDeviceConnection({ device, events }) {
   function start(name, hand) {
     if (closed) return;
     if (name !== 'control' && name !== 'controller') throw Error('Invalid logical channel');
-    if (name === 'controller' && (!(grants & 4) || hand !== 'left' && hand !== 'right'))
-      throw Error('Controller permission is unavailable');
+    if (name === 'controller' && hand !== 'left' && hand !== 'right') throw Error('Invalid controller hand');
     if (owners[name]?.wanted && (name === 'control' || owners[name].hand === hand)) return;
     stop(name);
     const owner = { wanted: true, hand, active: null, retry: null }; owners[name] = owner;

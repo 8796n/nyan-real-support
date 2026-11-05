@@ -2,6 +2,7 @@
 // Copyright (C) 2026 8796n <info@8796.jp>
 import { createPairing } from './pairing.mjs';
 import { openOrderedChannel } from './transport.mjs';
+import { validGrants } from './connection-data.mjs';
 const encoder = new TextEncoder();
 const MAX_REPLY = 308, TIMEOUT = 5000;
 
@@ -9,7 +10,6 @@ function copy(bytes, size, name) {
   if (!(bytes instanceof Uint8Array) || bytes.length !== size) throw Error('Invalid ' + name);
   return new Uint8Array(bytes);
 }
-function grantsValid(grants) { return Number.isInteger(grants) && grants >= 1 && grants <= 7; }
 function labelBytes(label) {
   if (typeof label !== 'string' || !label.length || label.length > 96 || /[\x00-\x1f\x7f]/.test(label))
     throw Error('Invalid device label');
@@ -183,7 +183,7 @@ export async function pairWithCode({ server, code, label, module, signal }) {
     const name = labelBytes(label);
     run = attempt(signal);
     const context = await publicRequest(urls.pair, null, 200, 98, run);
-    if (context[0] !== 2 || !grantsValid(context[97])) throw Error('Unsupported pairing context');
+    if (context[0] !== 2 || !validGrants(context[97])) throw Error('Unsupported pairing context');
     const hash = context.slice(33, 65), leaf = context.slice(65, 97);
     session = createPairing(module, 0, context, password); password.fill(0);
     const exchange = new Uint8Array(65); exchange[0] = 1;
@@ -216,7 +216,7 @@ export async function enrollWithInvite({ server, invite, certificateHash, spki, 
   let run, enrollment;
   try {
     const leaf = copy(certificateHash, 32, 'certificate pin');
-    if (!(spki instanceof Uint8Array) || !spki.length || spki.length > 256 || !grantsValid(grants))
+    if (!(spki instanceof Uint8Array) || !spki.length || spki.length > 256 || !validGrants(grants))
       throw Error('Invalid QR identity or grants');
     spki = new Uint8Array(spki);
     const name = labelBytes(label);

@@ -7,7 +7,6 @@ import { createRemoteFrame } from './ui-frame.mjs';
 // bytes and the existing narrow, credential-free hooks reach the opaque frame.
 export async function mountDeviceFrame({ device, container, storage, productKey, signal, onReady, onClose, onControlChange }) {
   if (typeof onReady !== 'function' || typeof onClose !== 'function') throw Error('Missing frame lifecycle');
-  const controllerAllowed = !!(device?.grants & 4);
   let frame, connection, closed = false;
   const events = Object.fromEntries(['open', 'close', 'text', 'cursor', 'controllerText', 'controllerClose']
     .map(name => [name, (...args) => {
@@ -27,7 +26,7 @@ export async function mountDeviceFrame({ device, container, storage, productKey,
     const payload = await connection.loadUi(signal);
     if (closed) throw new DOMException('Connection cancelled', 'AbortError');
     frame = await createRemoteFrame({ container, ...payload, productKey, storage, hooks: connection.hooks,
-      controllerAllowed,
+      controllerAllowed: true,
       onReady() { if (!closed) onReady(); }, onClose: close });
     if (closed) { frame.close(); throw new DOMException('Connection cancelled', 'AbortError'); }
     return Object.freeze({ close, iframe: frame.iframe, downloadApk: () => connection.downloadApk(productKey),

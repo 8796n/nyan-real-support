@@ -20,8 +20,6 @@ constexpr char transcript_domain[] = "nyan-real/pair-v2/boringssl-spake2-draft02
 constexpr char server_label[] = "nyan-real/pair-v2/boringssl-spake2-draft02/server-confirm";
 constexpr char client_label[] = "nyan-real/pair-v2/boringssl-spake2-draft02/client-confirm";
 constexpr char enrollment_label[] = "nyan-real/pair-v2/boringssl-spake2-draft02/enrollment";
-constexpr unsigned allowed_grants = NYAN_PAIRING_GRANT_REMOTE | NYAN_PAIRING_GRANT_GLASSES |
-                                    NYAN_PAIRING_GRANT_CONTROLLER;
 using Bytes32 = std::array<uint8_t, 32>;
 using Context = std::array<uint8_t, NYAN_PAIRING_CONTEXT_BYTES>;
 enum class State { generated, processed, confirmed, failed };
@@ -102,7 +100,7 @@ nyan_pairing *nyan_pairing_new(int role, const uint8_t *context, size_t context_
 {
     if ((role != NYAN_PAIRING_CLIENT && role != NYAN_PAIRING_SERVER) || !context ||
         context_len != NYAN_PAIRING_CONTEXT_BYTES || !code || code_len != NYAN_PAIRING_CODE_BYTES ||
-        context[0] != NYAN_PAIRING_VERSION || context[97] == 0 || (context[97] & ~allowed_grants))
+        context[0] != NYAN_PAIRING_VERSION || context[97] == 0 || (context[97] & ~NYAN_PAIRING_GRANT_MASK))
         return nullptr;
     for (size_t i = 0; i < code_len; ++i)
         if (code[i] < '0' || code[i] > '9') return nullptr;

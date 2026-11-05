@@ -17,7 +17,7 @@ assert.equal(runBrowserChecks(module).checks, 4);
 const code = new TextEncoder().encode('012345');
 const context = Uint8Array.from({ length: 98 }, (_, index) => index);
 context[0] = 2;
-context[97] = 7;
+context[97] = 3;
 let checks = 0;
 function check(value, label) { assert.ok(value, label); checks++; }
 function rejected(operation, label) { assert.throws(operation, undefined, label); checks++; }

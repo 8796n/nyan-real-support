@@ -12,9 +12,7 @@
 
 namespace nyan {
 namespace {
-constexpr uint8_t allowed_grants = NYAN_PAIRING_GRANT_REMOTE | NYAN_PAIRING_GRANT_GLASSES |
-                                   NYAN_PAIRING_GRANT_CONTROLLER;
-bool grants_valid(uint8_t value) { return value && !(value & ~allowed_grants); }
+bool grants_valid(uint8_t value) { return value && !(value & ~NYAN_PAIRING_GRANT_MASK); }
 struct secret_text {
     std::string value;
     ~secret_text() { if (!value.empty()) OPENSSL_cleanse(value.data(), value.size()); }

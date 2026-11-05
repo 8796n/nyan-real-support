@@ -39,7 +39,7 @@ public:
     using persist = std::function<bool(const records &)>;
     static constexpr size_t capacity = 64;
 
-    bool load(records saved);
+    bool load(records saved, bool restore_retired_grant = false);
     bool ready() const { return ready_; }
     const records &saved() const { return records_; }
     bool can_enroll(uint8_t grants, std::string_view label) const;

@@ -2,6 +2,7 @@
 // Copyright (C) 2026 8796n <info@8796.jp>
 const ENTRY = 'https://support.nyanreal.jp/spatial-wall/remote/';
 const FIELDS = 'cert,grants,host,invite,port,spki,v';
+export function validGrants(grants) { return Number.isInteger(grants) && grants >= 1 && grants <= 3; }
 
 export function lanServer(host, port) {
   if (typeof host !== 'string' || host.length > 15 ||
@@ -64,7 +65,7 @@ export async function parsePairingLink(value) {
     }
     if (Object.keys(fields).sort().join(',') !== FIELDS || fields.v !== '2' ||
         !/^[1-9][0-9]{0,4}$/.test(fields.port) || String(Number(fields.port)) !== fields.port ||
-        fields.grants.length !== 1 || !/^[1-7]$/.test(fields.grants)) throw Error();
+        fields.grants.length !== 1 || !validGrants(Number(fields.grants))) throw Error();
     const host = fields.host, port = Number(fields.port), grants = Number(fields.grants);
     lanServer(host, port);
     const spki = decodeBase64url(fields.spki, 1, 256);
@@ -81,7 +82,7 @@ export async function parsePairingLink(value) {
 // Call only for an explicit user action. No saved device credential is accepted.
 export function androidIntent({ host, port, grants, spki, certificateHash, invite }) {
   lanServer(host, port);
-  if (!Number.isInteger(grants) || grants < 1 || grants > 7 ||
+  if (!validGrants(grants) ||
       !(certificateHash instanceof Uint8Array) || certificateHash.length !== 32 ||
       !(invite instanceof Uint8Array) || invite.length !== 32) throw Error('Invalid pairing invitation');
   return `intent://pair?v=2&host=${host}&port=${port}&spki=${encodeBase64url(spki)}` +

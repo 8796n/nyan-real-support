@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (C) 2026 8796n <info@8796.jp>
-import { lanServer, encodeBase64url, decodeBase64url, validateSpki } from './connection-data.mjs';
+import { lanServer, encodeBase64url, decodeBase64url, validateSpki, validGrants } from './connection-data.mjs';
 export const DEVICE_STORE_KEY = 'spatial-wall.devices.v2';
 const KEY = DEVICE_STORE_KEY, MAX_DEVICES = 16, MAX_BYTES = 16384;
 const FIELDS = 'grants,host,id,port,secret,spki';
@@ -13,7 +13,7 @@ function unhex(value, size) {
 }
 function snapshot(device) {
   lanServer(device?.host, device?.port);
-  if (!Number.isInteger(device.grants) || device.grants < 1 || device.grants > 7 ||
+  if (!validGrants(device.grants) ||
       !(device.id instanceof Uint8Array) || device.id.length !== 16 || !device.id.some(b => b) ||
       !(device.secret instanceof Uint8Array) || device.secret.length !== 32 || !device.secret.some(b => b)) throw Error();
   return { host: device.host, port: device.port, id: hex(device.id), secret: hex(device.secret),
@@ -43,6 +43,9 @@ async function read(storage) {
         !Array.isArray(record.devices) || record.devices.length > MAX_DEVICES) throw Error();
     const seen = new Set();
     for (const entry of record.devices) {
+      // Only saved registrations can carry the retired standalone controller grant.
+      if (entry?.grants === 4) continue;
+      if (Number.isInteger(entry?.grants) && entry.grants >= 5 && entry.grants <= 7) entry.grants &= 3;
       if (seen.has(entry?.spki)) throw Error();
       seen.add(entry?.spki); devices.push(await validate(entry));
     }

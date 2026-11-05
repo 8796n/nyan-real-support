@@ -15,6 +15,7 @@ const WORDS = {
     'pair-title':'Register with a code', 'label-title':'Name shown on the PC', 'host-title':'PC address', 'port-title':'Port', 'code-title':'Six-digit code',
     register:'Register and connect', 'browser-pair':'Register and connect', 'open-app':'Open installed Android app',
     'app-note':'If the Android app is already installed, open it to register it with this PC.',
+    glassesMissing:'This registration allows remote control only. To use glasses connected to Android, open Remote on the PC, turn on “Allow Android glasses bridge”, then register the Android app with a new QR or six-digit code.',
     'android-title':'Android app', 'download-app':'Get Android app from PC', 'save-apk':'Save APK',
     'download-note':'To install or update the Android app, connect to your PC and choose Get Android app from PC. Requires Android 11 or later on a 64-bit ARM device.',
     apkLoading:'Getting the Android app from your PC and verifying its signature…',
@@ -45,7 +46,7 @@ const WORDS = {
     removed:'Saved access was removed from this browser.', changed:'Saved registrations changed in another tab. The connection was closed.',
     invalidInput:'Enter a local IPv4 address, a port from 1 to 65535, and exactly six digits.',
     disconnected:'Disconnected.', app:'Opening the installed Android app…', selectionError:'The PC selection could not be saved for reloading.',
-    remote:'Remote', glasses:'Android glasses bridge', controller:'Phone controller', embedded:'Open this page directly to connect.',
+    remote:'Remote', glasses:'Android glasses bridge', embedded:'Open this page directly to connect.',
   },
   ja: {
     intro:'同じLAN内のSpatial Wallに接続します。PCに表示されたQRを読み取るか、PCのアドレスと6桁コードを入力してください。',
@@ -53,6 +54,7 @@ const WORDS = {
     'pair-title':'コードで登録', 'label-title':'PCに表示する端末名', 'host-title':'PCのアドレス', 'port-title':'ポート', 'code-title':'6桁コード',
     register:'登録して接続', 'browser-pair':'登録して接続', 'open-app':'インストール済みAndroidアプリを開く',
     'app-note':'Androidアプリをすでにインストールしている場合は、アプリを開いてこのPCに登録できます。',
+    glassesMissing:'この登録で使えるのはリモコン操作のみです。Androidにつないだメガネを使うには、PCの「リモコン操作」で「Android メガネブリッジを許可」をオンにして、新しいQRか6桁コードでAndroidアプリを登録してください。',
     'android-title':'Androidアプリ', 'download-app':'PCからAndroidアプリを取得', 'save-apk':'APKを保存',
     'download-note':'Androidアプリをインストール・更新するには、PCに接続して「PCからAndroidアプリを取得」を選びます。Android 11以降の64ビットARM端末で利用できます。',
     apkLoading:'PCからAndroidアプリを取得し、製品署名を確認しています…',
@@ -83,7 +85,7 @@ const WORDS = {
     removed:'このブラウザの保存済みアクセスを削除しました。', changed:'別のタブで保存済み登録が変更されたため、接続を閉じました。',
     invalidInput:'LANのIPv4アドレス、1〜65535のポート、数字6桁を入力してください。',
     disconnected:'切断しました。', app:'インストール済みAndroidアプリを開いています…', selectionError:'再読込用のPC選択を保存できませんでした。',
-    remote:'リモコン', glasses:'Androidメガネブリッジ', controller:'スマホコントローラー', embedded:'接続するには、このページを直接開いてください。',
+    remote:'リモコン', glasses:'Androidメガネブリッジ', embedded:'接続するには、このページを直接開いてください。',
   },
 };
 const defaults = { loadDevices, saveDevice, forgetDevice, forgetAllDevices, parsePairingLink, watchOffline,
@@ -116,7 +118,7 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
     if (disposed) return;
     doc.documentElement.lang = language; $('language').value = language;
     for (const key of ['intro','invite-title','saved-title','empty','pair-title','label-title','host-title','port-title','code-title',
-      'register','browser-pair','open-app','app-note','local-note','remove-all','cancel','disconnect','change-pc',
+      'register','browser-pair','open-app','local-note','remove-all','cancel','disconnect','change-pc',
       'android-title','download-app','download-note','entry-source','entry-license']) $(key).textContent = text(key);
     $('status').textContent = text(message);
     $('offline-status').textContent = text(offlineStatus);
@@ -124,7 +126,8 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
     $('invite').hidden = !invitation;
     if (invitation) {
       $('invite-host').textContent = invitation.host + ':' + invitation.port;
-      $('invite-grants').textContent = [[1,'remote'],[2,'glasses'],[4,'controller']].filter(([bit]) => invitation.grants & bit).map(([,key]) => text(key)).join(' / ');
+      $('invite-grants').textContent = [[1,'remote'],[2,'glasses']].filter(([bit]) => invitation.grants & bit).map(([,key]) => text(key)).join(' / ');
+      $('app-note').textContent = text(invitation.grants & 2 ? 'app-note' : 'glassesMissing');
     }
     $('browser-pair').disabled = !!active || blocked || !supported || !productKey || !invitation || !(invitation.grants & 1);
     $('open-app').hidden = $('app-note').hidden = $('android-app').hidden = !android;
@@ -141,6 +144,8 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
     $('handoff-app').textContent = text(active?.appUrl ? 'open-app' : 'handoff-app');
     $('handoff-status').hidden = !active?.handoffStatus;
     $('handoff-status').textContent = active?.handoffStatus ? text(active.handoffStatus) : '';
+    if (active?.handoffStatus === 'handoffReady' && !active.appGlasses)
+      $('handoff-status').textContent += ' ' + text('glassesMissing');
     $('save-apk').hidden = !android || !active?.apkUrl;
     if (active?.apkUrl) {
       $('save-apk').href = active.apkUrl;
@@ -228,6 +233,7 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
       invitation = await frame.appInvitation();
       if (!current(op)) return;
       if (performance.now() >= op.appExpiry) throw Error('App invitation expired');
+      op.appGlasses = !!(invitation.grants & 2);
       op.appUrl = androidIntent(invitation); op.handoffStatus = 'handoffReady';
       // Keep app launch on a separate user tap, independent of network latency.
       op.appTimer = setTimeout(() => {
