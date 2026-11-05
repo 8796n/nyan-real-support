@@ -4,46 +4,54 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' blob: 'sha256-gqttCE1vvcsUfZmED1TLD3syX8zlVSydVt9aZciQgbc=' 'sha256-RWi8bTOJaHJcwR58TPNVuoVaQqVvTlh3TcmeU8GrJ44=' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' http: https: 'unsafe-webtransport-hashes'; frame-src blob:; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
-<script src="./assets/bc97ee5c5696eabd7c8aec6864649a6ad279b36f9b962e9d9280c59933de7bcf/entry-capture.js"></script>
+<script src="./assets/25f2d57d7828449a8f361f862731888f603f068b47d1db60b942a15c468e6a23/entry-capture.js"></script>
 <title>Spatial Wall Remote</title>
-<meta name="theme-color" content="#111725">
+<meta name="theme-color" content="#101216">
 <link rel="manifest" href="./manifest.webmanifest">
-<link rel="icon" href="./assets/bc97ee5c5696eabd7c8aec6864649a6ad279b36f9b962e9d9280c59933de7bcf/icon-192.png" type="image/png" sizes="192x192">
-<link rel="stylesheet" href="./assets/bc97ee5c5696eabd7c8aec6864649a6ad279b36f9b962e9d9280c59933de7bcf/entry.css">
-<script type="module" src="./assets/bc97ee5c5696eabd7c8aec6864649a6ad279b36f9b962e9d9280c59933de7bcf/entry.mjs"></script>
+<link rel="icon" href="./assets/25f2d57d7828449a8f361f862731888f603f068b47d1db60b942a15c468e6a23/icon-192.png" type="image/png" sizes="192x192">
+<link rel="stylesheet" href="./assets/25f2d57d7828449a8f361f862731888f603f068b47d1db60b942a15c468e6a23/entry.css">
+<script type="module" src="./assets/25f2d57d7828449a8f361f862731888f603f068b47d1db60b942a15c468e6a23/entry.mjs"></script>
 </head><body>
 <main id="panel">
   <header><h1>Spatial Wall Remote</h1><label><span class="sr-only">Language</span><select id="language"><option value="en">English</option><option value="ja">日本語</option></select></label></header>
-  <p id="intro">Connect to Spatial Wall on the same local network.</p>
-  <p id="status" role="status" aria-live="polite">Loading secure connection tools…</p>
-  <section id="invite" hidden><h2 id="invite-title"></h2><p id="invite-host"></p><p id="invite-grants"></p>
-    <div class="actions"><button id="browser-pair" type="button" disabled>Register and connect</button><button id="open-app" type="button" hidden disabled>Open installed Android app</button></div>
+  <p id="intro" class="hint">Scan the QR on your PC, or register with a six-digit code.</p>
+  <div class="status-row"><p id="status" role="status" aria-live="polite">Loading…</p><button id="cancel" type="button" hidden>Cancel</button></div>
+  <section id="invite" hidden><h2 id="invite-title"></h2><p id="invite-host"></p><p id="invite-grants" class="hint"></p>
+    <div class="actions"><button id="browser-pair" class="primary" type="button" disabled>Register and connect</button><button id="open-app" type="button" hidden disabled>Open in Android app</button></div>
     <p id="app-note" class="hint" hidden></p>
   </section>
-  <section><h2 id="saved-title">Saved PCs</h2><div id="saved"></div><p id="empty" class="hint"></p></section>
-  <section><h2 id="pair-title">Register with a code</h2>
-    <label for="label" id="label-title">Name shown on the PC</label><input id="label" maxlength="96" autocomplete="nickname">
+  <section id="saved-section" hidden><h2 id="saved-title">Saved PCs</h2><div id="saved"></div></section>
+  <details id="pair-box"><summary id="pair-title">Register with a code</summary>
     <form id="pair-form">
       <div class="endpoint"><label><span id="host-title">PC address</span><input id="host" inputmode="decimal" placeholder="192.168.1.7" required autocomplete="off"></label>
       <label><span id="port-title">Port</span><input id="port" inputmode="numeric" value="8797" required autocomplete="off"></label></div>
       <label for="code" id="code-title">Six-digit code</label><input id="code" type="password" inputmode="numeric" pattern="[0-9]{6}" minlength="6" maxlength="6" required autocomplete="one-time-code">
-      <button id="register" type="submit" disabled>Register and connect</button>
+      <label for="label" id="label-title">Name shown on the PC</label><input id="label" maxlength="96" autocomplete="nickname">
+      <div class="actions"><button id="register" class="primary" type="submit" disabled>Register and connect</button><button id="change-pc" type="button" hidden></button></div>
     </form>
-    <button id="change-pc" type="button" hidden></button>
+  </details>
+  <section id="android-app" class="plain" hidden><h2 id="android-title">Android app</h2>
+    <p id="download-note" class="hint">To install or update the app, connect to your PC and open the Android app menu. Android 11 or later, 64-bit ARM.</p>
   </section>
-  <p id="local-note" class="hint"></p>
-  <p id="offline-status" class="hint" role="status" aria-live="polite"></p>
-  <section id="android-app" hidden><h2 id="android-title">Android app</h2>
-    <p id="download-note" class="hint">To install or update the Android app, connect to your PC and choose Get Android app from PC. Requires Android 11 or later on a 64-bit ARM device.</p>
-  </section>
-  <p class="hint"><a id="entry-source" href="https://github.com/8796n/nyan-real-support/tree/main/spatial-wall/remote-source" target="_blank" rel="noopener noreferrer">Entry source</a> · <a id="entry-license" href="./assets/bc97ee5c5696eabd7c8aec6864649a6ad279b36f9b962e9d9280c59933de7bcf/LICENSE" target="_blank" rel="noopener noreferrer">MIT license</a> · <a id="runtime-notice" href="./assets/bc97ee5c5696eabd7c8aec6864649a6ad279b36f9b962e9d9280c59933de7bcf/remote-pairing-wasm.txt" target="_blank" rel="noopener noreferrer">Wasm runtime licenses</a> · <a id="boring-notice" href="./assets/bc97ee5c5696eabd7c8aec6864649a6ad279b36f9b962e9d9280c59933de7bcf/boringssl.txt" target="_blank" rel="noopener noreferrer">BoringSSL licenses</a></p>
-  <div class="actions"><button id="remove-all" type="button" disabled>Clear saved PCs in this browser</button><button id="cancel" type="button" hidden>Cancel</button></div>
+  <footer>
+    <p id="offline-status" role="status" aria-live="polite"></p>
+    <p id="local-note"></p>
+    <p><a id="entry-source" href="https://github.com/8796n/nyan-real-support/tree/main/spatial-wall/remote-source" target="_blank" rel="noopener noreferrer">Source</a> · <a id="entry-license" href="./assets/25f2d57d7828449a8f361f862731888f603f068b47d1db60b942a15c468e6a23/LICENSE" target="_blank" rel="noopener noreferrer">MIT license</a> · <a id="runtime-notice" href="./assets/25f2d57d7828449a8f361f862731888f603f068b47d1db60b942a15c468e6a23/remote-pairing-wasm.txt" target="_blank" rel="noopener noreferrer">Wasm licenses</a> · <a id="boring-notice" href="./assets/25f2d57d7828449a8f361f862731888f603f068b47d1db60b942a15c468e6a23/boringssl.txt" target="_blank" rel="noopener noreferrer">BoringSSL licenses</a></p>
+    <button id="remove-all" class="text danger" type="button" disabled>Remove all from this browser</button>
+  </footer>
   <noscript>JavaScript is required to connect securely. / 安全に接続するには JavaScript が必要です。</noscript>
 </main>
 <div id="remote" hidden>
-  <div class="remote-tools"><button id="download-app" type="button" hidden disabled>Get Android app from PC</button>
-    <a id="save-apk" download="SpatialWall.apk" hidden>Save APK</a>
-    <button id="handoff-app" type="button" hidden>Connect Android app</button><button id="disconnect" type="button"></button></div>
-  <p id="apk-status" role="status" hidden></p><p id="handoff-status" role="status" aria-live="polite" hidden></p><div id="viewport"></div>
+  <div class="remote-bar"><span id="remote-pc"></span>
+    <button id="android-menu-button" type="button" popovertarget="android-menu" hidden>Android app</button>
+    <button id="disconnect" type="button"></button></div>
+  <div id="android-menu" popover>
+    <button id="download-app" type="button" hidden disabled>Get app from PC</button>
+    <a id="save-apk" class="button primary" download="SpatialWall.apk" hidden>Save APK</a>
+    <p id="apk-status" role="status" hidden></p>
+    <button id="handoff-app" type="button" hidden>Hand off to app</button>
+    <p id="handoff-status" role="status" aria-live="polite" hidden></p>
+  </div>
+  <div id="viewport"></div>
 </div>
 </body></html>

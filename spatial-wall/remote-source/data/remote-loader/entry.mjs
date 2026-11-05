@@ -10,81 +10,75 @@ import { watchOffline } from './offline.mjs';
 const SELECTED = 'spatial-wall.selected-pc.v2';
 const WORDS = {
   en: {
-    intro:'Connect to Spatial Wall on the same local network. Scan the QR shown on your PC, or enter its address and six-digit code.',
-    'invite-title':'Register this browser', 'saved-title':'Saved PCs', empty:'No PCs saved in this browser.',
+    intro:'Scan the QR on your PC, or register with a six-digit code.',
+    'invite-title':'Register with this PC', 'saved-title':'Saved PCs',
     'pair-title':'Register with a code', 'label-title':'Name shown on the PC', 'host-title':'PC address', 'port-title':'Port', 'code-title':'Six-digit code',
-    register:'Register and connect', 'browser-pair':'Register and connect', 'open-app':'Open installed Android app',
-    'app-note':'If the Android app is already installed, open it to register it with this PC.',
-    glassesMissing:'This registration allows remote control only. To use glasses connected to Android, open Remote on the PC, turn on “Allow Android glasses bridge”, then register the Android app with a new QR or six-digit code.',
-    'android-title':'Android app', 'download-app':'Get Android app from PC', 'save-apk':'Save APK',
-    'download-note':'To install or update the Android app, connect to your PC and choose Get Android app from PC. Requires Android 11 or later on a 64-bit ARM device.',
-    apkLoading:'Getting the Android app from your PC and verifying its signature…',
-    apkReady:'Open the saved APK on Android to install it. Return here and choose Connect Android app, then Open installed Android app. No new QR is needed.',
-    'handoff-app':'Connect Android app', handoffLoading:'Preparing the app connection…',
-    handoffReady:'Ready. Choose Open installed Android app before this invitation expires and confirm the PC in the app.',
-    handoffFailed:'Could not prepare the app connection. Check the PC has an up-to-date Spatial Wall installation and try again.',
-    apkFailed:'Could not verify or download the Android app. Check the PC has an up-to-date Spatial Wall installation and try again.',
-    'entry-source':'Entry source', 'entry-license':'MIT license',
-    'local-note':'Saved access belongs to this browser. Removing it here does not revoke the device on your PC. Clearing browser data requires registration again.',
-    'remove-all':'Clear saved PCs in this browser', cancel:'Cancel', disconnect:'Disconnect', 'change-pc':'Choose another PC',
-    connect:'Connect', forget:'Remove here', label:'Phone browser', loading:'Loading secure connection tools…', ready:'Ready to connect.',
-    unsupported:'Use Chrome or Chromium 156 or later on Android or desktop. iPhone and iPad browsers are not supported.',
-    networkPrompt:'Select Connect to allow access to your PC on the local network.',
-    networkDenied:'Allow local network access in this site’s browser settings, then select Connect.',
-    offlineSaving:'Saving the official connection tools for offline use…',
-    offlineReady:'Offline connection tools are ready. Your PC must remain reachable on the LAN.',
-    offlineNext:'Offline files are saved. Close and reopen this page to use them on your next visit.',
-    offlineUpdate:'An update is saved. Close all remote tabs and any remote opened from the home screen, then reopen the remote.',
-    offlineUnavailable:'Offline files are not confirmed. Keep internet access available and reopen this page to retry.',
-    runtimeNotice:'Wasm runtime licenses', boringNotice:'BoringSSL licenses',
-    invalidLink:'This registration link is invalid. Scan a new QR from your PC.',
-    storeError:'Saved registrations cannot be read. Explicitly clear them here to register again.',
-    toolsError:'Connection tools could not be loaded. Open this page online and try again.',
-    registering:'Registering with your PC…', connecting:'Connecting to your PC…', connected:'Connected.', cancelled:'Cancelled.',
-    failed:'Connection failed. Check the PC and local network; if access was removed, register again.',
-    saveError:'Registration could not be saved. No remote was opened. Check browser storage and register again.',
-    removed:'Saved access was removed from this browser.', changed:'Saved registrations changed in another tab. The connection was closed.',
-    invalidInput:'Enter a local IPv4 address, a port from 1 to 65535, and exactly six digits.',
-    disconnected:'Disconnected.', app:'Opening the installed Android app…', selectionError:'The PC selection could not be saved for reloading.',
+    register:'Register and connect', 'browser-pair':'Register and connect', 'open-app':'Open in Android app',
+    'app-note':'If the Android app is installed, you can register it instead.',
+    glassesMissing:'This registration covers remote control only. To use glasses connected to Android, turn on “Allow Android glasses bridge” under Remote on the PC, then register the app with a new QR or six-digit code.',
+    'android-title':'Android app', 'android-menu-button':'Android app', 'download-app':'Get app from PC', 'save-apk':'Save APK',
+    'download-note':'To install or update the app, connect to your PC and open the Android app menu. Android 11 or later, 64-bit ARM.',
+    apkLoading:'Getting the app from your PC and checking its signature…',
+    apkReady:'Open the saved APK to install it, then come back and choose Hand off to app.',
+    'handoff-app':'Hand off to app', handoffLoading:'Preparing…',
+    handoffReady:'Within a minute, choose Open in Android app and confirm the PC in the app.',
+    handoffFailed:'Could not prepare the handoff. Update Spatial Wall on the PC and try again.',
+    apkFailed:'Could not verify or download the app. Update Spatial Wall on the PC and try again.',
+    'entry-source':'Source', 'entry-license':'MIT license',
+    'local-note':'Registrations are stored in this browser only. Removing them here does not remove this device from the PC.',
+    'remove-all':'Remove all from this browser', cancel:'Cancel', disconnect:'Disconnect', 'change-pc':'Choose another PC',
+    connect:'Connect', forget:'Remove', label:'Phone browser', loading:'Loading…', ready:'',
+    unsupported:'Open this page in Chrome 156 or later on Android or a PC. iPhone and iPad are not supported.',
+    networkPrompt:'Select Connect and allow access to your local network.',
+    networkDenied:'Allow local network access for this site in browser settings, then select Connect.',
+    offlineUpdate:'An update is ready. Close every remote tab and home-screen window, then reopen.',
+    offlineUnavailable:'Offline files are not confirmed. Go online and reopen this page.',
+    runtimeNotice:'Wasm licenses', boringNotice:'BoringSSL licenses',
+    invalidLink:'This QR link is invalid. Show a new QR on your PC.',
+    storeError:'Saved registrations cannot be read. Choose Remove all from this browser, then register again.',
+    toolsError:'Could not load. Go online and reopen this page.',
+    registering:'Registering…', connecting:'Connecting…', connected:'Connected.', cancelled:'Cancelled.',
+    failed:'Could not connect. Check the PC and network. If the PC removed this device, register again.',
+    saveError:'Registration could not be saved. Check browser storage and register again.',
+    removed:'Removed from this browser.', changed:'Registrations changed in another tab, so the connection was closed.',
+    invalidInput:'Check the PC address (for example 192.168.1.7), the port and the six-digit code.',
+    disconnected:'Disconnected.', app:'Opening the Android app…', selectionError:'The PC selection could not be saved for reloading.',
     remote:'Remote', glasses:'Android glasses bridge', embedded:'Open this page directly to connect.',
   },
   ja: {
-    intro:'同じLAN内のSpatial Wallに接続します。PCに表示されたQRを読み取るか、PCのアドレスと6桁コードを入力してください。',
-    'invite-title':'このブラウザを登録', 'saved-title':'保存済みPC', empty:'このブラウザに保存済みのPCはありません。',
-    'pair-title':'コードで登録', 'label-title':'PCに表示する端末名', 'host-title':'PCのアドレス', 'port-title':'ポート', 'code-title':'6桁コード',
-    register:'登録して接続', 'browser-pair':'登録して接続', 'open-app':'インストール済みAndroidアプリを開く',
-    'app-note':'Androidアプリをすでにインストールしている場合は、アプリを開いてこのPCに登録できます。',
-    glassesMissing:'この登録で使えるのはリモコン操作のみです。Androidにつないだメガネを使うには、PCの「リモコン操作」で「Android メガネブリッジを許可」をオンにして、新しいQRか6桁コードでAndroidアプリを登録してください。',
-    'android-title':'Androidアプリ', 'download-app':'PCからAndroidアプリを取得', 'save-apk':'APKを保存',
-    'download-note':'Androidアプリをインストール・更新するには、PCに接続して「PCからAndroidアプリを取得」を選びます。Android 11以降の64ビットARM端末で利用できます。',
-    apkLoading:'PCからAndroidアプリを取得し、製品署名を確認しています…',
-    apkReady:'保存したAPKをAndroidで開いてインストールしてください。この画面に戻り「アプリへ接続を引き継ぐ」→「インストール済みAndroidアプリを開く」を選びます。QRの再読取は不要です。',
-    'handoff-app':'アプリへ接続を引き継ぐ', handoffLoading:'アプリへの接続を準備しています…',
-    handoffReady:'準備できました。期限が切れる前に「インストール済みAndroidアプリを開く」を選び、アプリで接続先のPCを確認してください。',
-    handoffFailed:'接続を引き継げませんでした。PCのSpatial Wallが最新版か確認して、もう一度お試しください。',
-    apkFailed:'Androidアプリを取得・検証できませんでした。PCのSpatial Wallが最新版か確認して、もう一度お試しください。',
-    'entry-source':'入口のソース', 'entry-license':'MITライセンス',
-    'local-note':'保存したアクセスはこのブラウザ専用です。ここで削除してもPC上の端末登録は解除されません。ブラウザのデータを消した場合は再登録が必要です。',
-    'remove-all':'このブラウザの保存済みPCを削除', cancel:'キャンセル', disconnect:'切断', 'change-pc':'別のPCを選ぶ',
-    connect:'接続', forget:'このブラウザから削除', label:'スマホブラウザ', loading:'安全な接続に必要な機能を読み込んでいます…', ready:'接続できます。',
-    unsupported:'AndroidまたはPCのChrome / Chromium 156以降を使用してください。iPhone・iPadのブラウザには対応していません。',
+    intro:'PCに表示されたQRを読み取るか、6桁コードで登録します。',
+    'invite-title':'このPCに登録', 'saved-title':'登録済みのPC',
+    'pair-title':'コードで登録', 'label-title':'PCに表示する名前', 'host-title':'PCのアドレス', 'port-title':'ポート', 'code-title':'6桁コード',
+    register:'登録して接続', 'browser-pair':'登録して接続', 'open-app':'Androidアプリで開く',
+    'app-note':'Androidアプリを入れている場合は、アプリで登録することもできます。',
+    glassesMissing:'この登録で使えるのはリモコン操作だけです。Androidにつないだメガネも使うには、PCの「リモコン操作」で「Android メガネブリッジを許可」をオンにして、新しいQRか6桁コードでアプリを登録してください。',
+    'android-title':'Androidアプリ', 'android-menu-button':'Androidアプリ', 'download-app':'PCからアプリを取得', 'save-apk':'APKを保存',
+    'download-note':'アプリのインストールと更新は、PCに接続してから「Androidアプリ」メニューで行います。Android 11以降・64ビットARM。',
+    apkLoading:'PCからアプリを取得し、署名を確認しています…',
+    apkReady:'保存したAPKを開いてインストールし、ここに戻って「アプリに引き継ぐ」を選んでください。',
+    'handoff-app':'アプリに引き継ぐ', handoffLoading:'準備しています…',
+    handoffReady:'1分以内に「Androidアプリで開く」を選び、アプリで接続先のPCを確認してください。',
+    handoffFailed:'引き継げませんでした。PCのSpatial Wallを最新にして、もう一度お試しください。',
+    apkFailed:'アプリを取得・検証できませんでした。PCのSpatial Wallを最新にして、もう一度お試しください。',
+    'entry-source':'ソース', 'entry-license':'MITライセンス',
+    'local-note':'登録はこのブラウザにだけ保存されます。ここで削除してもPC側の登録は残ります。',
+    'remove-all':'このブラウザの登録をすべて削除', cancel:'キャンセル', disconnect:'切断', 'change-pc':'別のPCを選ぶ',
+    connect:'接続', forget:'削除', label:'スマホのブラウザ', loading:'読み込んでいます…', ready:'',
+    unsupported:'AndroidまたはPCのChrome 156以降で開いてください。iPhone・iPadには対応していません。',
     networkPrompt:'「接続」を押して、LAN内のPCへのアクセスを許可してください。',
-    networkDenied:'ブラウザのこのサイトの設定でローカルネットワークへのアクセスを許可してから、「接続」を押してください。',
-    offlineSaving:'公式の接続機能をオフライン用に保存しています…',
-    offlineReady:'オフライン用の接続機能を利用できます。PCにはLANで接続できる必要があります。',
-    offlineNext:'オフライン用ファイルを保存しました。このページを閉じて開き直すと、次回から利用できます。',
-    offlineUpdate:'更新を保存しました。リモコンの全タブと、ホーム画面から開いたリモコンを閉じて、開き直してください。',
-    offlineUnavailable:'オフライン用ファイルの保存を確認できません。ネット接続を保ち、このページを開き直して再試行してください。',
-    runtimeNotice:'Wasm実行環境のライセンス', boringNotice:'BoringSSLのライセンス',
-    invalidLink:'登録リンクが無効です。PCの新しいQRを読み取ってください。',
-    storeError:'保存済みの登録を読み取れません。再登録する場合は、このブラウザの保存済みPCを明示的に削除してください。',
-    toolsError:'接続機能を読み込めませんでした。インターネットに接続してこのページを開き直してください。',
-    registering:'PCに登録しています…', connecting:'PCに接続しています…', connected:'接続しました。', cancelled:'キャンセルしました。',
-    failed:'接続できませんでした。PCとLANを確認し、アクセスが解除された場合は再登録してください。',
-    saveError:'登録を保存できなかったためリモコンを開きませんでした。ブラウザの保存領域を確認し、再登録してください。',
-    removed:'このブラウザの保存済みアクセスを削除しました。', changed:'別のタブで保存済み登録が変更されたため、接続を閉じました。',
-    invalidInput:'LANのIPv4アドレス、1〜65535のポート、数字6桁を入力してください。',
-    disconnected:'切断しました。', app:'インストール済みAndroidアプリを開いています…', selectionError:'再読込用のPC選択を保存できませんでした。',
+    networkDenied:'ブラウザのサイト設定でローカルネットワークへのアクセスを許可してから、「接続」を押してください。',
+    offlineUpdate:'更新があります。リモコンのタブとホーム画面から開いたリモコンをすべて閉じて、開き直してください。',
+    offlineUnavailable:'オフライン用ファイルの保存を確認できません。インターネットにつないで開き直してください。',
+    runtimeNotice:'Wasmのライセンス', boringNotice:'BoringSSLのライセンス',
+    invalidLink:'このQRのリンクは無効です。PCで新しいQRを表示してください。',
+    storeError:'登録を読み込めません。「このブラウザの登録をすべて削除」を押してから登録し直してください。',
+    toolsError:'読み込めませんでした。インターネットに接続して開き直してください。',
+    registering:'登録しています…', connecting:'接続しています…', connected:'接続しました。', cancelled:'キャンセルしました。',
+    failed:'接続できませんでした。PCとネットワークを確認してください。PC側で削除された場合は登録し直してください。',
+    saveError:'登録を保存できませんでした。ブラウザの保存領域を確認して、登録し直してください。',
+    removed:'このブラウザから削除しました。', changed:'別のタブで登録が変わったため、接続を閉じました。',
+    invalidInput:'PCのアドレス（例: 192.168.1.7）、ポート、6桁コードを確認してください。',
+    disconnected:'切断しました。', app:'Androidアプリを開いています…', selectionError:'再読み込み用のPC選択を保存できませんでした。',
     remote:'リモコン', glasses:'Androidメガネブリッジ', embedded:'接続するには、このページを直接開いてください。',
   },
 };
@@ -117,11 +111,12 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
   function render() {
     if (disposed) return;
     doc.documentElement.lang = language; $('language').value = language;
-    for (const key of ['intro','invite-title','saved-title','empty','pair-title','label-title','host-title','port-title','code-title',
+    for (const key of ['intro','invite-title','saved-title','pair-title','label-title','host-title','port-title','code-title',
       'register','browser-pair','open-app','local-note','remove-all','cancel','disconnect','change-pc',
-      'android-title','download-app','download-note','entry-source','entry-license']) $(key).textContent = text(key);
+      'android-title','android-menu-button','download-app','download-note','entry-source','entry-license']) $(key).textContent = text(key);
     $('status').textContent = text(message);
-    $('offline-status').textContent = text(offlineStatus);
+    // Offline caching is silent unless the user has to act on it: an update, or a cache that failed.
+    $('offline-status').textContent = text(offlineStatus) || '';
     $('runtime-notice').textContent = text('runtimeNotice'); $('boring-notice').textContent = text('boringNotice');
     $('invite').hidden = !invitation;
     if (invitation) {
@@ -137,6 +132,7 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
     $('host').readOnly = $('port').readOnly = !!constrained;
     $('change-pc').hidden = !constrained; $('change-pc').disabled = !!active;
     $('cancel').hidden = !active; $('panel').hidden = !!active?.ready; $('remote').hidden = !active?.ready;
+    $('remote-pc').textContent = active?.label || ''; $('android-menu-button').hidden = !android;
     $('download-app').disabled = !android || !frame || !active?.controlOpen || active.apkStatus === 'apkLoading';
     $('download-app').hidden = !android || !!active?.apkUrl;
     $('handoff-app').hidden = !android;
@@ -155,11 +151,12 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
     }
     $('apk-status').hidden = !active?.apkStatus;
     $('apk-status').textContent = active?.apkStatus ? text(active.apkStatus) : '';
-    $('empty').hidden = devices.length !== 0; $('saved').replaceChildren();
+    $('saved-section').hidden = devices.length === 0; $('saved').replaceChildren();
     for (const device of devices) {
       const row = doc.createElement('div'), name = doc.createElement('span'), connect = doc.createElement('button'), remove = doc.createElement('button');
       row.className = 'saved-pc'; name.textContent = device.host + ':' + device.port;
       connect.type = remove.type = 'button'; connect.textContent = text('connect'); remove.textContent = text('forget');
+      connect.className = 'primary'; remove.className = 'text danger';
       connect.disabled = !!active || blocked || !supported || !productKey; remove.disabled = !!active;
       connect.addEventListener('click', () => select(device));
       remove.addEventListener('click', () => { void removeSaved(device); });
@@ -172,12 +169,15 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
     try { saved = await api.loadDevices(win.localStorage); }
     catch { if (!disposed && revision === generation) { blocked = true; status('storeError'); } return false; }
     if (disposed || revision !== generation) { wipe(saved); return false; }
-    wipe(devices); devices = saved; blocked = false; render(); return true;
+    wipe(devices); devices = saved; blocked = false;
+    if (!devices.length) $('pair-box').open = true; // nothing saved: the code form is the way in
+    render(); return true;
   }
   function cancel(key = 'cancelled') {
     const old = active; active = null; old?.abort.abort(); frame?.close(); frame = null;
     clearTimeout(old?.appTimer); if (old) old.appUrl = null;
     if (old?.apkUrl) win.URL.revokeObjectURL(old.apkUrl);
+    $('android-menu').hidePopover?.();
     $('code').value = ''; status(key); render();
   }
   function reload(selection) {
@@ -199,7 +199,7 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
   }
   async function connect(op, device) {
     if (!current(op)) return;
-    status('connecting');
+    op.label = device.host + ':' + device.port; status('connecting');
     const mounted = await api.mountDeviceFrame({ device, container:$('viewport'), storage:win.localStorage, productKey, signal:op.abort.signal,
       onReady() { if (current(op)) { op.ready = true; status('connected'); render(); } },
       onControlChange(open) { if (current(op)) { op.controlOpen = open; render(); } },
@@ -320,6 +320,7 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
     }
   } catch { hadLink = true; status('invalidLink'); }
   try { selection = win.sessionStorage.getItem(SELECTED); win.sessionStorage.removeItem(SELECTED); } catch {}
+  if (selection === 'choose') $('pair-box').open = true;
   await refresh();
   if (disposed) return { dispose };
   if (!hadLink && !blocked) status(supported ? 'loading' : 'unsupported');
