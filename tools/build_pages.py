@@ -2,7 +2,7 @@
 """src/pages/ の本文と共通の枠（src/layout.html）から公開HTMLを生成する。
 
     python tools/build_pages.py          # 生成する
-    python tools/build_pages.py --check  # 生成物が最新か確認する（古ければ終了コード1）
+    python tools/build_pages.py --check  # 生成物と、公開するリモコン入口が現行版だけかを確認する
 
 src/pages/<出力パス> が <出力パス> になる。ページの先頭に `キー: 値` を並べ、`---` の行の
 後ろへ <main> 要素を書く。head・ナビ・言語切替・フッター・CSSのキャッシュ版数は生成器が作る。
@@ -154,6 +154,12 @@ def main() -> int:
 		for target in stale:
 			print(f"NG: {target.relative_to(ROOT).as_posix()} が src/ と一致しません。python tools/build_pages.py を実行してください。")
 		if stale:
+			return 1
+		remote = ROOT / "spatial-wall/remote"
+		release = json.loads((remote / "loader-manifest.json").read_text(encoding="utf-8"))["release"]
+		assets = list((remote / "assets").iterdir())
+		if len(assets) != 1 or assets[0].name != release or not assets[0].is_dir():
+			print(f"NG: spatial-wall/remote/assets/ には現行版 {release} のディレクトリだけを配置してください。")
 			return 1
 		print("OK: 生成物は最新です。")
 	elif not stale:
