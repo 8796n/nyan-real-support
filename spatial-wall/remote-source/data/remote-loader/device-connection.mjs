@@ -46,7 +46,7 @@ export function createDeviceConnection({ device, events }) {
     throw Error('Invalid remote registration');
   for (const name of ['open', 'close', 'text', 'cursor', 'controllerText', 'controllerClose'])
     if (typeof events?.[name] !== 'function') throw Error('Missing connection callback');
-  const grants = device.grants, port = device.port, spki = new Uint8Array(device.spki), secret = new Uint8Array(device.secret);
+  const host = device.host, grants = device.grants, port = device.port, spki = new Uint8Array(device.spki), secret = new Uint8Array(device.secret);
   let authorization = 'Device ' + hex(device.id) + '.' + hex(secret), closed = false;
   const owners = { control: null, controller: null };
   const operations = new Set();
@@ -198,7 +198,17 @@ export function createDeviceConnection({ device, events }) {
     for (const cancel of operations) cancel.abort();
     stop('control'); stop('controller'); secret.fill(0); authorization = '';
   }
-  return Object.freeze({ close, downloadApk, hooks: Object.freeze({ start, stop, send,
+  return Object.freeze({ close, downloadApk,
+    async appInvitation(signal) {
+      const bytes = await oneReply('/app-invite-v2', 66, signal);
+      try {
+        if (bytes.length !== 66 || bytes[0] !== 2 || bytes[1] !== grants ||
+            !bytes.subarray(2, 34).some(b => b) || !bytes.subarray(34).some(b => b))
+          throw Error('Invalid app invitation');
+        return { host, port, spki:new Uint8Array(spki), grants,
+          certificateHash:bytes.slice(2, 34), invite:bytes.slice(34) };
+      } finally { bytes.fill(0); }
+    }, hooks: Object.freeze({ start, stop, send,
     async preview(signal) {
       const active = owners.control?.active;
       if (closed || previewPending || !active?.channel?.isOpen) return '';

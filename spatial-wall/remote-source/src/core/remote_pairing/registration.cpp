@@ -118,7 +118,11 @@ void remote_registration::clear_invite()
     have_invite_ = false; invite_grants_ = 0;
     OPENSSL_cleanse(invite_.data(), invite_.size());
 }
-void remote_registration::cancel() { window_.cancel(); clear_invite(); }
+void remote_registration::cancel()
+{
+    window_.cancel(); clear_invite();
+    OPENSSL_cleanse(app_invites_.data(), sizeof(app_invites_));
+}
 bool remote_registration::observe(uint64_t now_ms)
 {
     const bool forward = !have_time_ || now_ms >= last_time_;
@@ -169,6 +173,46 @@ remote_registration::response remote_registration::failure(unsigned status) cons
     result.status = status; result.close_listener = !devices_.ready();
     return result;
 }
+remote_registration::app_invite *remote_registration::find_app_invite(const uint8_t *token, uint64_t now_ms)
+{
+    app_invite *found = nullptr;
+    for (auto &pending : app_invites_) {
+        if (!pending.grants) continue;
+        const auto &saved = devices_.saved();
+        const bool parent_current = std::any_of(saved.begin(), saved.end(), [&](const auto &record) {
+            return record.device == pending.parent && record.verifier == pending.verifier && record.grants == pending.grants;
+        });
+        if (now_ms - pending.opened >= 60000 || !parent_current)
+            OPENSSL_cleanse(&pending, sizeof(pending));
+        else if (token && CRYPTO_memcmp(pending.token.data(), token, pending.token.size()) == 0)
+            found = &pending;
+    }
+    return found;
+}
+remote_registration::response remote_registration::app_invitation(std::string_view authorization, uint64_t now_ms)
+{
+    if (!devices_.ready()) return failure(503);
+    if (!observe(now_ms) || !configured_) return failure(403);
+    const auto parent = devices_.authenticate(authorization, NYAN_PAIRING_GRANT_REMOTE);
+    if (!parent || !devices_.can_enroll(parent->grants, "Android")) return failure(403);
+    find_app_invite(nullptr, now_ms);
+    auto slot = std::find_if(app_invites_.begin(), app_invites_.end(), [&](const auto &pending) {
+        return pending.grants && pending.parent == parent->device;
+    });
+    if (slot == app_invites_.end())
+        slot = std::find_if(app_invites_.begin(), app_invites_.end(), [](const auto &pending) { return !pending.grants; });
+    if (slot == app_invites_.end()) return failure(503);
+    response result;
+    result.body.resize(66);
+    secret32 token{};
+    if (!RAND_bytes(token.bytes.data(), token.bytes.size())) return failure(503);
+    *slot = {parent->device, parent->verifier, token.bytes, now_ms, parent->grants};
+    result.status = 200; result.content = response::format::binary;
+    result.body[0] = NYAN_PAIRING_VERSION; result.body[1] = parent->grants;
+    std::copy(leaf_hash_.begin(), leaf_hash_.end(), result.body.begin() + 2);
+    std::copy(token.bytes.begin(), token.bytes.end(), result.body.begin() + 34);
+    return result;
+}
 remote_registration::response remote_registration::pair_get(uint64_t now_ms)
 {
     if (!devices_.ready()) return failure(503);
@@ -217,6 +261,8 @@ unsigned remote_registration::enrollment_status(bool encrypted, std::string_view
         grants = window_.enrollment_grants(bytes32_at(data.bytes.data()), data.bytes[32], proof.bytes, now_ms);
     } else if (invite_current(now_ms) && CRYPTO_memcmp(invite_.data(), data.bytes.data(), invite_.size()) == 0) {
         grants = invite_grants_;
+    } else if (auto *pending = find_app_invite(data.bytes.data(), now_ms)) {
+        grants = pending->grants;
     }
     const std::string_view label(reinterpret_cast<const char *>(data.bytes.data() + prefix), data.size - prefix);
     return grants && devices_.can_enroll(*grants, label) ? 200 : 403;
@@ -254,6 +300,9 @@ remote_registration::response remote_registration::enroll(bool encrypted, std::s
     } else if (invite_current(now_ms) && CRYPTO_memcmp(invite_.data(), data.bytes.data(), invite_.size()) == 0) {
         saved = persist(invite_grants_);
         if (saved) clear_invite();
+    } else if (auto *pending = find_app_invite(data.bytes.data(), now_ms)) {
+        saved = persist(pending->grants);
+        if (saved) OPENSSL_cleanse(pending, sizeof(*pending));
     }
     if (!saved) return failure(devices_.ready() ? 403 : 503);
     result.status = 200; result.content = response::format::binary;
