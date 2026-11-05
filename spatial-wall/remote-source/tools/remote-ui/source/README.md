@@ -80,11 +80,17 @@ Staging refuses changed sources or outputs and creates a content-addressed relea
 under `build/remote-loader/site/`. All generated files stay under `build/` and
 downloaded dependencies under `deps/`. These commands do not publish a site.
 
-These sources support rebuilding the loader and pairing Wasm. Bit-for-bit output
-reproducibility across toolchain installations has not been established. A clean
-build from the exported tree is not yet recorded; the allowlist tests verify that
-the exported tree contains every current Wasm receipt input and can check itself.
-The native/Wasm build has been exercised in the development checkout.
+On 2026-11-05, fresh native and Wasm builds from the published source tree
+(`0429a18`) succeeded in a separate directory, without adding desktop source or
+private keys. The run reused verified, pinned dependency caches and passed the
+8 source checks, 153 native/Wasm assertions, 3 notice tests, and release staging.
+Fresh dependency downloads or installation on a clean Windows machine were not
+part of this run.
+
+The rebuilt release matched 24 of its 25 payload files byte for byte. Wasm contains
+absolute BoringSSL build paths and differed in size and SHA-256 (94,588 bytes in
+the separate directory versus 94,482 published bytes). Functional rebuilding is
+verified; bit-for-bit Wasm reproducibility is not established.
 
 ## Running a modified copy
 
