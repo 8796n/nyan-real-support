@@ -585,8 +585,8 @@ network. The browser needs both TCP and UDP on the displayed port; the Android
 app uses TCP. Guest Wi-Fi or client isolation may prevent devices from connecting.
 Control, video, audio and app downloads use authenticated encryption. Keep QR
 invitations and codes private, and turn the remote off when it is not needed.
-Older Android companions and old pairing links cannot connect; install the
-current app and register again.</p>
+If your app or pairing link predates device registration, install the current app
+and register it using the new QR code shown on the PC.</p>
 </blockquote>
 <h3 id="android-glasses-bridge-remote">Android glasses bridge ("Remote")</h3>
 <p>A way to connect the glasses to an <strong>Android phone</strong> instead of the PC. The app
@@ -609,13 +609,15 @@ widget remains Windows-only.</p>
    If Google Play Protect shows <strong>Harmful app blocked</strong>, dismiss the warning and stop.
    Leave Play Protect enabled.</li>
 </ol>
+<p><strong>After updating Spatial Wall on the PC</strong>, repeat steps 1–3 using that PC to update the Android app in place.
+Apps that send head tracking data in the older format cannot connect to the updated glasses bridge.
+An in-place update with the same signing certificate preserves the app's saved PC registrations.</p>
 <p>After the <strong>first installation</strong>, register the Android app separately from the browser.
 Return to the browser used for installation, select <strong>Connect Android app</strong>, then
 <strong>Open installed Android app</strong>, and confirm the PC in Android. There is no need to scan the QR again.
 The app inherits the browser's permissions. For glasses use, enable <strong>Android glasses bridge</strong>
 on the PC before registering the browser. If the prepared link expires, prepare another from the same page.
-You can also open the app from a fresh QR or enter the PC address and a fresh six-digit code in the app. Updating the
-installed app with the same product signature preserves its saved PC registrations. Saved PC credentials
+You can also open the app from a fresh QR or enter the PC address and a fresh six-digit code in the app. Saved PC credentials
 are protected by Android Keystore and excluded from backups; normal reconnection
 does not ask for biometric authentication. Losing or erasing saved registrations
 requires registration again. RDP credentials have their separate authentication
