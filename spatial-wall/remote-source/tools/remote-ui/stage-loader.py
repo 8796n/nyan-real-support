@@ -106,7 +106,7 @@ def release_files(wasm_directory=WASM):
     if index.count(script_policy) != 1:
         raise ValueError('Unexpected parent script policy')
     index = index.replace(script_policy, script_policy + b' '.join(hashes) + b' ')
-    for name in ('entry-capture.js', 'entry.css', 'entry.mjs', 'LICENSE', 'remote-pairing-wasm.txt', 'boringssl.txt'):
+    for name in ('entry-capture.js', 'entry.css', 'entry.mjs', 'icon-192.png', 'LICENSE', 'remote-pairing-wasm.txt', 'boringssl.txt'):
         before, after = ('./' + name).encode(), ('./' + prefix + name).encode()
         if index.count(before) != 1:
             raise ValueError('Unexpected entry asset reference: ' + name)
