@@ -96,11 +96,11 @@ async function publicRequest(url, body, status, length, run) {
     if (response.status !== status || response.redirected ||
         (status === 204 ? size !== null && size !== '0' : size !== String(length)))
       throw Error('Pairing HTTP response rejected');
-    if (status === 204) {
-      if (response.body) throw Error('Unexpected confirmation body');
-      return new Uint8Array(0);
-    }
-    if (!response.body || response.headers.get('Content-Type')?.split(';')[0].trim().toLowerCase() !== 'application/octet-stream')
+    if (status === 204 && !response.body) return new Uint8Array(0);
+    // Some browsers expose an empty stream for 204. Drain it with the same
+    // deadline and zero-byte bound instead of treating the stream as content.
+    if (!response.body || status !== 204 &&
+        response.headers.get('Content-Type')?.split(';')[0].trim().toLowerCase() !== 'application/octet-stream')
       throw Error('Invalid pairing content type');
     reader = response.body.getReader();
     const bytes = new Uint8Array(length);
