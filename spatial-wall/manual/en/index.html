@@ -590,8 +590,8 @@ and register it using the new QR code shown on the PC.</p>
 </blockquote>
 <h3 id="android-glasses-bridge-remote">Android glasses bridge ("Remote")</h3>
 <p>A way to connect the glasses to an <strong>Android phone</strong> instead of the PC. The app
-on the phone handles the USB connection and relays video and head orientation
-to the wall on your PC. This is useful when you would rather not tie up a PC
+on the phone receives wall video from the PC, calculates head orientation using
+the glasses’ sensors, and sends that orientation to the PC. This is useful when you would rather not tie up a PC
 port or want to sit away from the machine. Windows, GNOME and macOS can send video and
 audio by treating the glasses as an Android external display (Presentation).
 On macOS this uses Screen Recording and Audio Recording permission. The appendix
@@ -626,6 +626,10 @@ rules described below.</p>
 display mode and external display, plus whether the IMU and video channels are
 up. Model-specific settings behave the same over the bridge as they do when the
 glasses are plugged straight into the PC.</p>
+<p>The glasses’ magnetic heading and detailed magnetometer readings stay on the phone.
+If your glasses have a supported magnetometer, calibrate it and turn on <strong>Use magnetic sensor</strong>
+in the compass widget to show magnetic north in both 2D and SBS wall modes. On the PC,
+the <strong>MAG</strong> row in the status details shows the correction status.</p>
 <h3 id="connecting-to-rdp-from-android">Connecting to RDP from Android</h3>
 <p>Choose "RDP" on the Android home screen, or open "RDP destinations" from "…".
 Register the PC's hostname, username and optional domain. For access outside the
