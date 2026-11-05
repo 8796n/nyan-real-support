@@ -43,6 +43,9 @@ public:
     // Reuses the same live invitation. Expiry, consumption or a grant change
     // creates a fresh 60-second invitation, without disconnecting saved devices.
     bool invitation(uint8_t grants, uint64_t now_ms, bytes32 &out, unsigned &seconds_left);
+    // Authenticated browser handoff: one fresh, single-use 60-second invitation
+    // per parent. It cannot outlive the parent's registration or widen its grants.
+    response app_invitation(std::string_view authorization, uint64_t now_ms);
 
     response pair_get(uint64_t now_ms);
     response pair_post(const uint8_t *body, size_t size, uint64_t now_ms);
@@ -58,11 +61,19 @@ private:
     bool observe(uint64_t now_ms);
     void clear_invite();
     bool invite_current(uint64_t now_ms);
+    struct app_invite {
+        remote_devices::id parent{};
+        bytes32 verifier{}, token{};
+        uint64_t opened = 0;
+        uint8_t grants = 0;
+    };
+    app_invite *find_app_invite(const uint8_t *token, uint64_t now_ms);
     response failure(unsigned status) const;
     remote_devices &devices_;
     const remote_snapshot &snapshot_;
     remote_snapshot::writer write_;
     pairing_window window_;
+    std::array<app_invite, remote_devices::capacity> app_invites_{};
     std::vector<uint8_t> spki_;
     bytes32 spki_hash_{}, leaf_hash_{}, invite_{};
     uint64_t invite_opened_ = 0, last_time_ = 0;

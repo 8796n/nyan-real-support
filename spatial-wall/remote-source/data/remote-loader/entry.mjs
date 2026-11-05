@@ -18,7 +18,10 @@ const WORDS = {
     'android-title':'Android app', 'download-app':'Get Android app from PC', 'save-apk':'Save APK',
     'download-note':'To install or update the Android app, connect to your PC and choose Get Android app from PC. Requires Android 11 or later on a 64-bit ARM device.',
     apkLoading:'Getting the Android app from your PC and verifying its signature…',
-    apkReady:'Open the saved APK on Android to install it. On first use, scan a fresh QR from your PC to register the app.',
+    apkReady:'Open the saved APK on Android to install it. Return here and choose Connect Android app, then Open installed Android app. No new QR is needed.',
+    'handoff-app':'Connect Android app', handoffLoading:'Preparing the app connection…',
+    handoffReady:'Ready. Choose Open installed Android app before this invitation expires and confirm the PC in the app.',
+    handoffFailed:'Could not prepare the app connection. Check the PC has an up-to-date Spatial Wall installation and try again.',
     apkFailed:'Could not verify or download the Android app. Check the PC has an up-to-date Spatial Wall installation and try again.',
     'entry-source':'Entry source', 'entry-license':'MIT license',
     'local-note':'Saved access belongs to this browser. Removing it here does not revoke the device on your PC. Clearing browser data requires registration again.',
@@ -53,7 +56,10 @@ const WORDS = {
     'android-title':'Androidアプリ', 'download-app':'PCからAndroidアプリを取得', 'save-apk':'APKを保存',
     'download-note':'Androidアプリをインストール・更新するには、PCに接続して「PCからAndroidアプリを取得」を選びます。Android 11以降の64ビットARM端末で利用できます。',
     apkLoading:'PCからAndroidアプリを取得し、製品署名を確認しています…',
-    apkReady:'保存したAPKをAndroidで開いてインストールしてください。初回はPCの新しいQRを読み取り、アプリを登録します。',
+    apkReady:'保存したAPKをAndroidで開いてインストールしてください。この画面に戻り「アプリへ接続を引き継ぐ」→「インストール済みAndroidアプリを開く」を選びます。QRの再読取は不要です。',
+    'handoff-app':'アプリへ接続を引き継ぐ', handoffLoading:'アプリへの接続を準備しています…',
+    handoffReady:'準備できました。期限が切れる前に「インストール済みAndroidアプリを開く」を選び、アプリで接続先のPCを確認してください。',
+    handoffFailed:'接続を引き継げませんでした。PCのSpatial Wallが最新版か確認して、もう一度お試しください。',
     apkFailed:'Androidアプリを取得・検証できませんでした。PCのSpatial Wallが最新版か確認して、もう一度お試しください。',
     'entry-source':'入口のソース', 'entry-license':'MITライセンス',
     'local-note':'保存したアクセスはこのブラウザ専用です。ここで削除してもPC上の端末登録は解除されません。ブラウザのデータを消した場合は再登録が必要です。',
@@ -128,6 +134,11 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
     $('cancel').hidden = !active; $('panel').hidden = !!active?.ready; $('remote').hidden = !active?.ready;
     $('download-app').disabled = !frame || !active?.controlOpen || active.apkStatus === 'apkLoading';
     $('download-app').hidden = !!active?.apkUrl;
+    $('handoff-app').hidden = !/Android/i.test(win.navigator.userAgent);
+    $('handoff-app').disabled = !frame || !active?.ready || active.handoffStatus === 'handoffLoading';
+    $('handoff-app').textContent = text(active?.appUrl ? 'open-app' : 'handoff-app');
+    $('handoff-status').hidden = !active?.handoffStatus;
+    $('handoff-status').textContent = active?.handoffStatus ? text(active.handoffStatus) : '';
     $('save-apk').hidden = !active?.apkUrl;
     if (active?.apkUrl) {
       $('save-apk').href = active.apkUrl;
@@ -158,6 +169,7 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
   }
   function cancel(key = 'cancelled') {
     const old = active; active = null; old?.abort.abort(); frame?.close(); frame = null;
+    clearTimeout(old?.appTimer); if (old) old.appUrl = null;
     if (old?.apkUrl) win.URL.revokeObjectURL(old.apkUrl);
     $('code').value = ''; status(key); render();
   }
@@ -198,6 +210,29 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
       if (!current(op)) return;
       op.apkUrl = win.URL.createObjectURL(blob); op.apkVersion = version; op.apkStatus = 'apkReady';
     } catch { if (current(op)) op.apkStatus = 'apkFailed'; }
+    render();
+  }
+  async function handoffApp() {
+    const op = active;
+    if ($('handoff-app').disabled || $('handoff-app').hidden) return;
+    if (op.appUrl && performance.now() < op.appExpiry) {
+      const url = op.appUrl; op.appUrl = null; clearTimeout(op.appTimer);
+      op.handoffStatus = null; render(); win.location.assign(url); return;
+    }
+    op.appUrl = null; op.handoffStatus = 'handoffLoading'; render();
+    op.appExpiry = performance.now() + 55000;
+    let invitation;
+    try {
+      invitation = await frame.appInvitation();
+      if (!current(op)) return;
+      if (performance.now() >= op.appExpiry) throw Error('App invitation expired');
+      op.appUrl = androidIntent(invitation); op.handoffStatus = 'handoffReady';
+      // Keep app launch on a separate user tap, independent of network latency.
+      op.appTimer = setTimeout(() => {
+        op.appUrl = null; op.handoffStatus = null; if (current(op)) render();
+      }, op.appExpiry - performance.now());
+    } catch { if (current(op)) op.handoffStatus = 'handoffFailed'; }
+    finally { invitation?.invite.fill(0); }
     render();
   }
   function select(device) {
@@ -249,6 +284,7 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
   listen($('browser-pair'),'click',() => { if (!$('browser-pair').disabled) void register(true); });
   listen($('cancel'),'click',() => cancel()); listen($('disconnect'),'click',() => cancel('disconnected'));
   listen($('download-app'),'click',() => { void prepareApk(); });
+  listen($('handoff-app'),'click',() => { void handoffApp(); });
   listen($('change-pc'),'click',() => reload('choose'));
   listen($('remove-all'),'click',() => {
     if (active) return;
