@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="android_update_check_failed">Cannot check the Android update: %1$s</string>
+    <string name="android_update_busy">An Android update is in progress</string>
+    <string name="android_update_invalid">Invalid Android update information</string>
+    <string name="android_update_checking">Checking the Android update APK…</string>
+    <string name="android_update_verify_failed">Cannot verify the Android update: %1$s</string>
+    <string name="android_update_permission_required">Enable Allow from this source to update the Android app</string>
+    <string name="android_update_save_failed">Cannot save the APK</string>
+    <string name="android_update_hash_mismatch">The APK does not match the PC update offer. Reconnect to the PC.</string>
+    <string name="android_update_identity_mismatch">The APK package, version or signing certificate does not match this app</string>
+    <string name="android_update_already_installed">This APK is already installed</string>
+    <string name="android_update_permission">Check the Android installation permission</string>
+    <string name="android_update_permission_failed">Cannot open installation permissions: %1$s</string>
+    <string name="android_update_preparing">Preparing the Android installer…</string>
+    <string name="android_update_opening">Opening the Android update confirmation…</string>
+    <string name="android_update_start_failed">Cannot start the Android update: %1$s</string>
+    <string name="android_update_confirmation_failed">Cannot open the Android update confirmation</string>
+    <string name="android_update_success">The Android app was updated</string>
+    <string name="android_update_failed">The Android update failed</string>
+</resources>

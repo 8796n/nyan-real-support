@@ -1,0 +1,15 @@
+AndroidAppUpdaterTest
+PairingClientTest
+PairingHttpTest
+PairingLinkTest
+PcAddressTest
+PcConnectionTest
+PcRegistrationTest
+PinnedHttpGetTest
+PinnedTlsConnectorTest
+SpatialConnectionsTest
+SpatialCredentialsTest
+WsAuthorizationTest
+WsClientFrameTest
+WsClientNestingLimitTest
+WsUpgradeTest

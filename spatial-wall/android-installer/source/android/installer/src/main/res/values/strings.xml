@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Spatial Wall</string>
+    <string name="installer_title">Install Spatial Wall from your PC</string>
+    <string name="installer_intro">Keep Spatial Wall open on a PC on the same local network. Register using its QR code or six-digit code. This starter downloads the full app from that PC, verifies it, and asks Android to install it. Your registration will carry over. It does not contact an external download server.</string>
+    <string name="installer_saved">Download from saved PC</string>
+    <string name="installer_saved_address">Download from %1$s</string>
+    <string name="installer_host">PC address or hostname</string>
+    <string name="installer_port">Port</string>
+    <string name="installer_code">Six-digit code shown on the PC</string>
+    <string name="installer_register">Register and download</string>
+    <string name="installer_device_name">Android Spatial Wall</string>
+    <string name="installer_registering">Registering with your PC…</string>
+    <string name="installer_connecting">Checking the app offered by your PC…</string>
+    <string name="installer_updating">An app update is in progress. Finish the Android installation prompt before changing the PC.</string>
+    <string name="installer_failed">Could not obtain the app. Check that your PC is on the same local network, allows incoming connections, and provides a current Android app. If access was removed, register again.</string>
+    <string name="installer_invalid">Enter a local PC address, a port from 1 to 65535, and exactly six digits. For a QR link, scan a new QR from the PC.</string>
+    <string name="installer_remote_required">Enable Remote permission on the PC and register again.</string>
+    <string name="installer_cancelled">Cancelled.</string>
+    <string name="installer_register_again">Register with your PC to continue.</string>
+    <string name="installer_storage_failed">Saved registrations are unavailable. Connections have stopped. You can explicitly erase this app’s registrations and register again.</string>
+    <string name="installer_confirm_title">Register with this PC?</string>
+    <string name="installer_confirm">Register this Android device with %1$s and download the full Spatial Wall app from that PC. Continue only if you just scanned its QR code.</string>
+    <string name="installer_reset">Erase saved registrations</string>
+    <string name="installer_reset_confirm">Erase all Spatial Wall registrations saved in this app? You will need to register with each PC again. PC-side device registrations remain until you remove them on the PC.</string>
+    <string name="installer_licenses">Open-source licenses</string>
+</resources>
