@@ -4,20 +4,20 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' blob: 'sha256-gqttCE1vvcsUfZmED1TLD3syX8zlVSydVt9aZciQgbc=' 'sha256-RWi8bTOJaHJcwR58TPNVuoVaQqVvTlh3TcmeU8GrJ44=' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' http: https: 'unsafe-webtransport-hashes'; frame-src blob:; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
-<script src="./assets/b62e392c714900fe37ef5d4d6d0152742c3be4069e9b87edf5d601cee27dba22/entry-capture.js"></script>
+<script src="./assets/08024003680be3e87fef43c824fc61054303fd1270b6310b11ec443a9fdc4d3a/entry-capture.js"></script>
 <title>Spatial Wall Remote</title>
 <meta name="theme-color" content="#111725">
 <link rel="manifest" href="./manifest.webmanifest">
-<link rel="stylesheet" href="./assets/b62e392c714900fe37ef5d4d6d0152742c3be4069e9b87edf5d601cee27dba22/entry.css">
-<script type="module" src="./assets/b62e392c714900fe37ef5d4d6d0152742c3be4069e9b87edf5d601cee27dba22/entry.mjs"></script>
+<link rel="stylesheet" href="./assets/08024003680be3e87fef43c824fc61054303fd1270b6310b11ec443a9fdc4d3a/entry.css">
+<script type="module" src="./assets/08024003680be3e87fef43c824fc61054303fd1270b6310b11ec443a9fdc4d3a/entry.mjs"></script>
 </head><body>
 <main id="panel">
   <header><h1>Spatial Wall Remote</h1><label><span class="sr-only">Language</span><select id="language"><option value="en">English</option><option value="ja">日本語</option></select></label></header>
   <p id="intro">Connect to Spatial Wall on the same local network.</p>
   <p id="status" role="status" aria-live="polite">Loading secure connection tools…</p>
   <section id="invite" hidden><h2 id="invite-title"></h2><p id="invite-host"></p><p id="invite-grants"></p>
-    <div class="actions"><button id="browser-pair" type="button" disabled>Register and connect</button><button id="open-app" type="button" disabled>Open installed Android app</button></div>
-    <p id="app-note" class="hint"></p>
+    <div class="actions"><button id="browser-pair" type="button" disabled>Register and connect</button><button id="open-app" type="button" hidden disabled>Open installed Android app</button></div>
+    <p id="app-note" class="hint" hidden></p>
   </section>
   <section><h2 id="saved-title">Saved PCs</h2><div id="saved"></div><p id="empty" class="hint"></p></section>
   <section><h2 id="pair-title">Register with a code</h2>
@@ -32,15 +32,15 @@
   </section>
   <p id="local-note" class="hint"></p>
   <p id="offline-status" class="hint" role="status" aria-live="polite"></p>
-  <section><h2 id="android-title">Android app</h2>
+  <section id="android-app" hidden><h2 id="android-title">Android app</h2>
     <p id="download-note" class="hint">To install or update the Android app, connect to your PC and choose Get Android app from PC. Requires Android 11 or later on a 64-bit ARM device.</p>
   </section>
-  <p class="hint"><a id="entry-source" href="https://github.com/8796n/nyan-real-support/tree/main/spatial-wall/remote-source" target="_blank" rel="noopener noreferrer">Entry source</a> · <a id="entry-license" href="./assets/b62e392c714900fe37ef5d4d6d0152742c3be4069e9b87edf5d601cee27dba22/LICENSE" target="_blank" rel="noopener noreferrer">MIT license</a> · <a id="runtime-notice" href="./assets/b62e392c714900fe37ef5d4d6d0152742c3be4069e9b87edf5d601cee27dba22/remote-pairing-wasm.txt" target="_blank" rel="noopener noreferrer">Wasm runtime licenses</a> · <a id="boring-notice" href="./assets/b62e392c714900fe37ef5d4d6d0152742c3be4069e9b87edf5d601cee27dba22/boringssl.txt" target="_blank" rel="noopener noreferrer">BoringSSL licenses</a></p>
+  <p class="hint"><a id="entry-source" href="https://github.com/8796n/nyan-real-support/tree/main/spatial-wall/remote-source" target="_blank" rel="noopener noreferrer">Entry source</a> · <a id="entry-license" href="./assets/08024003680be3e87fef43c824fc61054303fd1270b6310b11ec443a9fdc4d3a/LICENSE" target="_blank" rel="noopener noreferrer">MIT license</a> · <a id="runtime-notice" href="./assets/08024003680be3e87fef43c824fc61054303fd1270b6310b11ec443a9fdc4d3a/remote-pairing-wasm.txt" target="_blank" rel="noopener noreferrer">Wasm runtime licenses</a> · <a id="boring-notice" href="./assets/08024003680be3e87fef43c824fc61054303fd1270b6310b11ec443a9fdc4d3a/boringssl.txt" target="_blank" rel="noopener noreferrer">BoringSSL licenses</a></p>
   <div class="actions"><button id="remove-all" type="button" disabled>Clear saved PCs in this browser</button><button id="cancel" type="button" hidden>Cancel</button></div>
   <noscript>JavaScript is required to connect securely. / 安全に接続するには JavaScript が必要です。</noscript>
 </main>
 <div id="remote" hidden>
-  <div class="remote-tools"><button id="download-app" type="button" disabled>Get Android app from PC</button>
+  <div class="remote-tools"><button id="download-app" type="button" hidden disabled>Get Android app from PC</button>
     <a id="save-apk" download="SpatialWall.apk" hidden>Save APK</a>
     <button id="handoff-app" type="button" hidden>Connect Android app</button><button id="disconnect" type="button"></button></div>
   <p id="apk-status" role="status" hidden></p><p id="handoff-status" role="status" aria-live="polite" hidden></p><div id="viewport"></div>

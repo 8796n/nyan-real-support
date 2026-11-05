@@ -105,6 +105,7 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
   let blocked = false, productKey, module, revision = 0;
   let offlineStatus = 'offlineUnavailable', stopOffline;
   const listeners = [], supported = supportsSecureRemote(win);
+  const android = /Android/i.test(win.navigator.userAgent);
   const text = key => WORDS[language][key];
   const wipe = values => { for (const device of values) device.secret.fill(0); };
   function listen(target, name, callback) { target.addEventListener(name, callback); listeners.push(() => target.removeEventListener(name, callback)); }
@@ -126,20 +127,21 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
       $('invite-grants').textContent = [[1,'remote'],[2,'glasses'],[4,'controller']].filter(([bit]) => invitation.grants & bit).map(([,key]) => text(key)).join(' / ');
     }
     $('browser-pair').disabled = !!active || blocked || !supported || !productKey || !invitation || !(invitation.grants & 1);
-    $('open-app').disabled = !!active || !invitation || !/Android/i.test(win.navigator.userAgent);
+    $('open-app').hidden = $('app-note').hidden = $('android-app').hidden = !android;
+    $('open-app').disabled = !android || !!active || !invitation;
     $('register').disabled = !!active || blocked || !supported || !module || !productKey;
     $('remove-all').disabled = !!active;
     $('host').readOnly = $('port').readOnly = !!constrained;
     $('change-pc').hidden = !constrained; $('change-pc').disabled = !!active;
     $('cancel').hidden = !active; $('panel').hidden = !!active?.ready; $('remote').hidden = !active?.ready;
-    $('download-app').disabled = !frame || !active?.controlOpen || active.apkStatus === 'apkLoading';
-    $('download-app').hidden = !!active?.apkUrl;
-    $('handoff-app').hidden = !/Android/i.test(win.navigator.userAgent);
+    $('download-app').disabled = !android || !frame || !active?.controlOpen || active.apkStatus === 'apkLoading';
+    $('download-app').hidden = !android || !!active?.apkUrl;
+    $('handoff-app').hidden = !android;
     $('handoff-app').disabled = !frame || !active?.ready || active.handoffStatus === 'handoffLoading';
     $('handoff-app').textContent = text(active?.appUrl ? 'open-app' : 'handoff-app');
     $('handoff-status').hidden = !active?.handoffStatus;
     $('handoff-status').textContent = active?.handoffStatus ? text(active.handoffStatus) : '';
-    $('save-apk').hidden = !active?.apkUrl;
+    $('save-apk').hidden = !android || !active?.apkUrl;
     if (active?.apkUrl) {
       $('save-apk').href = active.apkUrl;
       $('save-apk').textContent = text('save-apk') + ' (' + active.apkVersion + ')';
@@ -203,7 +205,7 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
   }
   async function prepareApk() {
     const op = active;
-    if (!frame || !op?.controlOpen || op.apkUrl || op.apkStatus === 'apkLoading') return;
+    if (!android || !frame || !op?.controlOpen || op.apkUrl || op.apkStatus === 'apkLoading') return;
     op.apkStatus = 'apkLoading'; render();
     try {
       const { blob, version } = await frame.downloadApk();
