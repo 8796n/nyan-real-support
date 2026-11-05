@@ -571,9 +571,10 @@ shown for manual entry. Select <strong>Automatic</strong> to let the PC choose a
 <strong>Pair with code</strong> on the PC. Open the official entry, enter the PC address and port
 shown in Spatial Wall, and enter its six-digit code. QR invitations and codes expire
 after 60 seconds and are single-use after successful registration.</p>
-<p>Before registering, choose whether the new device may also use the Android glasses
-bridge or phone controller. Remote control is included. These choices apply to the
-next registration; changing them does not change an already registered device.
+<p>A registered phone can control Spatial Wall. When using VR Bridge on Windows, it can also
+act as a left-hand or right-hand SteamVR controller. If you connect the glasses to Android,
+turn on <strong>Allow Android glasses bridge</strong> on the PC before registration. The PC’s registered-device
+list shows which devices have bridge access.
 After registration, choose the saved PC in the browser. Automatic reconnection does
 not require another code while the registration and browser permission remain valid.</p>
 <p>To revoke one device, use its <strong>Forget</strong> button in the PC's registered-device list.
@@ -613,15 +614,27 @@ widget remains Windows-only.</p>
    If Google Play Protect shows <strong>Harmful app blocked</strong>, dismiss the warning and stop.
    Leave Play Protect enabled.</li>
 </ol>
-<p><strong>After updating Spatial Wall on the PC</strong>, repeat steps 1–3 using that PC to update the Android app in place.
+<p><strong>Android app updates.</strong> When the app connects to a PC, it offers an update if the PC has a newer
+version or a different APK with the same version number. An older version on the PC does not trigger an offer.
+Tap the update notice in the app to get the APK from the connected PC and verify its product signature.
+If Android asks the first time, enable <strong>Allow from this source</strong> for Spatial Wall and return to the app.
+Tap <strong>Update</strong> on the Android confirmation screen. Your PC selection and registration carry over.
+For an app that predates in-app updates, use steps 1–3 above once.
 Apps that send head tracking data in the older format cannot connect to the updated glasses bridge.
 An in-place update with the same signing certificate preserves the app's saved PC registrations.</p>
 <p>After the <strong>first installation</strong>, register the Android app separately from the browser.
 Return to the browser used for installation, select <strong>Connect Android app</strong>, then
 <strong>Open installed Android app</strong>, and confirm the PC in Android. There is no need to scan the QR again.
-The app inherits the browser's permissions. For glasses use, enable <strong>Android glasses bridge</strong>
-on the PC before registering the browser. If the prepared link expires, prepare another from the same page.
-You can also open the app from a fresh QR or enter the PC address and a fresh six-digit code in the app. Saved PC credentials
+The app inherits the permissions granted when the browser was registered. If the prepared link expires,
+prepare another from the same page. You can also open the app from a fresh QR or enter the PC address
+and a fresh six-digit code in the app.</p>
+<p><strong>If the app says “Glasses bridge not allowed by this PC”</strong>, open <strong>Remote</strong> on the PC, turn on
+<strong>Allow Android glasses bridge</strong>, then select <strong>Pair with code</strong>. In the phone app, select
+<strong>Pair for glasses bridge</strong>, enter the new six-digit code and tap <strong>Save and connect</strong>.
+This registers the app with bridge access. Repeating the handoff from the same browser gives the
+app that browser’s original permissions. If the PC still lists the old registration for the same app,
+you can forget the entry marked <strong>Glasses bridge not allowed</strong>.</p>
+<p>Saved PC credentials
 are protected by Android Keystore and excluded from backups; normal reconnection
 does not ask for biometric authentication. Losing or erasing saved registrations
 requires registration again. RDP credentials have their separate authentication
