@@ -96,6 +96,11 @@ installation in Android. The support website serves the browser entry. The APK
 transfer and the browser's device credential stay between your browser and your PC.
 The Android app registers separately with the PC on first use.
 
+During Android installation, Google Play Protect may offer to scan the app. If
+you agree, or if your Google Play Protect settings enable automatic submission
+of unknown apps, Play Protect can send the app to Google for analysis.
+[Google Play Protect help](https://support.google.com/googleplay/answer/2812853?hl=en)
+
 Spatial Wall's Android PC registrations are encrypted with an app-private Android
 Keystore key and excluded from backups. They include the PC's public identity,
 device access credential and permissions; the display name and PC address are
@@ -255,6 +260,10 @@ Spatial WallのPCからLAN内の認証・暗号化された接続でAPKを取得
 開き、Androidの画面でインストールを確認します。サポートサイトが配信するのはブラウザの入口で、
 APKとブラウザの端末資格はブラウザとPCの間で直接やり取りします。
 Androidアプリは初回利用時にブラウザとは別にPCに登録します。
+
+Androidでインストールする際、Google Play プロテクトがスキャンを提案することがあります。
+同意した場合や、不明なアプリの自動送信が有効な場合は、Play プロテクトが解析のため
+アプリをGoogleに送信することがあります。[Google Play プロテクトの説明](https://support.google.com/googleplay/answer/2812853?hl=ja)
 
 AndroidのSpatial Wall用PC登録は、アプリ専用のAndroid Keystore鍵で暗号化し、バックアップから
 除外します。PCの公開の識別情報・端末のアクセス資格・権限を含み、表示名とPCアドレスは別の
