@@ -16,7 +16,7 @@ verification key, not a signing key.
 ## What is included
 
 - `data/remote-loader/`: unbundled JavaScript, HTML, CSS, the service worker template,
-  public verification key, and MIT license.
+  home screen icons, public verification key, and MIT license.
 - `src/core/remote_pairing/` and `src/core/ws_message_validation.h`: the shared C++
   pairing library and the header needed to compile its existing static target.
   The Wasm entry exports only the pairing API; unused server objects are not linked.
@@ -94,7 +94,8 @@ verified; bit-for-bit Wasm reproducibility is not established.
 
 ## Running a modified copy
 
-Serve the staged tree from a secure origin for development. Do not open the raw
+Serve the staged tree at `/spatial-wall/remote/` on a secure origin for development.
+The web app manifest uses this path as both its installed identity and launch URL. Do not open the raw
 `index.html` with `file://`. The current product accepts its official origin,
 `https://support.nyanreal.jp`; changing hosts requires deliberate corresponding
 PC origin-policy changes. Building these sources alone does not authorize another

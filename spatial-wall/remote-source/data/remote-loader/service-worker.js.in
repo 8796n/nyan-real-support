@@ -75,7 +75,7 @@ self.addEventListener('fetch', event => {
     try {
       const response = await verifiedFetch(url.href, item); await cache.put(url.href, response.clone()); return response;
     } catch {
-      return new Response('Offline files are unavailable. Connect to the internet, close all remote tabs, and reopen. / オフライン用ファイルがありません。ネット接続後、リモコンの全タブを閉じて開き直してください。',
+      return new Response('Offline files are unavailable. Connect to the internet, close all remote tabs and any remote opened from the home screen, then reopen the remote. / オフライン用ファイルがありません。ネット接続後、リモコンの全タブと、ホーム画面から開いたリモコンを閉じて、開き直してください。',
         {status:503,headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'}});
     }
   })());

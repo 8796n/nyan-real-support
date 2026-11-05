@@ -90,6 +90,13 @@ class SourceTests(unittest.TestCase):
             (self.root / name).write_bytes(self.files[name].replace(b'\n', b'\r\n'))
         self.assertEqual(source.source_files(self.root), self.files)
 
+    def test_export_preserves_png_bytes_in_the_repository_and_on_checkout(self):
+        for name in ('icon-192.png', 'icon-512.png'):
+            relative = 'data/remote-loader/' + name
+            self.assertEqual(self.files[relative], (source.ROOT / relative).read_bytes())
+            self.assertTrue(self.files[relative].startswith(b'\x89PNG\r\n\x1a\n'))
+        self.assertIn(b'*.png binary', self.files['.gitattributes'].splitlines())
+
     def test_redirected_file_is_rejected(self):
         path = (self.root / 'tools/remote-pairing-wasm/entry.cpp').resolve()
         # Creating a real symlink requires extra privileges on some Windows hosts.

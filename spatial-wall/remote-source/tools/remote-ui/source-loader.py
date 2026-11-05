@@ -14,6 +14,7 @@ LOADER = (
     'device-frame.mjs', 'device-connection.mjs', 'ui-frame.mjs', 'frame-bridge.js',
     'frame.js', 'frame.html', 'frame-source.mjs', 'identity.mjs', 'transport.mjs',
     'verify-ui.mjs', 'browser-support.mjs', 'offline.mjs', 'service-worker.js.in', 'product-key.pem',
+    'manifest.webmanifest', 'icon-192.png', 'icon-512.png',
 )
 CORE = (
     'CMakeLists.txt', 'boringssl.json', 'pairing.cpp', 'pairing.h', 'window.cpp', 'window.h',
@@ -37,8 +38,8 @@ def check_dependencies(root: Path, files: dict[str, bytes]) -> None:
     # New executable assets or core compilation inputs require an explicit publication review.
     stage = ast.parse(files['tools/remote-ui/stage-loader.py'])
     assets = [ast.literal_eval(node.value) for node in stage.body if isinstance(node, ast.Assign)
-              and any(isinstance(target, ast.Name) and target.id == 'SOURCE_ASSETS' for target in node.targets)]
-    if len(assets) != 1 or set(assets[0]) | {'index.html', 'service-worker.js.in'} != set(LOADER):
+              and any(isinstance(target, ast.Name) and target.id in {'SOURCE_ASSETS', 'ICON_ASSETS'} for target in node.targets)]
+    if len(assets) != 2 or set().union(*assets, {'index.html', 'manifest.webmanifest', 'service-worker.js.in'}) != set(LOADER):
         raise ValueError('Loader runtime source list changed; review the public source allowlist')
     actual_core = {path.name for path in (root / 'src/core/remote_pairing').iterdir()
                    if path.suffix in {'.cpp', '.h'} or path.name in {'CMakeLists.txt', 'boringssl.json'}}
@@ -72,7 +73,9 @@ def source_files(root: Path) -> dict[str, bytes]:
                 break
             if component.is_symlink() or getattr(component, 'is_junction', lambda: False)():
                 raise ValueError(f'Redirected loader source: {name}')
-        data = path.read_bytes().replace(b'\r\n', b'\n')
+        data = path.read_bytes()
+        if path.suffix != '.png':
+            data = data.replace(b'\r\n', b'\n')
         if not data:
             raise ValueError(f'Empty loader source: {name}')
         result[name] = data
@@ -84,7 +87,7 @@ def source_files(root: Path) -> dict[str, bytes]:
     result['LICENSE'] = result['data/remote-loader/LICENSE']
     result['README.md'] = result['tools/remote-ui/source/README.md']
     result['README.ja.md'] = result['tools/remote-ui/source/README.ja.md']
-    result['.gitattributes'] = b'* text eol=lf\n'
+    result['.gitattributes'] = b'* text eol=lf\n*.png binary\n'
     result['.gitignore'] = b'build/\ndeps/\n__pycache__/\nlocal.properties\n*.keystore\n*.jks\n*.p12\n'
     return result
 

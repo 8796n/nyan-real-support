@@ -67,6 +67,11 @@ provider receives ordinary web-request information, including the connecting IP
 address and browser headers. This is separate from the desktop app's LAN traffic.
 No analytics or third-party scripts are included in the entry.
 
+If you install the remote on your Android home screen, Chrome may send the
+public app name, icons and fixed launch URL to Google's WebAPK service to create
+or update the installed web app. These details contain no PC address, invitation
+or device credential.
+
 After all entry assets have been saved, the browser can reopen them offline.
 The cache contains only the fixed entry assets, not LAN responses, screen images,
 registration invitations, or access credentials. The actual remote-control UI is
@@ -224,6 +229,10 @@ QRの招待または6桁コードによる登録でPCを確認し、再接続で
 更新確認では、このサイトへ通信します。サイトのホスティング事業者には、接続元IPアドレスや
 ブラウザのHTTPヘッダーなど通常のWebリクエスト情報が届きます。本体PCのLAN通信とは別の経路です。
 入口に解析サービスや第三者のスクリプトは含めていません。
+
+Androidのホーム画面にリモコンをインストールすると、ChromeはWebアプリの作成や更新のため、
+公開されているアプリ名・アイコン・固定の起動URLをGoogleのWebAPKサービスへ送ることがあります。
+これらの情報にPCのアドレス・招待・端末のアクセス資格は含まれません。
 
 入口に必要なファイルをすべて保存すると、次回からオフラインでも開けます。
 キャッシュに含めるのは固定の入口ファイルだけで、LANの応答、画面、登録用の招待、

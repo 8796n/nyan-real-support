@@ -18,7 +18,16 @@ SOURCE_ASSETS = (
     'browser-support.mjs', 'offline.mjs', 'product-key.pem', 'LICENSE',
 )
 GENERATED = ('pairing-core.mjs', 'pairing-core.wasm', 'remote-pairing-wasm.txt', 'boringssl.txt')
-FORMAT = 'spatial-wall.loader.v2'
+ICON_ASSETS = ('icon-192.png', 'icon-512.png')
+FORMAT = 'spatial-wall.loader.v3'
+LEGACY_FORMAT = 'spatial-wall.loader.v2'
+
+def immutable_asset_names(format_name):
+    if format_name == LEGACY_FORMAT:
+        return SOURCE_ASSETS + GENERATED
+    if format_name == FORMAT:
+        return SOURCE_ASSETS + GENERATED + ICON_ASSETS
+    raise ValueError('Unknown loader manifest format')
 
 def digest(data):
     return hashlib.sha256(data).hexdigest()
@@ -70,17 +79,21 @@ def checked_wasm(directory):
 def content_type(name):
     return {'.html': 'text/html; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8',
             '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8',
-            '.wasm': 'application/wasm'}.get(Path(name).suffix, 'text/plain; charset=utf-8')
+            '.wasm': 'application/wasm', '.png': 'image/png',
+            '.webmanifest': 'application/manifest+json; charset=utf-8'}.get(Path(name).suffix, 'text/plain; charset=utf-8')
 
 def release_files(wasm_directory=WASM):
     raw = {name: text_bytes(SOURCE / name) for name in SOURCE_ASSETS}
+    raw.update({name: (SOURCE / name).read_bytes() for name in ICON_ASSETS})
     # Verify exact build bytes first, then use the same LF text format as public Git blobs.
     raw.update({name: data if name.endswith('.wasm') else data.replace(b'\r\n', b'\n')
                 for name, data in checked_wasm(wasm_directory).items()})
     index = text_bytes(SOURCE / 'index.html')
+    app_manifest = text_bytes(SOURCE / 'manifest.webmanifest')
     template = text_bytes(SOURCE / 'service-worker.js.in')
     inputs = {name: digest(data) for name, data in raw.items()}
-    inputs.update({'index.html': digest(index), 'service-worker.js.in': digest(template)})
+    inputs.update({'index.html': digest(index), 'manifest.webmanifest': digest(app_manifest),
+                   'service-worker.js.in': digest(template)})
     release = digest(canonical(inputs))
     prefix = f'assets/{release}/'
     # Only these fixed official scripts inherit inline permission in the Blob frame.
@@ -100,6 +113,12 @@ def release_files(wasm_directory=WASM):
         index = index.replace(before, after)
     files = {prefix + name: data for name, data in raw.items()}
     files['index.html'] = index
+    app = json.loads(app_manifest)
+    if [icon['src'] for icon in app['icons']] != ['./' + name for name in ICON_ASSETS]:
+        raise ValueError('Unexpected app manifest icon references')
+    for icon, name in zip(app['icons'], ICON_ASSETS):
+        icon['src'] = './' + prefix + name
+    files['manifest.webmanifest'] = canonical(app) + b'\n'
     assets = [{'path': name, 'size': len(data), 'sha256': digest(data), 'type': content_type(name)}
               for name, data in sorted(files.items())]
     if any(not 0 < item['size'] <= 1024 * 1024 for item in assets):
@@ -122,11 +141,15 @@ def safe_file(directory, name):
     return path
 
 def owned_names(manifest):
+    format_name = manifest.get('format')
+    payloads = immutable_asset_names(format_name)
     release = manifest.get('release', '')
-    if manifest.get('format') != FORMAT or len(release) != 64 or any(c not in '0123456789abcdef' for c in release):
+    if not isinstance(release, str) or len(release) != 64 or any(c not in '0123456789abcdef' for c in release):
         raise ValueError('Unknown staged loader manifest')
     names = set(manifest.get('files', {}))
-    expected = {'index.html', 'sw.js'} | {f'assets/{release}/{name}' for name in SOURCE_ASSETS + GENERATED + ('release-manifest.json',)}
+    expected = {'index.html', 'sw.js'} | {f'assets/{release}/{name}' for name in payloads + ('release-manifest.json',)}
+    if format_name == FORMAT:
+        expected.add('manifest.webmanifest')
     if names != expected:
         raise ValueError('Unexpected staged loader file list')
     return names | {'loader-manifest.json'}

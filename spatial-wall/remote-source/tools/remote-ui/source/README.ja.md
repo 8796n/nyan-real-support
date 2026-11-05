@@ -15,7 +15,7 @@ PC 側 UI、デスクトップ本体、製品署名秘密鍵、保存済み端�
 ## 含まれるもの
 
 - `data/remote-loader/`: 加工前の JavaScript・HTML・CSS、サービスワーカーの雛形、
-  検証用公開鍵、MIT 許諾全文。
+  ホーム画面用アイコン、検証用公開鍵、MIT 許諾全文。
 - `src/core/remote_pairing/` と `src/core/ws_message_validation.h`: 共通 C++ ペアリングと、
   既存の静的ライブラリをコンパイルする補助ヘッダー。
   Wasm の公開 API はペアリングだけで、未使用のサーバー用 object は link されません。
@@ -93,7 +93,8 @@ WasmにはBoringSSLの絶対ビルドパスが含まれ、サイズ・SHA-256は
 
 ## 変更した入口の実行
 
-開発時は stage の内容を secure origin から配信します。加工前の `index.html` を
+開発時は stage の内容を secure origin の `/spatial-wall/remote/` で配信します。
+Web アプリの manifest は、このパスをインストール時の識別子と起動先に使います。加工前の `index.html` を
 `file://` で開く方式は使用しません。現行製品は公式 origin
 `https://support.nyanreal.jp` を許可しているため、別ホストで運用するには
 PC 側の origin policy も意図して変更する必要があります。
