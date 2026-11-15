@@ -1,0 +1,12 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["S4RL2QBA29.jp.nyanreal.spatialwall.remote"],
+        "components": [
+          { "/": "/spatial-wall/remote/", "#": "v=2&*" }
+        ]
+      }
+    ]
+  }
+}
