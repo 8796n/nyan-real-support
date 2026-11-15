@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "jp.nyanreal.spatialwall.remote",
+      "sha256_cert_fingerprints": [
+        "3E:E0:CE:B9:62:47:59:42:4C:65:E9:8C:88:52:02:16:DB:3A:4F:3D:6A:C7:2B:7B:CE:8B:F3:62:4B:4A:22:62"
+      ]
+    }
+  }
+]
