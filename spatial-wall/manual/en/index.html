@@ -287,21 +287,11 @@ glasses. While cloned, the glasses and the mirrored monitor share one desktop
 source, so wall output stays off until Windows finishes giving the glasses their
 own extended source. On Windows, Spatial Wall can also reactivate a disabled
 supported-glasses target.</p>
-<p>As a conditional feature, when a display mode's hardware EDID contains the
-Microsoft HMD VSDB, Windows classifies the glasses as <code>HeadMounted</code> and removes
-them from the desktop. Spatial Wall detects this state automatically, acquires
-the display exclusively, and drives it directly. It cannot turn ordinary
-glasses into an HMD through a setting. Extended-display layout, corner tucking,
-the glasses cursor fence, and Fullscreen Exclusive do not apply while this HMD
-path is active. See "Tested configurations and known limitations" in the
-appendix for eligibility and tested hardware.</p>
 <p>Once connected, check these three.</p>
 <ol>
 <li><strong>Display mode</strong> — 2D or 3D SBS, and the refresh rate.
    "Restore saved display mode on connection" is off by default. Manual choices
-   are remembered even while it is off, and the setting also restores normal
-   modes. If the last remembered mode is HMD-capable, enable it only on a PC that
-   enters that mode reliably.
+   are remembered even while it is off.
    When XREAL One / One Pro / 1S is connected directly to the PC, both 2D and
    3D SBS use 60 Hz modes while the master switch is on. Other refresh rates
    are unavailable during this time, and this startup mode selection takes
@@ -451,9 +441,7 @@ N or V displays follow the same rules.</p>
 </table>
 <p>V is made main automatically only when there is <strong>exactly one G, at least one
 V, and no N</strong>, and a current V frame has actually been shown through G. It is
-not automatic when an N is present or multiple glasses displays are detected.
-Windows Direct HMD output puts G outside the desktop and therefore follows the
-HMD-output path instead of this table.</p>
+not automatic when an N is present or multiple glasses displays are detected.</p>
 <p>To choose V with "Make main display", the display must belong to the wall and
 be viewable through the glasses. It cannot be selected while the glasses are
 asleep or a single target is focused. On GNOME, the V choice lasts for the
@@ -508,9 +496,7 @@ is invisible, such as during sleep or with the glasses disconnected. When
 focusing one display, that visible virtual display remains mouse-operable;
 the other invisible virtual displays stay fenced. This also applies over the
 glasses bridge. While the diagram's live view is showing the
-virtual displays, the cursor is let in so you can work there. The glasses option is
-hidden while the glasses are an HMD outside the desktop, where no cursor can
-enter them. macOS asks for Input Monitoring permission the first time. GNOME and
+virtual displays, the cursor is let in so you can work there. macOS asks for Input Monitoring permission the first time. GNOME and
 Raspberry Pi use different input controls, so this option is not shown there.</p>
 <blockquote>
 <p><strong>Tip</strong>: if the cursor occasionally jumps to the far edge of the adjacent
@@ -766,8 +752,7 @@ the icon can reopen it at any time.</p>
   including IPD parallax with 6DoF tracking. If switching back to SBS fails,
   wait briefly, then turn the master off and on again.</li>
 <li><strong>Glasses Fullscreen Exclusive (Windows, "Advanced")</strong> — normally unnecessary. Try it only where scanout
-  falls below the panel's nominal Hz (some NVIDIA hybrid setups). It belongs to
-  the desktop path and is disabled while DisplayCore drives an HMD.</li>
+  falls below the panel's nominal Hz (some NVIDIA hybrid setups).</li>
 </ul>
 <h3 id="appearance-appearance">Appearance ("Appearance")</h3>
 <p>Display language defaults to "Auto (follow OS)". You can explicitly choose
@@ -796,12 +781,6 @@ remembered the next time Spatial Wall starts.</p>
   "Second screen only". Leaving "Force glasses to an extended display" on fixes
   this on every connection on Windows by identifying the supported glasses'
   physical target and repairing its disabled or cloned-source state.</li>
-<li>If the display stays dark after switching into an HMD-capable mode, turn off
-  "Restore saved display mode on connection" and reconnect the cable. If the
-  normal display still does not return, restart Windows. Do not force-quit the
-  app while it is waiting to verify the return to the normal display path.</li>
-<li>See "Tested configurations and known limitations" in the appendix for the
-  GPU-specific status of direct HMD output.</li>
 </ul>
 <h3 id="stutter-or-dropped-frames">Stutter or dropped frames</h3>
 <ul>
@@ -966,11 +945,6 @@ Hardware verification so far used GNOME 50.1 and SC-52D; other combinations rema
 <td>macOS direct MOVERIO BT-40 connection</td>
 <td>Apple A18 Pro / macOS 27.2 / BT-40. Natural head tracking with magnetic correction, dedicated HMD output at 1920×1080 and 60 Hz, automatic recovery after unplugging and reconnecting, and working settings and menus verified. Restoring magnetic calibration and resuming correction also verified.</td>
 <td>When prompted, place the glasses on a desk and manually recalibrate the gyroscope (about 20–50 seconds). Worn 3D viewing, long sessions, repeated reconnections, and BT-30C remain unverified.</td>
-</tr>
-<tr>
-<td>Windows direct HMD output</td>
-<td>Windows 11 Pro (build 26200) / RTX 3060 / xbx a01+ with an HMD VSDB. Acquisition and scanout verified at 2D 90 Hz and 3D SBS 72 Hz.</td>
-<td>Only display modes with a Microsoft HMD VSDB are eligible. A Radeon 780M system (driver 32.0.31035.1003) did not expose an HMD Target. Intel UHD (driver 32.0.101.7088) was not stable in its classification; acquisition and scanout remain unverified.</td>
 </tr>
 <tr>
 <td>macOS glasses bridge</td>
