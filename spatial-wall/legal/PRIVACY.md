@@ -1,6 +1,6 @@
 # Privacy Notice — nyan Real / Spatial Wall (standalone app)
 
-**Last updated: 2026-11-05**
+**Last updated: 2026-11-23**
 
 This is the privacy notice for the **standalone nyan Real / Spatial Wall
 application** (`spatial-wall.exe` on Windows, `spatial-wall` on Linux and
@@ -51,7 +51,7 @@ The phone remote and the bridge listen on your local network, so anyone already
 on that network can reach them while they are enabled. Use them on a network you
 trust, and turn them off when not in use.
 
-Phone control, companion APK downloads, and the Android bridge use authenticated
+Phone control, companion APK downloads, and the Android glasses bridge use authenticated
 encryption on the LAN. Registration establishes the PC's identity using its QR
 invitation or six-digit code; reconnecting checks the saved identity. Public
 connection-setup data can be fetched over HTTP, but the code and saved access
@@ -114,7 +114,15 @@ To draw the wall the app captures your screens and the audio of playing apps,
 and reads head tracking from the glasses. This data is processed in memory and
 sent to the glasses over USB/DisplayPort, or to your own Android device over the
 local network when the bridge is in use. **It is not written to disk and not
-transmitted anywhere else.** No camera or microphone is used.
+transmitted anywhere else.** No camera is used.
+
+The microphone is used only while you turn on "Use glasses connected to your
+phone as this PC's microphone". The sound of the glasses' microphone (or of your Android device's
+microphone, for glasses without one) is then sent from your Android device to
+your PC over the local network and handed to VB-CABLE on the PC, so that the
+apps you choose can use it as a microphone. It is processed in memory, **not
+written to disk and not transmitted anywhere else** by Spatial Wall. Android
+shows its microphone indicator while it is being sent.
 
 To place each window in space, the app reads the window list of the operating
 system, including window titles and process names. This stays in memory on your
@@ -224,7 +232,7 @@ PC のホスト名とポート番号で、ネットワークの外には出ま�
 到達できます。信頼できるネットワークでお使いいただき、使わないときは
 オフにしてください。
 
-スマホの操作、連携APKの取得、Androidブリッジには、LAN内で認証付きの暗号化を使用します。
+スマホの操作、連携APKの取得、Android メガネブリッジには、LAN内で認証付きの暗号化を使用します。
 QRの招待または6桁コードによる登録でPCを確認し、再接続では保存済みのPCの識別情報を検証します。
 公開の接続準備情報はHTTPで取得することがありますが、コードや保存済みのアクセス資格を
 平文では送信しません。PCで端末ごと、またはまとめて登録を解除でき、対象の操作・映像・音声接続も停止します。
@@ -276,7 +284,13 @@ AndroidのSpatial Wall用PC登録は、アプリ専用のAndroid Keystore鍵で�
 メガネから頭の動きを読み取ります。これらはメモリ上で処理され、
 USB / DisplayPort でメガネへ、またはブリッジ使用時はご自身の Android 端末へ
 ローカルネットワーク経由で送られます。**ディスクには書き出されず、
-それ以外のどこにも送信されません。** カメラ・マイクは使用しません。
+それ以外のどこにも送信されません。** カメラは使用しません。
+
+マイクは、「スマホにつないだメガネのマイクを、このPCのマイクにする」をオンにしている間だけ使います。そのとき、メガネの
+マイク（マイクの無いメガネでは Android 端末のマイク）の音を、Android 端末からローカルネットワーク
+経由でお使いのPCへ送り、PCの VB-CABLE へ渡します。選んだアプリがそれをマイクとして使えます。
+音はメモリ上で処理され、Spatial Wall が**ディスクへ書き出したり、それ以外のどこかへ送信したり
+することはありません。** 送っている間は、Android がマイク使用中の印を出します。
 
 各ウィンドウを空間に配置するために、OS のウィンドウ一覧（ウィンドウ名と
 プロセス名を含みます）を読み取ります。これはお使いのコンピューターの
