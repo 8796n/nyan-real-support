@@ -77,6 +77,30 @@ python tools/remote-ui/stage-loader.py
 python tools/remote-ui/stage-loader.py --check
 ```
 
+### Rebuild on macOS
+
+Apple silicon macOS is supported with Git, Python 3.11+, Node.js 24, CMake, and the
+Xcode command line tools. `tools/remote-pairing-wasm/setup-emsdk-macos.py` installs the
+same emsdk commit and Emscripten release as above from the fixed
+[official macOS arm64 archive](https://storage.googleapis.com/webassembly/emscripten-releases-builds/mac/eb132757325583b787fe9414b09afea9442b72ad/wasm-binaries-arm64.tar.xz)
+(286,147,016 bytes) into the same local directory, keeps the archive, and checks its
+SHA-256 `3d8ced05935fbef5b3edda4252dce260004860bf8d579617f13d417338aa4cac`.
+This too is our recorded hash of the official HTTPS download, kept in `runtime.json`.
+The runtime notice hashes recorded from the Windows SDK match this SDK.
+
+```sh
+python3 scripts/setup-remote-pairing.py
+python3 tools/remote-pairing-wasm/setup-emsdk-macos.py
+tools/remote-pairing-wasm/build-macos.sh
+python3 tools/remote-ui/stage-loader.py
+python3 tools/remote-ui/stage-loader.py --check
+```
+
+`build-macos.sh` runs the same checks as `build.ps1` with the system clang for the
+native fixture, and reads `scripts/macos-build-env.sh` to find Python and Node.js.
+
+### What the helpers check
+
 The helper builds the existing C++ core for native and Wasm, checks both protocol
 roles across native/Wasm, rejects wrong codes, contexts, MACs, and proofs, and
 verifies the linked runtime notices. It records the input and output hashes.

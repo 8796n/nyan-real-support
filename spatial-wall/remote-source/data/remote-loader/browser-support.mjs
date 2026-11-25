@@ -2,14 +2,18 @@
 // Copyright (C) 2026 8796n <info@8796.jp>
 export const MIN_CHROMIUM_MAJOR = 156;
 
+export function isIOS(nav) {
+  return /iPad|iPhone|iPod|CriOS|FxiOS|EdgiOS/i.test(nav.userAgent || '') ||
+    nav.platform === 'MacIntel' && nav.maxTouchPoints > 1;
+}
+
 // Compatibility admission, not an attestation of a modified browser. Unknown
 // engines and iOS WebKit are rejected before any credential or LAN operation.
 export function supportsSecureRemote(win) {
   try {
     const nav = win.navigator, ua = nav.userAgent || '';
     if (!win.isSecureContext || typeof win.WebTransport !== 'function' || !win.crypto?.subtle || !win.WebAssembly ||
-        /iPad|iPhone|iPod|CriOS|FxiOS|EdgiOS/i.test(ua) ||
-        nav.platform === 'MacIntel' && nav.maxTouchPoints > 1 ||
+        isIOS(nav) ||
         /; wv\)/.test(ua) || /Android/.test(ua) && /Version\/4\.0/.test(ua)) return false;
     let version;
     if (nav.userAgentData !== undefined) {

@@ -3,6 +3,15 @@
   "revision": "e13ee988ce3d87a738dd8f3661d02223308c412a",
   "emsdk_revision": "d7b4130688bfa348392b921ab04015aa15c4f154",
   "sdk_archive_sha256": "937b834b397e33645923794c1a20566a86c63ebc02b213e537c0a86dd380ab6c",
+  "release_build": "eb132757325583b787fe9414b09afea9442b72ad",
+  "sdk_archives": {
+    "mac-arm64": {
+      "file": "eb132757325583b787fe9414b09afea9442b72ad-wasm-binaries-arm64.tar.xz",
+      "url": "https://storage.googleapis.com/webassembly/emscripten-releases-builds/mac/eb132757325583b787fe9414b09afea9442b72ad/wasm-binaries-arm64.tar.xz",
+      "size": 286147016,
+      "sha256": "3d8ced05935fbef5b3edda4252dce260004860bf8d579617f13d417338aa4cac"
+    }
+  },
   "boringssl_notice_sha256": "3e1afdec027297c5cfb9486e21da57e828a76414f0c18ce53ec237188845dee6",
   "files": [
     {

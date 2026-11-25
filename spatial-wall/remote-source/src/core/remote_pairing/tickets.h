@@ -7,7 +7,7 @@ namespace nyan {
 // One live glasses owner, one outstanding ticket for each auxiliary route.
 class bridge_tickets {
 public:
-    enum class route : uint8_t { video, audio, media };
+    enum class route : uint8_t { video, audio, media, mic };
     struct owner {
         remote_devices::id device{};
         uint64_t control = 0;
@@ -29,7 +29,7 @@ private:
         bool active = false;
     };
     bool current(const owner &live, uint64_t now_ms);
-    std::array<slot, 3> slots_{};
+    std::array<slot, 4> slots_{};
     owner owner_{};
     uint64_t last_time_ = 0;
     bool has_time_ = false;

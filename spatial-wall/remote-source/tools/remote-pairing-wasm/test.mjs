@@ -26,7 +26,8 @@ function changed(bytes, index = 0) { const result = bytes.slice(); result[index]
 
 // Only this process's pipe sees test MACs/proofs. Failure output contains labels, never their values.
 async function nativePeer(role, ctx, password) {
-  const child = spawn(path.join(directory, 'pairing-native/pairing_pipe.exe'), [String(role)],
+  const fixture = process.platform === 'win32' ? 'pairing_pipe.exe' : 'pairing_pipe'; // build.ps1 / build-macos.sh
+  const child = spawn(path.join(directory, 'pairing-native', fixture), [String(role)],
     { stdio: ['pipe', 'pipe', 'ignore'], windowsHide: true, timeout: 5000 });
   const lines = createInterface({ input: child.stdout, crlfDelay: Infinity })[Symbol.asyncIterator]();
   const ended = new Promise((resolve, reject) => {

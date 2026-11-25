@@ -2,66 +2,16 @@
 // Copyright (C) 2026 8796n <info@8796.jp>
 #include "registration.h"
 #include <algorithm>
-#include <openssl/base64.h>
-#include <openssl/bytestring.h>
 #include <openssl/crypto.h>
-#include <openssl/evp.h>
-#include <openssl/nid.h>
 #include <openssl/rand.h>
 #include <openssl/sha.h>
 
 namespace nyan {
 namespace {
-bool grants_valid(uint8_t value) { return value && !(value & ~NYAN_PAIRING_GRANT_MASK); }
-struct secret_text {
-    std::string value;
-    ~secret_text() { if (!value.empty()) OPENSSL_cleanse(value.data(), value.size()); }
-};
-struct decoded_header {
-    // Decoding padded base64 may require up to two bytes of spare capacity.
-    std::array<uint8_t, 165> bytes{};
-    size_t size = 0;
-    ~decoded_header() { OPENSSL_cleanse(bytes.data(), bytes.size()); }
-};
 struct secret32 {
     remote_registration::bytes32 bytes;
     ~secret32() { OPENSSL_cleanse(bytes.data(), bytes.size()); }
 };
-} // namespace
-std::string remote_base64url(const uint8_t *bytes, size_t size)
-{
-    std::string encoded(((size + 2) / 3) * 4 + 1, '\0');
-    encoded.resize(EVP_EncodeBlock(reinterpret_cast<uint8_t *>(encoded.data()), bytes, size));
-    while (!encoded.empty() && encoded.back() == '=') encoded.pop_back();
-    std::replace(encoded.begin(), encoded.end(), '+', '-');
-    std::replace(encoded.begin(), encoded.end(), '/', '_');
-    return encoded;
-}
-namespace {
-bool decode(std::string_view text, decoded_header &out)
-{
-    if (text.empty() || text.size() > 215 || text.size() % 4 == 1 ||
-        std::any_of(text.begin(), text.end(), [](char c) {
-            return !((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-                     (c >= '0' && c <= '9') || c == '-' || c == '_');
-        })) return false;
-    secret_text padded{std::string(text)};
-    std::replace(padded.value.begin(), padded.value.end(), '-', '+');
-    std::replace(padded.value.begin(), padded.value.end(), '_', '/');
-    while (padded.value.size() % 4) padded.value += '=';
-    if (!EVP_DecodeBase64(out.bytes.data(), &out.size, out.bytes.size(),
-                         reinterpret_cast<const uint8_t *>(padded.value.data()), padded.value.size())) return false;
-    secret_text canonical{remote_base64url(out.bytes.data(), out.size)};
-    return canonical.value == text;
-}
-bool p256_spki(const uint8_t *bytes, size_t size)
-{
-    if (!bytes || !size || size > 256) return false;
-    CBS input;
-    CBS_init(&input, bytes, size);
-    bssl::UniquePtr<EVP_PKEY> key(EVP_parse_public_key(&input));
-    return key && CBS_len(&input) == 0 && EVP_PKEY_get_ec_curve_nid(key.get()) == NID_X9_62_prime256v1;
-}
 bool random_code(remote_registration::code_bytes &code)
 {
     size_t filled = 0;
@@ -99,7 +49,7 @@ remote_registration::~remote_registration() { cancel(); }
 
 bool remote_registration::configure(const uint8_t *spki, size_t size, const bytes32 &leaf_hash)
 {
-    if (!p256_spki(spki, size) || !snapshot_.key_size() || !write_ ||
+    if (!remote_p256_spki(spki, size) || !snapshot_.key_size() || !write_ ||
         std::all_of(leaf_hash.begin(), leaf_hash.end(), [](uint8_t b) { return b == 0; })) {
         cancel(); configured_ = false; spki_.clear(); return false;
     }
@@ -136,7 +86,7 @@ bool remote_registration::invite_current(uint64_t now_ms)
 bool remote_registration::start_code(uint8_t grants, uint64_t now_ms)
 {
     window_.cancel();
-    if (!observe(now_ms) || !configured_ || !devices_.ready() || !grants_valid(grants)) return false;
+    if (!observe(now_ms) || !configured_ || !devices_.ready() || !nyan_pairing_grants_valid(grants)) return false;
     pairing_window::context_bytes context{};
     context.front() = NYAN_PAIRING_VERSION; context.back() = grants;
     std::copy(spki_hash_.begin(), spki_hash_.end(), context.begin() + 33);
@@ -155,7 +105,7 @@ bool remote_registration::display_code(uint64_t now_ms, code_bytes &out, unsigne
 bool remote_registration::invitation(uint8_t grants, uint64_t now_ms, bytes32 &out, unsigned &seconds_left)
 {
     out.fill(0); seconds_left = 0;
-    if (!observe(now_ms) || !configured_ || !devices_.ready() || !grants_valid(grants)) return false;
+    if (!observe(now_ms) || !configured_ || !devices_.ready() || !nyan_pairing_grants_valid(grants)) return false;
     if (!invite_current(now_ms) || invite_grants_ != grants) {
         clear_invite();
         if (!RAND_bytes(invite_.data(), invite_.size())) { clear_invite(); return false; }
@@ -249,10 +199,10 @@ unsigned remote_registration::enrollment_status(bool encrypted, std::string_view
     const bool pairing = authorization.substr(0, 8) == "Pairing ";
     const bool invite = authorization.substr(0, 7) == "Invite ";
     if (!pairing && !invite) return 403;
-    decoded_header data;
-    if (!decode(authorization.substr(pairing ? 8 : 7), data)) return 400;
+    remote_decoded_bytes data;
+    if (!remote_decode_base64url(authorization.substr(pairing ? 8 : 7), data)) return 400;
     const size_t prefix = pairing ? 65 : 32;
-    if (data.size < prefix + 1 || data.size > prefix + 96) return 400;
+    if (data.size < prefix + 1 || data.size > prefix + NYAN_PAIRING_MAX_LABEL_BYTES) return 400;
     std::optional<uint8_t> grants;
     if (pairing) {
         secret32 proof{bytes32_at(data.bytes.data() + 33)};
@@ -271,8 +221,8 @@ remote_registration::response remote_registration::enroll(bool encrypted, std::s
     const auto status = enrollment_status(encrypted, authorization, body_size, now_ms);
     if (status != 200) return failure(status);
     const bool pairing = authorization.substr(0, 8) == "Pairing ";
-    decoded_header data;
-    if (!decode(authorization.substr(pairing ? 8 : 7), data)) return failure(400);
+    remote_decoded_bytes data;
+    if (!remote_decode_base64url(authorization.substr(pairing ? 8 : 7), data)) return failure(400);
     const size_t prefix = pairing ? 65 : 32;
     const std::string label(reinterpret_cast<const char *>(data.bytes.data() + prefix), data.size - prefix);
     // Reserve the complete response before persistence. After committing there

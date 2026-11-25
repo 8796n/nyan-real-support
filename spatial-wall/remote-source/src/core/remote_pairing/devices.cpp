@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (C) 2026 8796n <info@8796.jp>
 #include "devices.h"
-#include "ws_message_validation.h"
+#include "encoding.h"
 #include <algorithm>
 #include <openssl/crypto.h>
 #include <openssl/rand.h>
@@ -9,23 +9,9 @@
 
 namespace nyan {
 namespace {
-bool grants_valid(uint8_t grants)
-{
-    return grants && !(grants & ~NYAN_PAIRING_GRANT_MASK);
-}
 template<size_t N> bool nonzero(const std::array<uint8_t, N> &bytes)
 {
     return std::any_of(bytes.begin(), bytes.end(), [](uint8_t value) { return value != 0; });
-}
-bool label_valid(std::string_view label)
-{
-    return !label.empty() && label.size() <= 96 && ws_valid_utf8(label) &&
-           std::none_of(label.begin(), label.end(), [](unsigned char c) { return c < 0x20 || c == 0x7f; });
-}
-template<size_t N> void append_hex(std::string &out, const std::array<uint8_t, N> &bytes)
-{
-    constexpr char digits[] = "0123456789abcdef";
-    for (auto byte : bytes) { out += digits[byte >> 4]; out += digits[byte & 15]; }
 }
 template<size_t N> bool parse_hex(std::string_view text, std::array<uint8_t, N> &out)
 {
@@ -53,11 +39,9 @@ void remote_devices::credential::clear()
 std::string remote_devices::credential::authorization() const
 {
     if (!nonzero(device) || !nonzero(secret)) return {};
-    std::string value = "Device ";
-    value.reserve(104);
-    append_hex(value, device);
-    value += '.';
-    append_hex(value, secret);
+    std::string value(NYAN_DEVICE_AUTHORIZATION_BYTES, '\0');
+    nyan_device_authorization(device.data(), device.size(), secret.data(), secret.size(),
+                              reinterpret_cast<uint8_t *>(value.data()), value.size());
     return value;
 }
 
@@ -71,7 +55,7 @@ bool remote_devices::load(records saved, bool restore_retired_grant)
     for (size_t i = 0; i < saved.size(); ++i) {
         auto &item = saved[i];
         if (!nonzero(item.device) || !nonzero(item.verifier) ||
-            !item.grants || (item.grants & ~allowed) || !label_valid(item.label)) return false;
+            !item.grants || (item.grants & ~allowed) || !remote_device_label_valid(item.label)) return false;
         for (size_t j = 0; j < i; ++j)
             if (item.device == saved[j].device || item.verifier == saved[j].verifier) return false;
         item.grants &= NYAN_PAIRING_GRANT_MASK;
@@ -97,7 +81,7 @@ bool remote_devices::commit(records next, const persist &save)
 
 bool remote_devices::can_enroll(uint8_t grants, std::string_view label) const
 {
-    return ready_ && records_.size() < capacity && grants_valid(grants) && label_valid(label);
+    return ready_ && records_.size() < capacity && nyan_pairing_grants_valid(grants) && remote_device_label_valid(label);
 }
 
 bool remote_devices::enroll(uint8_t grants, std::string label, const persist &save, credential &out)
@@ -123,7 +107,7 @@ bool remote_devices::enroll(uint8_t grants, std::string label, const persist &sa
 std::optional<remote_devices::record> remote_devices::authenticate(std::string_view authorization,
                                                                   uint8_t required_grants) const
 {
-    if (!ready_ || !grants_valid(required_grants) || authorization.size() != 104 ||
+    if (!ready_ || !nyan_pairing_grants_valid(required_grants) || authorization.size() != NYAN_DEVICE_AUTHORIZATION_BYTES ||
         authorization.substr(0, 7) != "Device " || authorization[39] != '.') return std::nullopt;
     credential supplied;
     if (!parse_hex(authorization.substr(7, 32), supplied.device) ||

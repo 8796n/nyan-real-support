@@ -6,7 +6,8 @@
   const TEXT = 256 * 1024, MEDIA = 4 * 1024 * 1024 + 40;
   const LIMITS = Object.freeze({ text: TEXT, media: MEDIA, count: 64, bytes: 8 * 1024 * 1024 });
   const SETTINGS = Object.freeze(['nyanRemoteTune', 'nyanRemoteStripLeft', 'nyanSettingsOpen',
-    'nyanVrHand', 'nyanVrHaptics', 'nyanRemoteMarker', 'nyanRemotePanesSwapped', 'nyanRemotePreviewLive']);
+    'nyanVrHand', 'nyanVrHaptics', 'nyanRemoteMarker', 'nyanRemotePanesSwapped', 'nyanRemotePreviewLive',
+    'nyanRemoteTheme']);
   const encoder = new TextEncoder();
   function textSize(value, max) {
     if (typeof value !== 'string' || value.length > max) throw Error('Invalid frame text');
@@ -17,6 +18,7 @@
   function validSetting(key, value) {
     if (!SETTINGS.includes(key) || typeof value !== 'string' || value.length > 4096) return false;
     if (key === 'nyanVrHand') return value === 'left' || value === 'right';
+    if (key === 'nyanRemoteTheme') return value === 'auto' || value === 'light' || value === 'dark';
     if (key === 'nyanRemoteTune') {
       try {
         const v = JSON.parse(value), ranges = { sens: [.5, 4], wheel: [.3, 3], dolly: [.3, 3], hold: [200, 800], vib: [0, 3] };

@@ -43,7 +43,8 @@ def wasm_inputs():
              if path.suffix in ('.cpp', '.h') or path.name in ('CMakeLists.txt', 'boringssl.json')]
     files += [ROOT / relative for relative in (
         'src/core/ws_message_validation.h',
-        'tools/remote-pairing-wasm/build.ps1', 'tools/remote-pairing-wasm/CMakeLists.txt',
+        'tools/remote-pairing-wasm/build.ps1', 'tools/remote-pairing-wasm/build-macos.sh',
+        'tools/remote-pairing-wasm/setup-emsdk-macos.py', 'tools/remote-pairing-wasm/CMakeLists.txt',
         'tools/remote-pairing-wasm/entry.cpp', 'tools/remote-pairing-wasm/runtime.json',
         'tools/remote-pairing-wasm/licenses.py', 'data/remote-loader/pairing.mjs',
         'licenses/remote-pairing-wasm.txt', 'licenses/boringssl.txt', 'scripts/setup-remote-pairing.py',

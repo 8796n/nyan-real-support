@@ -5,7 +5,7 @@ import { DEVICE_STORE_KEY, loadDevices, saveDevice, forgetDevice, forgetAllDevic
 import { enrollWithInvite, pairWithCode } from './pairing-client.mjs';
 import { mountDeviceFrame } from './device-frame.mjs';
 import { importProductKey } from './verify-ui.mjs';
-import { supportsSecureRemote, localNetworkPermission } from './browser-support.mjs';
+import { isIOS, supportsSecureRemote, localNetworkPermission } from './browser-support.mjs';
 import { watchOffline } from './offline.mjs';
 const SELECTED = 'spatial-wall.selected-pc.v2';
 const WORDS = {
@@ -14,8 +14,12 @@ const WORDS = {
     'invite-title':'Register with this PC', 'saved-title':'Saved PCs',
     'pair-title':'Register with a code', 'label-title':'Name shown on the PC', 'host-title':'PC address', 'port-title':'Port', 'code-title':'Six-digit code',
     register:'Register and connect', 'browser-pair':'Register and connect', 'open-app':'Open in Android app',
+    iosOpen:'Open in iPhone app', iosIntro:'Open the Spatial Wall app and enter the six-digit code shown on your PC.',
+    iosInviteIntro:'Copy the invitation, then open Spatial Wall to register this PC.',
+    iosOpening:'Opening Spatial Wall…', iosCopy:'Copy one-use invitation', iosCopied:'Open the iPhone app, then choose Paste under PC invitation.',
+    iosCopyFailed:'Could not copy the invitation. Use the six-digit code in the app.',
     'app-note':'If the Android app is installed, you can register it instead.',
-    glassesMissing:'This registration covers remote control only. To use glasses connected to Android, turn on “Allow Android glasses bridge” under Remote on the PC, then register the app with a new QR or six-digit code.',
+    glassesMissing:'This registration covers remote control only. To use glasses connected to Android, turn on “Allow glasses bridge” under Remote on the PC, then register the app with a new QR or six-digit code.',
     'android-title':'Android app', 'android-menu-button':'Android app', 'download-app':'Get app from PC', 'save-apk':'Save APK',
     'download-note':'To install or update the app, connect to your PC and open the Android app menu. Android 11 or later, 64-bit ARM.',
     apkLoading:'Getting the app from your PC and checking its signature…',
@@ -28,7 +32,7 @@ const WORDS = {
     'local-note':'Registrations are stored in this browser only. Removing them here does not remove this device from the PC.',
     'remove-all':'Remove all from this browser', cancel:'Cancel', disconnect:'Disconnect', 'change-pc':'Choose another PC',
     connect:'Connect', forget:'Remove', label:'Phone browser', loading:'Loading…', ready:'',
-    unsupported:'Open this page in Chrome 156 or later on Android or a PC. iPhone and iPad are not supported.',
+    unsupported:'Open this page in Chrome 156 or later on Android or a PC.',
     networkPrompt:'Select Connect and allow access to your local network.',
     networkDenied:'Allow local network access for this site in browser settings, then select Connect.',
     offlineUpdate:'An update is ready. Close every remote tab and home-screen window, then reopen.',
@@ -43,15 +47,19 @@ const WORDS = {
     removed:'Removed from this browser.', changed:'Registrations changed in another tab, so the connection was closed.',
     invalidInput:'Check the PC address (for example 192.168.1.7), the port and the six-digit code.',
     disconnected:'Disconnected.', app:'Opening the Android app…', selectionError:'The PC selection could not be saved for reloading.',
-    remote:'Remote', glasses:'Android glasses bridge', embedded:'Open this page directly to connect.',
+    remote:'Remote', glasses:'Glasses bridge', embedded:'Open this page directly to connect.',
   },
   ja: {
     intro:'PCに表示されたQRを読み取るか、6桁コードで登録します。',
     'invite-title':'このPCに登録', 'saved-title':'登録済みのPC',
     'pair-title':'コードで登録', 'label-title':'PCに表示する名前', 'host-title':'PCのアドレス', 'port-title':'ポート', 'code-title':'6桁コード',
     register:'登録して接続', 'browser-pair':'登録して接続', 'open-app':'Androidアプリで開く',
+    iosOpen:'iPhoneアプリで開く', iosIntro:'Spatial Wallアプリを開き、PCに表示されている6桁コードで登録します。',
+    iosInviteIntro:'招待リンクをコピーしてからSpatial Wallアプリを開くと、このPCを登録できます。',
+    iosOpening:'Spatial Wallを開いています…', iosCopy:'使い切りの招待リンクをコピー', iosCopied:'iPhoneアプリを開き、「PCからの招待」の「ペースト」を選んでください。',
+    iosCopyFailed:'招待リンクをコピーできませんでした。アプリでPCの6桁コードを入力してください。',
     'app-note':'Androidアプリを入れている場合は、アプリで登録することもできます。',
-    glassesMissing:'この登録で使えるのはリモコン操作だけです。Androidにつないだメガネも使うには、PCの「リモコン操作」で「Android メガネブリッジを許可」をオンにして、新しいQRか6桁コードでアプリを登録してください。',
+    glassesMissing:'この登録で使えるのはリモコン操作だけです。Androidにつないだメガネも使うには、PCの「リモコン操作」で「メガネブリッジを許可」をオンにして、新しいQRか6桁コードでアプリを登録してください。',
     'android-title':'Androidアプリ', 'android-menu-button':'Androidアプリ', 'download-app':'PCからアプリを取得', 'save-apk':'APKを保存',
     'download-note':'アプリのインストールと更新は、PCに接続してから「Androidアプリ」メニューで行います。Android 11以降・64ビットARM。',
     apkLoading:'PCからアプリを取得し、署名を確認しています…',
@@ -64,7 +72,7 @@ const WORDS = {
     'local-note':'登録はこのブラウザにだけ保存されます。ここで削除してもPC側の登録は残ります。',
     'remove-all':'このブラウザの登録をすべて削除', cancel:'キャンセル', disconnect:'切断', 'change-pc':'別のPCを選ぶ',
     connect:'接続', forget:'削除', label:'スマホのブラウザ', loading:'読み込んでいます…', ready:'',
-    unsupported:'AndroidまたはPCのChrome 156以降で開いてください。iPhone・iPadには対応していません。',
+    unsupported:'AndroidまたはPCのChrome 156以降で開いてください。',
     networkPrompt:'「接続」を押して、LAN内のPCへのアクセスを許可してください。',
     networkDenied:'ブラウザのサイト設定でローカルネットワークへのアクセスを許可してから、「接続」を押してください。',
     offlineUpdate:'更新があります。リモコンのタブとホーム画面から開いたリモコンをすべて閉じて、開き直してください。',
@@ -79,7 +87,7 @@ const WORDS = {
     removed:'このブラウザから削除しました。', changed:'別のタブで登録が変わったため、接続を閉じました。',
     invalidInput:'PCのアドレス（例: 192.168.1.7）、ポート、6桁コードを確認してください。',
     disconnected:'切断しました。', app:'Androidアプリを開いています…', selectionError:'再読み込み用のPC選択を保存できませんでした。',
-    remote:'リモコン', glasses:'Androidメガネブリッジ', embedded:'接続するには、このページを直接開いてください。',
+    remote:'リモコン', glasses:'メガネブリッジ', embedded:'接続するには、このページを直接開いてください。',
   },
 };
 const defaults = { loadDevices, saveDevice, forgetDevice, forgetAllDevices, parsePairingLink, watchOffline,
@@ -101,7 +109,17 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
   let blocked = false, productKey, module, revision = 0;
   let offlineStatus = 'offlineUnavailable', stopOffline;
   const listeners = [], supported = supportsSecureRemote(win);
-  const android = /Android/i.test(win.navigator.userAgent);
+  const ios = isIOS(win.navigator), android = /Android/i.test(win.navigator.userAgent);
+  // The remote's preferences, kept here; when it saves its theme, this page follows at once.
+  const settingsStorage = Object.freeze({
+    getItem: key => win.localStorage.getItem(key),
+    setItem(key, value) {
+      win.localStorage.setItem(key, value);
+      if (key === 'nyanRemoteTheme') win.SpatialRemoteEntryTheme?.apply(value);
+    },
+  });
+  let iosEndpoint = null, iosInvite = null, iosInviteTimer;
+  function clearIOSInvite() { iosInvite = null; clearTimeout(iosInviteTimer); }
   const text = key => WORDS[language][key];
   const wipe = values => { for (const device of values) device.secret.fill(0); };
   function listen(target, name, callback) { target.addEventListener(name, callback); listeners.push(() => target.removeEventListener(name, callback)); }
@@ -114,9 +132,17 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
     for (const key of ['intro','invite-title','saved-title','pair-title','label-title','host-title','port-title','code-title',
       'register','browser-pair','open-app','local-note','remove-all','cancel','disconnect','change-pc',
       'android-title','android-menu-button','download-app','download-note','entry-source','entry-license']) $(key).textContent = text(key);
+    $('ios-app').hidden = !ios;
+    if (ios) {
+      const canCopy = !!iosInvite && typeof win.navigator.clipboard?.writeText === 'function';
+      $('intro').textContent = text(canCopy || message === 'iosCopied' ? 'iosInviteIntro' : 'iosIntro');
+      $('ios-open').textContent = text('iosOpen'); $('ios-copy').textContent = text('iosCopy'); $('ios-copy').hidden = !canCopy;
+      $('ios-pc').hidden = !iosEndpoint; $('ios-pc').textContent = iosEndpoint ? iosEndpoint.host + ':' + iosEndpoint.port : '';
+      $('pair-box').hidden = $('local-note').hidden = $('remove-all').hidden = true;
+    }
     $('status').textContent = text(message);
     // Offline caching is silent unless the user has to act on it: an update, or a cache that failed.
-    $('offline-status').textContent = text(offlineStatus) || '';
+    $('offline-status').textContent = ios ? '' : text(offlineStatus) || '';
     $('runtime-notice').textContent = text('runtimeNotice'); $('boring-notice').textContent = text('boringNotice');
     $('invite').hidden = !invitation;
     if (invitation) {
@@ -200,7 +226,7 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
   async function connect(op, device) {
     if (!current(op)) return;
     op.label = device.host + ':' + device.port; status('connecting');
-    const mounted = await api.mountDeviceFrame({ device, container:$('viewport'), storage:win.localStorage, productKey, signal:op.abort.signal,
+    const mounted = await api.mountDeviceFrame({ device, container:$('viewport'), storage:settingsStorage, productKey, signal:op.abort.signal,
       onReady() { if (current(op)) { op.ready = true; status('connected'); render(); } },
       onControlChange(open) { if (current(op)) { op.controlOpen = open; render(); } },
       onClose() { if (current(op)) cancel(op.ready ? 'disconnected' : 'failed'); },
@@ -282,7 +308,7 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
   }
   function dispose() {
     if (disposed) return;
-    cancel(); disposed = true; ++revision; clearInvitation(); wipe(devices); devices = [];
+    cancel(); disposed = true; ++revision; clearInvitation(); clearIOSInvite(); wipe(devices); devices = [];
     stopOffline?.();
     for (const remove of listeners) remove();
   }
@@ -299,12 +325,25 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
     try { api.forgetAllDevices(win.localStorage); void refresh().then(ok => { if (ok) status('removed'); render(); }); }
     catch { blocked = true; status('storeError'); render(); }
   });
+  listen($('ios-copy'),'click',async () => {
+    if (!ios || !iosInvite || disposed || $('ios-copy').hidden) return;
+    try {
+      await win.navigator.clipboard.writeText(iosInvite);
+      clearIOSInvite(); status('iosCopied'); render();
+    } catch { status('iosCopyFailed'); }
+  });
+  listen($('ios-open'),'click',() => {
+    if (!ios || disposed) return;
+    // iOS custom schemes have no package binding. Only the public endpoint may travel here.
+    const url = iosEndpoint ? `nyanreal://connect?host=${iosEndpoint.host}&port=${iosEndpoint.port}` : 'nyanreal://connect';
+    clearIOSInvite(); status('iosOpening'); render(); win.location.assign(url);
+  });
   listen($('open-app'),'click',() => {
     if ($('open-app').disabled) return;
     const url = androidIntent(invitation); clearInvitation(); cancel('app'); win.location.assign(url);
   });
   listen(win,'storage',event => {
-    if (event.storageArea !== win.localStorage || event.key !== null && event.key !== DEVICE_STORE_KEY) return;
+    if (ios || event.storageArea !== win.localStorage || event.key !== null && event.key !== DEVICE_STORE_KEY) return;
     cancel('changed'); void refresh();
   });
   listen(win,'pagehide',dispose);
@@ -316,9 +355,19 @@ export async function startLauncher(win = globalThis, dependencies = {}) {
     const value = win.SpatialRemoteEntryLink(); hadLink = value !== null;
     if (hadLink) {
       const parsed = await api.parsePairingLink(value);
-      if (disposed) parsed.invite.fill(0); else invitation = parsed;
+      if (ios && !disposed) {
+        iosEndpoint = { host:parsed.host, port:parsed.port };
+        iosInvite = value; // The validated official HTTPS link stays in this closure until an explicit copy.
+        iosInviteTimer = setTimeout(() => { clearIOSInvite(); render(); }, 60000);
+      }
+      if (disposed || ios) parsed.invite.fill(0); else invitation = parsed;
     }
   } catch { hadLink = true; status('invalidLink'); }
+  // Native registration uses its own Keychain. Skip browser credentials, Wasm and LAN access.
+  if (ios) {
+    if (message === 'loading') status('ready');
+    render(); return { dispose };
+  }
   try { selection = win.sessionStorage.getItem(SELECTED); win.sessionStorage.removeItem(SELECTED); } catch {}
   if (selection === 'choose') $('pair-box').open = true;
   await refresh();

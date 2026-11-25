@@ -17,10 +17,16 @@ enum {
     NYAN_PAIRING_MESSAGE_BYTES = 32,
     NYAN_PAIRING_CONFIRMATION_BYTES = 32,
     NYAN_PAIRING_ENROLLMENT_BYTES = 32,
+    NYAN_PAIRING_MAX_LABEL_BYTES = 96,
     NYAN_PAIRING_GRANT_REMOTE = 1,
     NYAN_PAIRING_GRANT_GLASSES = 2,
     NYAN_PAIRING_GRANT_MASK = NYAN_PAIRING_GRANT_REMOTE | NYAN_PAIRING_GRANT_GLASSES
 };
+
+static inline int nyan_pairing_grants_valid(unsigned grants)
+{
+    return grants != 0 && (grants & ~(unsigned)NYAN_PAIRING_GRANT_MASK) == 0;
+}
 
 typedef struct nyan_pairing nyan_pairing;
 

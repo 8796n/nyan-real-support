@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: MIT
 // Copyright (C) 2026 8796n <info@8796.jp>
 #pragma once
+#include "encoding.h"
 #include "snapshot.h"
 #include "window.h"
 
 namespace nyan {
-// Canonical unpadded base64url for registration headers and the local QR bootstrap.
-std::string remote_base64url(const uint8_t *bytes, size_t size);
 // The owner holds one mutex across every call and the protected atomic writer,
 // supplies monotonic milliseconds, and validates routes/methods/Origin/CORS.
 // This service owns no listener, clock, OS resource or legacy token.

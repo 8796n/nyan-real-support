@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (C) 2026 8796n <info@8796.jp>
 #include "tickets.h"
+#include "encoding.h"
 #include <algorithm>
 #include <openssl/crypto.h>
 #include <openssl/rand.h>
@@ -48,7 +49,7 @@ std::optional<std::string> bridge_tickets::issue(route endpoint, const owner &li
     secret random;
     if (!RAND_bytes(random.bytes.data(), random.bytes.size())) return {};
     std::string authorization = "Ticket ";
-    authorization.reserve(71);
+    authorization.reserve(NYAN_TICKET_AUTHORIZATION_BYTES);
     constexpr char hex[] = "0123456789abcdef";
     for (auto value : random.bytes) { authorization += hex[value >> 4]; authorization += hex[value & 15]; }
     auto &slot = slots_[index];
@@ -62,7 +63,7 @@ bool bridge_tickets::check(std::string_view authorization, route endpoint, const
 {
     const auto index = static_cast<size_t>(endpoint);
     if (index >= slots_.size() || !current(live, now_ms) || !same(live, owner_) ||
-        authorization.size() != 71 || authorization.substr(0, 7) != "Ticket ") return false;
+        !nyan_ticket_authorization_valid(authorization.data(), authorization.size())) return false;
     const auto &slot = slots_[index];
     if (!slot.active) return false;
     remote_devices::bytes32 verifier{};

@@ -4,9 +4,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' http: https: 'unsafe-webtransport-hashes'; frame-src blob:; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="theme-color" content="#101216">
 <script src="./entry-capture.js"></script>
 <title>Spatial Wall Remote</title>
-<meta name="theme-color" content="#101216">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icon-192.png" type="image/png" sizes="192x192">
 <link rel="stylesheet" href="./entry.css">
@@ -16,6 +16,10 @@
   <header><h1>Spatial Wall Remote</h1><label><span class="sr-only">Language</span><select id="language"><option value="en">English</option><option value="ja">日本語</option></select></label></header>
   <p id="intro" class="hint">Scan the QR on your PC, or register with a six-digit code.</p>
   <div class="status-row"><p id="status" role="status" aria-live="polite">Loading…</p><button id="cancel" type="button" hidden>Cancel</button></div>
+  <section id="ios-app" class="plain" hidden><p id="ios-pc" hidden></p>
+    <button id="ios-copy" type="button" hidden>Copy one-use invitation</button>
+    <button id="ios-open" class="primary" type="button">Open in iPhone app</button>
+  </section>
   <section id="invite" hidden><h2 id="invite-title"></h2><p id="invite-host"></p><p id="invite-grants" class="hint"></p>
     <div class="actions"><button id="browser-pair" class="primary" type="button" disabled>Register and connect</button><button id="open-app" type="button" hidden disabled>Open in Android app</button></div>
     <p id="app-note" class="hint" hidden></p>

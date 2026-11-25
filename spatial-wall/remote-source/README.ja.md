@@ -78,6 +78,30 @@ python tools/remote-ui/stage-loader.py
 python tools/remote-ui/stage-loader.py --check
 ```
 
+### macOS での再ビルド
+
+Apple silicon の macOS では、Git、Python 3.11 以降、Node.js 24、CMake、Xcode の
+command line tools を使用します。`tools/remote-pairing-wasm/setup-emsdk-macos.py` が、上と同じ
+emsdk の commit と Emscripten の release を、固定の
+[公式 macOS arm64 archive](https://storage.googleapis.com/webassembly/emscripten-releases-builds/mac/eb132757325583b787fe9414b09afea9442b72ad/wasm-binaries-arm64.tar.xz)
+（286,147,016 bytes）から同じローカルディレクトリへ導入し、archive を保持して
+SHA-256 `3d8ced05935fbef5b3edda4252dce260004860bf8d579617f13d417338aa4cac` と照合します。
+これも公式 HTTPS 配布物を取得して記録した hash で、`runtime.json` にあります。
+Windows の SDK で記録した runtime notice の hash は、この SDK でも一致します。
+
+```sh
+python3 scripts/setup-remote-pairing.py
+python3 tools/remote-pairing-wasm/setup-emsdk-macos.py
+tools/remote-pairing-wasm/build-macos.sh
+python3 tools/remote-ui/stage-loader.py
+python3 tools/remote-ui/stage-loader.py --check
+```
+
+`build-macos.sh` は `build.ps1` と同じ検査を行い、native 側はシステムの clang で
+ビルドします。Python と Node.js は `scripts/macos-build-env.sh` で探します。
+
+### ビルド補助が検査すること
+
 既存の共通 C++ core を native と Wasm の双方へビルドし、両 role の相互試験、
 誤ったコード・context・MAC・proof の拒否、実際に link した runtime の許諾を検査します。
 その後で入力・出力の hash を記録します。stage は変更済みソースや出力を拒否し、

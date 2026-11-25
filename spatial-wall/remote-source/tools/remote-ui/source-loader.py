@@ -19,14 +19,14 @@ LOADER = (
 CORE = (
     'CMakeLists.txt', 'boringssl.json', 'pairing.cpp', 'pairing.h', 'window.cpp', 'window.h',
     'devices.cpp', 'devices.h', 'snapshot.cpp', 'snapshot.h', 'tickets.cpp', 'tickets.h',
-    'registration.cpp', 'registration.h',
+    'registration.cpp', 'registration.h', 'encoding.cpp', 'encoding.h',
 )
 WASM = (
-    'build.ps1', 'CMakeLists.txt', 'entry.cpp', 'native.cpp', 'runtime.json', 'licenses.py',
+    'build.ps1', 'build-macos.sh', 'setup-emsdk-macos.py', 'CMakeLists.txt', 'entry.cpp', 'native.cpp', 'runtime.json', 'licenses.py',
     'test-licenses.py', 'test.mjs', 'pairing.mjs', 'browser.html', 'browser-checks.mjs',
 )
 FIXED = (
-    'scripts/setup-remote-pairing.py', 'scripts/windows-toolchain.ps1',
+    'scripts/setup-remote-pairing.py', 'scripts/windows-toolchain.ps1', 'scripts/macos-build-env.sh',
     'src/core/ws_message_validation.h', 'licenses/boringssl.txt', 'licenses/remote-pairing-wasm.txt',
     'tools/remote-ui/stage-loader.py', 'tools/remote-ui/source-loader.py',
     'tools/remote-ui/test-source-loader.py',

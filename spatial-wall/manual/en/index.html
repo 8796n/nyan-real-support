@@ -287,21 +287,11 @@ glasses. While cloned, the glasses and the mirrored monitor share one desktop
 source, so wall output stays off until Windows finishes giving the glasses their
 own extended source. On Windows, Spatial Wall can also reactivate a disabled
 supported-glasses target.</p>
-<p>As a conditional feature, when a display mode's hardware EDID contains the
-Microsoft HMD VSDB, Windows classifies the glasses as <code>HeadMounted</code> and removes
-them from the desktop. Spatial Wall detects this state automatically, acquires
-the display exclusively, and drives it directly. It cannot turn ordinary
-glasses into an HMD through a setting. Extended-display layout, corner tucking,
-the glasses cursor fence, and Fullscreen Exclusive do not apply while this HMD
-path is active. See "Tested configurations and known limitations" in the
-appendix for eligibility and tested hardware.</p>
 <p>Once connected, check these three.</p>
 <ol>
 <li><strong>Display mode</strong> — 2D or 3D SBS, and the refresh rate.
    "Restore saved display mode on connection" is off by default. Manual choices
-   are remembered even while it is off, and the setting also restores normal
-   modes. If the last remembered mode is HMD-capable, enable it only on a PC that
-   enters that mode reliably.
+   are remembered even while it is off.
    When XREAL One / One Pro / 1S is connected directly to the PC, both 2D and
    3D SBS use 60 Hz modes while the master switch is on. Other refresh rates
    are unavailable during this time, and this startup mode selection takes
@@ -388,6 +378,11 @@ display borders, screen distance, size factor, or the live view pointer size.</p
 as a clock to an edge of the wall. While arranging, click its tile to show or hide
 it, drag to move it, drag its lower-right corner to resize it, and right-click to
 open its settings.</p>
+<p>"Cat eyes" are two eyes that look toward the mouse pointer. The pupils are thin
+slits while the pointer is far away and turn round as it comes close. When the
+pointer stays still for 30 seconds the eyes close and doze; moving it opens them
+again. Turn off "Doze off" in its settings to keep them open. While the pointer
+is not on the wall, the eyes look straight ahead.</p>
 <h2 id="virtual-displays">Virtual displays</h2>
 <p>Short on physical monitors? Add <strong>virtual displays</strong> and the wall grows.
 Choose a resolution under "Virtual displays" in "Display Wall",
@@ -451,9 +446,7 @@ N or V displays follow the same rules.</p>
 </table>
 <p>V is made main automatically only when there is <strong>exactly one G, at least one
 V, and no N</strong>, and a current V frame has actually been shown through G. It is
-not automatic when an N is present or multiple glasses displays are detected.
-Windows Direct HMD output puts G outside the desktop and therefore follows the
-HMD-output path instead of this table.</p>
+not automatic when an N is present or multiple glasses displays are detected.</p>
 <p>To choose V with "Make main display", the display must belong to the wall and
 be viewable through the glasses. It cannot be selected while the glasses are
 asleep or a single target is focused. On GNOME, the V choice lasts for the
@@ -483,6 +476,8 @@ diagram.</p>
 <ul>
 <li>The tile of the display this settings window is on gets no picture: you are
   already looking at that screen.</li>
+<li>On both the PC and the phone remote, <strong>Arrange</strong> pauses live view and shows the
+  tile labels. Leaving <strong>Arrange</strong> resumes live view if it was on when you entered.</li>
 <li>It runs only while the diagram can be seen. Switching to another category,
   minimizing the window, or scrolling the diagram out of view stops it; coming
   back resumes it.</li>
@@ -508,9 +503,7 @@ is invisible, such as during sleep or with the glasses disconnected. When
 focusing one display, that visible virtual display remains mouse-operable;
 the other invisible virtual displays stay fenced. This also applies over the
 glasses bridge. While the diagram's live view is showing the
-virtual displays, the cursor is let in so you can work there. The glasses option is
-hidden while the glasses are an HMD outside the desktop, where no cursor can
-enter them. macOS asks for Input Monitoring permission the first time. GNOME and
+virtual displays, the cursor is let in so you can work there. macOS asks for Input Monitoring permission the first time. GNOME and
 Raspberry Pi use different input controls, so this option is not shown there.</p>
 <blockquote>
 <p><strong>Tip</strong>: if the cursor occasionally jumps to the far edge of the adjacent
@@ -526,8 +519,9 @@ connection. Pick a specific device and the choice is remembered while that devic
 is away, then re-applied when it returns.</p>
 <p>Volume and mute are in the operation panel at the top. While the glasses bridge
 is the active output, these controls adjust the phone's media volume instead.</p>
+<p><strong>When using XREAL 1S glasses connected directly to the PC with VR Bridge</strong>, some firmware versions keep capturing speech through the USB microphone even when SteamVR and Windows show it as muted. To prevent others from hearing you, turn off voice transmission in the call or game.</p>
 <h3 id="audio-wall">Audio Wall</h3>
-<p>Turn on spatial audio in the "Audio Wall" category and the app
+<p>Turn on "Audio Wall" in the "Audio Wall" category and the app
 finds whatever is playing, then mixes each app so it is heard from the direction
 of its window. There is no per-app setup. To keep something out of the mix, add
 its executable name to the exclusion list (for example <code>discord.exe</code>).</p>
@@ -766,8 +760,7 @@ the icon can reopen it at any time.</p>
   including IPD parallax with 6DoF tracking. If switching back to SBS fails,
   wait briefly, then turn the master off and on again.</li>
 <li><strong>Glasses Fullscreen Exclusive (Windows, "Advanced")</strong> — normally unnecessary. Try it only where scanout
-  falls below the panel's nominal Hz (some NVIDIA hybrid setups). It belongs to
-  the desktop path and is disabled while DisplayCore drives an HMD.</li>
+  falls below the panel's nominal Hz (some NVIDIA hybrid setups).</li>
 </ul>
 <h3 id="appearance-appearance">Appearance ("Appearance")</h3>
 <p>Display language defaults to "Auto (follow OS)". You can explicitly choose
@@ -778,7 +771,11 @@ Ubuntu 24.04's stock Qt 6.4, Auto uses the light theme and does not follow live
 OS theme changes, while Light and Dark remain available manually.</p>
 <p>"Show cursor direction compass" shows or hides the system tray compass that points
 toward the mouse cursor. It is on by default. Changes apply immediately and are
-remembered the next time Spatial Wall starts.</p>
+remembered the next time Spatial Wall starts.
+On Raspberry Pi and other Wayland desktops that are not GNOME, the cursor and icon
+positions are not available, so the compass is not shown and this option is not listed.
+On macOS the compass is not shown and this option is not listed either: the menu bar
+appears on every display with the same icon, so it cannot point the right way on each.</p>
 <p><img alt="Display language and theme in Appearance settings" src="manual-images/appearance-language-en.png" /></p>
 <h2 id="when-something-is-wrong">When something is wrong</h2>
 <h3 id="the-glasses-are-not-detected">The glasses are not detected</h3>
@@ -796,12 +793,6 @@ remembered the next time Spatial Wall starts.</p>
   "Second screen only". Leaving "Force glasses to an extended display" on fixes
   this on every connection on Windows by identifying the supported glasses'
   physical target and repairing its disabled or cloned-source state.</li>
-<li>If the display stays dark after switching into an HMD-capable mode, turn off
-  "Restore saved display mode on connection" and reconnect the cable. If the
-  normal display still does not return, restart Windows. Do not force-quit the
-  app while it is waiting to verify the return to the normal display path.</li>
-<li>See "Tested configurations and known limitations" in the appendix for the
-  GPU-specific status of direct HMD output.</li>
 </ul>
 <h3 id="stutter-or-dropped-frames">Stutter or dropped frames</h3>
 <ul>
@@ -966,11 +957,6 @@ Hardware verification so far used GNOME 50.1 and SC-52D; other combinations rema
 <td>macOS direct MOVERIO BT-40 connection</td>
 <td>Apple A18 Pro / macOS 27.2 / BT-40. Natural head tracking with magnetic correction, dedicated HMD output at 1920×1080 and 60 Hz, automatic recovery after unplugging and reconnecting, and working settings and menus verified. Restoring magnetic calibration and resuming correction also verified.</td>
 <td>When prompted, place the glasses on a desk and manually recalibrate the gyroscope (about 20–50 seconds). Worn 3D viewing, long sessions, repeated reconnections, and BT-30C remain unverified.</td>
-</tr>
-<tr>
-<td>Windows direct HMD output</td>
-<td>Windows 11 Pro (build 26200) / RTX 3060 / xbx a01+ with an HMD VSDB. Acquisition and scanout verified at 2D 90 Hz and 3D SBS 72 Hz.</td>
-<td>Only display modes with a Microsoft HMD VSDB are eligible. A Radeon 780M system (driver 32.0.31035.1003) did not expose an HMD Target. Intel UHD (driver 32.0.101.7088) was not stable in its classification; acquisition and scanout remain unverified.</td>
 </tr>
 <tr>
 <td>macOS glasses bridge</td>

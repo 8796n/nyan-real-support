@@ -3,19 +3,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' blob: 'sha256-gqttCE1vvcsUfZmED1TLD3syX8zlVSydVt9aZciQgbc=' 'sha256-RWi8bTOJaHJcwR58TPNVuoVaQqVvTlh3TcmeU8GrJ44=' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' http: https: 'unsafe-webtransport-hashes'; frame-src blob:; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
-<script src="./assets/25f2d57d7828449a8f361f862731888f603f068b47d1db60b942a15c468e6a23/entry-capture.js"></script>
-<title>Spatial Wall Remote</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' blob: 'sha256-j7DZbkQFqgmh07d7KDRKdqP+hwnlWR/30AoqWVRL8qo=' 'sha256-RWi8bTOJaHJcwR58TPNVuoVaQqVvTlh3TcmeU8GrJ44=' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' http: https: 'unsafe-webtransport-hashes'; frame-src blob:; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="theme-color" content="#101216">
+<script src="./assets/8e852c0ded39ae153761f15a8dab4b01abafda6292d2615bfcd17f01434a9060/entry-capture.js"></script>
+<title>Spatial Wall Remote</title>
 <link rel="manifest" href="./manifest.webmanifest">
-<link rel="icon" href="./assets/25f2d57d7828449a8f361f862731888f603f068b47d1db60b942a15c468e6a23/icon-192.png" type="image/png" sizes="192x192">
-<link rel="stylesheet" href="./assets/25f2d57d7828449a8f361f862731888f603f068b47d1db60b942a15c468e6a23/entry.css">
-<script type="module" src="./assets/25f2d57d7828449a8f361f862731888f603f068b47d1db60b942a15c468e6a23/entry.mjs"></script>
+<link rel="icon" href="./assets/8e852c0ded39ae153761f15a8dab4b01abafda6292d2615bfcd17f01434a9060/icon-192.png" type="image/png" sizes="192x192">
+<link rel="stylesheet" href="./assets/8e852c0ded39ae153761f15a8dab4b01abafda6292d2615bfcd17f01434a9060/entry.css">
+<script type="module" src="./assets/8e852c0ded39ae153761f15a8dab4b01abafda6292d2615bfcd17f01434a9060/entry.mjs"></script>
 </head><body>
 <main id="panel">
   <header><h1>Spatial Wall Remote</h1><label><span class="sr-only">Language</span><select id="language"><option value="en">English</option><option value="ja">日本語</option></select></label></header>
   <p id="intro" class="hint">Scan the QR on your PC, or register with a six-digit code.</p>
   <div class="status-row"><p id="status" role="status" aria-live="polite">Loading…</p><button id="cancel" type="button" hidden>Cancel</button></div>
+  <section id="ios-app" class="plain" hidden><p id="ios-pc" hidden></p>
+    <button id="ios-copy" type="button" hidden>Copy one-use invitation</button>
+    <button id="ios-open" class="primary" type="button">Open in iPhone app</button>
+  </section>
   <section id="invite" hidden><h2 id="invite-title"></h2><p id="invite-host"></p><p id="invite-grants" class="hint"></p>
     <div class="actions"><button id="browser-pair" class="primary" type="button" disabled>Register and connect</button><button id="open-app" type="button" hidden disabled>Open in Android app</button></div>
     <p id="app-note" class="hint" hidden></p>
@@ -36,7 +40,7 @@
   <footer>
     <p id="offline-status" role="status" aria-live="polite"></p>
     <p id="local-note"></p>
-    <p><a id="entry-source" href="https://github.com/8796n/nyan-real-support/tree/main/spatial-wall/remote-source" target="_blank" rel="noopener noreferrer">Source</a> · <a id="entry-license" href="./assets/25f2d57d7828449a8f361f862731888f603f068b47d1db60b942a15c468e6a23/LICENSE" target="_blank" rel="noopener noreferrer">MIT license</a> · <a id="runtime-notice" href="./assets/25f2d57d7828449a8f361f862731888f603f068b47d1db60b942a15c468e6a23/remote-pairing-wasm.txt" target="_blank" rel="noopener noreferrer">Wasm licenses</a> · <a id="boring-notice" href="./assets/25f2d57d7828449a8f361f862731888f603f068b47d1db60b942a15c468e6a23/boringssl.txt" target="_blank" rel="noopener noreferrer">BoringSSL licenses</a></p>
+    <p><a id="entry-source" href="https://github.com/8796n/nyan-real-support/tree/main/spatial-wall/remote-source" target="_blank" rel="noopener noreferrer">Source</a> · <a id="entry-license" href="./assets/8e852c0ded39ae153761f15a8dab4b01abafda6292d2615bfcd17f01434a9060/LICENSE" target="_blank" rel="noopener noreferrer">MIT license</a> · <a id="runtime-notice" href="./assets/8e852c0ded39ae153761f15a8dab4b01abafda6292d2615bfcd17f01434a9060/remote-pairing-wasm.txt" target="_blank" rel="noopener noreferrer">Wasm licenses</a> · <a id="boring-notice" href="./assets/8e852c0ded39ae153761f15a8dab4b01abafda6292d2615bfcd17f01434a9060/boringssl.txt" target="_blank" rel="noopener noreferrer">BoringSSL licenses</a></p>
     <button id="remove-all" class="text danger" type="button" disabled>Remove all from this browser</button>
   </footer>
   <noscript>JavaScript is required to connect securely. / 安全に接続するには JavaScript が必要です。</noscript>

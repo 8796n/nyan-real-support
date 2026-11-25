@@ -107,10 +107,10 @@ The Spatial Wall desktop application does not communicate with any external
 server on the internet. It performs no automatic update checks and sends no
 usage statistics, crash reports, advertising traffic or analytics. Desktop
 networking is limited to features inside the Customer's own network: the phone
-remote, integration with the Android glasses bridge, and receiving tab audio
+remote, integration with the glasses bridge, and receiving tab audio
 from the browser extension.
 
-The Android glasses bridge's RDP client communicates with an external server on
+The glasses bridge's RDP client communicates with an external server on
 the internet only when the Customer explicitly connects to a specified RD
 Gateway. Direct RDP connections without a Gateway are limited to the local
 network. Connections exchange authentication data, remote desktop images and

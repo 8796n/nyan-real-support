@@ -100,7 +100,7 @@ nyan_pairing *nyan_pairing_new(int role, const uint8_t *context, size_t context_
 {
     if ((role != NYAN_PAIRING_CLIENT && role != NYAN_PAIRING_SERVER) || !context ||
         context_len != NYAN_PAIRING_CONTEXT_BYTES || !code || code_len != NYAN_PAIRING_CODE_BYTES ||
-        context[0] != NYAN_PAIRING_VERSION || context[97] == 0 || (context[97] & ~NYAN_PAIRING_GRANT_MASK))
+        context[0] != NYAN_PAIRING_VERSION || !nyan_pairing_grants_valid(context[97]))
         return nullptr;
     for (size_t i = 0; i < code_len; ++i)
         if (code[i] < '0' || code[i] > '9') return nullptr;

@@ -17,7 +17,7 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 add_subdirectory("${NYAN_PAIRING_BORINGSSL}" boringssl EXCLUDE_FROM_ALL)
 
-add_library(nyan_remote_pairing STATIC pairing.cpp window.cpp devices.cpp snapshot.cpp tickets.cpp registration.cpp)
+add_library(nyan_remote_pairing STATIC pairing.cpp encoding.cpp window.cpp devices.cpp snapshot.cpp tickets.cpp registration.cpp)
 target_compile_features(nyan_remote_pairing PRIVATE cxx_std_17)
 target_compile_definitions(nyan_remote_pairing PRIVATE BORINGSSL_PREFIX=NYAN_SPAKE2)
 target_include_directories(nyan_remote_pairing PUBLIC "${CMAKE_CURRENT_LIST_DIR}/..")
